@@ -1,0 +1,15 @@
+name: Build Mindustry Mod
+
+on: [workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build DEX
+      run: |
+        echo "Сборка classes.dex"
+        # Здесь будет код сборки
