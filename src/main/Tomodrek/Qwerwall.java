@@ -1,4 +1,4 @@
-package Tomodrek; // замените на название вашего мода
+package Tomodrek;
 
 import arc.graphics.*;
 import arc.math.*;
