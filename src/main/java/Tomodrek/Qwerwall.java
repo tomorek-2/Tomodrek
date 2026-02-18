@@ -56,11 +56,17 @@ public class Tomodrek extends Mod {
         // public static Block myWall;
 
         public static void load() {
-            qwerwall = new wall("qwerwall") :{{
-              health: 50f;
-            }
-                                             }
+           package Tomodrek;  // или твой пакет
 
+import mindustry.world.blocks.defense.Wall;
+
+public class Qwerwall extends Wall {
+    qwerty new Wall("Qwerwall" ) {
+      
+        health = 50;    
+        size = 1;        
+    }
+}
             
         }
     }
