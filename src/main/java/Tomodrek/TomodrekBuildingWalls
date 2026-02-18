@@ -6,7 +6,7 @@ import mindustry.type.Category;
 import mindustry.content.Items;
 import mindustry.world.meta.BuildVisibility;
 
-public class TomodrekMod extends Mod {
+public class TomodrekBuildingWalls extends Mod {
     @Override
     public void loadContent() { 
         
