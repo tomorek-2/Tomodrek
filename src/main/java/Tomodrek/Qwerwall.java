@@ -44,23 +44,6 @@ import static mindustry.type.ItemStack.*;
 public class Tomodrek extends Mod {
     @Override
     public void loadContent() {
-        // Здесь будут инициализироваться ваши блоки.
-        // Рекомендуется вынести их в отдельный вложенный класс (например, MyBlocks)
-        // и вызывать MyBlocks.load();
-        qwerwall.load();
-    }
-
-    /** Класс, содержащий все блоки мода. */
-    public static class qwerwall {
-        // Пример объявления блока (раскомментируйте и настройте под себя)
-        // public static Block myWall;
-
-        public static void load() {
-           package Tomodrek;  // или твой пакет
-
-import mindustry.world.blocks.defense.Wall;
-
-public class Qwerwall extends Wall {
     qwerty new Wall("Qwerwall" ) {
       
         health = 50;    
