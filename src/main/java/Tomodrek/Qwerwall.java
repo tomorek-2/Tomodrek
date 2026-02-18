@@ -19,4 +19,5 @@ public class TomodrekMod extends Mod {
         }};
 
         
-        }
+        };
+};
