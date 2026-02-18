@@ -58,10 +58,8 @@ public class Tomodrek extends Mod {
         public static void load() {
            package Tomodrek;  // или твой пакет
 
-import mindustry.world.blocks.defense.Wall;
 
-public class Qwerwall extends Wall {
-    qwerty new Wall("Qwerwall" ) {
+    qwerWall new Wall("Qwerwall" ) {
       
         health = 50;    
         size = 1;        
