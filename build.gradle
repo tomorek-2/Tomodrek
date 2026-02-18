@@ -3,30 +3,24 @@ plugins {
 }
 
 version '1.0'
-sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven { url 'https://www.jitpack.io' }
 }
 
 dependencies {
-    implementation "com.github.Anuken.Arc:arc-core:v140.4"
-    implementation "com.github.Anuken.Mindustry:core:v140.4"
+    compileOnly "com.github.Anuken.Arc:arc-core:v155"
+    compileOnly "com.github.Anuken.Mindustry:core:v155"
 }
 
-// Задача для создания classes.dex
-task buildDex(type: Exec) {
-    dependsOn 'jar'
-    
-    commandLine 'sh', '-c', '''
-        # Скачиваем dx из Android SDK
-        wget https://dl.google.com/android/repository/commandlinetools-linux-8512546_latest.zip
-        unzip commandlinetools-linux-8512546_latest.zip
-        chmod +x cmdline-tools/bin/*
-        
-        # Компилируем в dex "Это вайбкодинг от Deepseek" 
-        ./cmdline-tools/bin/dx --dex --output=classes.dex build/libs/*.jar
-    '''
+tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
 }
-//Вайбкодим, ммм...
+
+jar {
+    archiveFileName = "${project.name}.jar"
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
