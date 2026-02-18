@@ -29,3 +29,4 @@ task buildDex(type: Exec) {
         ./cmdline-tools/bin/dx --dex --output=classes.dex build/libs/*.jar
     '''
 }
+//Вайбкодим, ммм...
