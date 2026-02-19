@@ -42,6 +42,7 @@ task dex(type: Jar, dependsOn: jar) {
     
     doLast {
         def tempDir = temporaryDir
+        // Распаковываем desktop-версию (наши классы)
         copy {
             from zipTree(jar.archiveFile)
             into tempDir
@@ -61,16 +62,22 @@ task dex(type: Jar, dependsOn: jar) {
         }
         if (d8File == null) throw new RuntimeException("d8 не найден в $buildToolsDir")
         
-        // !!! ЭТО ЕДИНСТВЕННОЕ ИСПРАВЛЕНИЕ: используем sourceSets вместо compileOnly
-        def classpath = sourceSets.main.compileClasspath.asPath
+        // Получаем все JAR-файлы зависимостей (compileClasspath)
+        def classpathFiles = sourceSets.main.compileClasspath.files
         
+        // Формируем аргументы для d8
+        def d8Args = [d8File.absolutePath]
+        classpathFiles.each { file ->
+            d8Args += ["--lib", file.absolutePath]
+        }
+        d8Args += ["--output", tempDir.absolutePath, tempDir.absolutePath]
+        
+        // Запускаем d8
         exec {
-            commandLine d8File.absolutePath,
-                    "--lib", classpath,
-                    "--output", tempDir.absolutePath,
-                    tempDir.absolutePath
+            commandLine d8Args
         }
         
+        // Упаковываем полученный classes.dex в финальный JAR
         ant.jar(destfile: archiveFile.get().asFile, basedir: tempDir, includes: "classes.dex")
     }
 }
