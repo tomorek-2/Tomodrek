@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group = 'com.tomodrek'          // можно любое
+group = 'com.tomodrek'
 version = '1.0.0'
 
 java {
@@ -17,7 +17,7 @@ ext {
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }  // правильная ссылка
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
@@ -29,38 +29,50 @@ tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-// Десктоп-версия (только .class)
 jar {
     archiveFileName = "${project.name}-desktop.jar"
     from sourceSets.main.output
+    manifest {
+        attributes('Implementation-Title': project.name, 'Implementation-Version': project.version)
+    }
 }
 
-// Android-версия (с classes.dex)
 task dex(type: Jar, dependsOn: jar) {
-    archiveFileName = "${project.name}.jar"  // универсальный JAR
-
+    archiveFileName = "${project.name}.jar"
+    
     doLast {
         def tempDir = temporaryDir
         copy {
             from zipTree(jar.archiveFile)
             into tempDir
         }
-
-        // Путь к Android SDK (задаётся в GitHub Actions)
+        
         def sdk = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
         if (sdk == null) throw new RuntimeException("ANDROID_HOME не задан")
-
-        def d8 = fileTree(dir: "$sdk/build-tools", include: "*/d8").find()
-        if (d8 == null) throw new RuntimeException("d8 не найден")
-
-        exec {
-            commandLine d8, "--lib", configurations.compileOnly.asPath,
-                    "--output", tempDir, tempDir
+        
+        def buildToolsDir = new File(sdk, "build-tools")
+        def d8File = null
+        buildToolsDir.eachDir { dir ->
+            def candidate = new File(dir, "d8")
+            if (candidate.exists()) {
+                d8File = candidate
+                return true
+            }
         }
-
+        if (d8File == null) throw new RuntimeException("d8 не найден в $buildToolsDir")
+        
+        // !!! ЭТО ЕДИНСТВЕННОЕ ИСПРАВЛЕНИЕ: используем sourceSets вместо compileOnly
+        def classpath = sourceSets.main.compileClasspath.asPath
+        
+        exec {
+            commandLine d8File.absolutePath,
+                    "--lib", classpath,
+                    "--output", tempDir.absolutePath,
+                    tempDir.absolutePath
+        }
+        
         ant.jar(destfile: archiveFile.get().asFile, basedir: tempDir, includes: "classes.dex")
     }
 }
 
-// Основная задача для GitHub Actions
 assemble.dependsOn dex
