@@ -19,8 +19,43 @@ tasks.withType(JavaCompile) {
 }
 
 jar {
-    archiveFileName = "${project.name}.jar"
+    archiveFileName = "${project.name}-desktop.jar"
+    from sourceSets.main.output  // добавляет скомпилированные классы
     from {
         configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
     }
+}
+
+task dex(type: Jar, dependsOn: jar) {
+    archiveFileName = "${project.name}.jar"
+    
+    doLast {
+        // Создаём временную папку для классов
+        def tempDir = temporaryDir
+        copy {
+            from zipTree(jar.archiveFile)
+            into tempDir
+        }
+        
+        // Путь к d8 (Android SDK должен быть установлен)
+        def sdk = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
+        if (sdk == null) throw new RuntimeException("ANDROID_HOME не задан")
+        
+        def buildTools = fileTree(dir: "$sdk/build-tools", include: "*/d8").maxDepth(1).find()
+        if (buildTools == null) throw new RuntimeException("d8 не найден")
+        
+        // Конвертируем class в dex
+        exec {
+            commandLine buildTools, "--lib", configurations.compileOnly.asPath,
+                    "--output", tempDir, tempDir
+        }
+        
+        // Создаём финальный JAR с classes.dex
+        ant.jar(destfile: archiveFile.get().asFile, basedir: tempDir, includes: "classes.dex")
+    }
+}
+
+// Чтобы собирать и desktop, и android версии
+task deploy(dependsOn: dex) {
+    // пусто, просто зависит от dex
 }
