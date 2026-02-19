@@ -50,7 +50,7 @@ task dex(type: Jar, dependsOn: jar) {
         def sdk = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
         if (sdk == null) throw new RuntimeException("ANDROID_HOME не задан")
 
-        def d8 = fileTree(dir: "$sdk/build-tools", include: "*/d8").maxDepth(1).find()
+        def d8 = fileTree(dir: "$sdk/build-tools", include: "*/d8").find()
         if (d8 == null) throw new RuntimeException("d8 не найден")
 
         exec {
