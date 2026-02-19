@@ -5,7 +5,7 @@ import mindustry.world.blocks.defense.Wall;
 import mindustry.type.Category;
 import mindustry.content.Items;
 import mindustry.world.meta.BuildVisibility;
-import mindustry.world.ItemStack;  
+
 
 public class qwerWalls extends Mod {
     @Override
@@ -16,7 +16,7 @@ public class qwerWalls extends Mod {
             size = 1;
             category = Category.defense;
             buildVisibility = BuildVisibility.shown;
-            requirements(Category.defense, ItemStack.with(Items.copper, 20));
+            
         }};
     }
                          }
