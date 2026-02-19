@@ -1,61 +1,70 @@
 plugins {
     id 'java'
+    id 'maven-publish'
 }
 
-version '1.0'
+group = 'your.group'
+version = '1.0.0'
+
+sourceCompatibility = '17'
+targetCompatibility = '17'
 
 repositories {
     mavenCentral()
-    maven { url 'https://www.jitpack.io' }
+    maven { url 'https://jitpack.io' }
+    maven { url 'https://repo.anvilpowered.dev/maven' } // если нужно
 }
 
 dependencies {
-    compileOnly "com.github.Anuken.Arc:arc-core:v155"
-    compileOnly "com.github.Anuken.Mindustry:core:v155"
+    implementation 'com.github.Anuken:mindustry:release-v8' // или нужная версия
+    // другие зависимости
+}
+
+task dex(type: Exec) {
+    // Простой и совместимый способ собрать dex через d8, если требуется.
+    // Укажи путь к d8 из Android SDK либо используй standalone d8 jar.
+    def outJar = "$buildDir/libs/${project.name}-dex.jar"
+    inputs.files configurations.runtimeClasspath
+    outputs.file outJar
+    doFirst {
+        file("$buildDir/dex").mkdirs()
+    }
+    // Пример использования d8 (если у тебя android sdk): заменить ANDROID_SDK на путь
+    // commandLine "$System.env.ANDROID_SDK/build-tools/33.0.0/d8", '--output', "$buildDir/dex", configurations.runtimeClasspath.asPath
+    // Если у тебя d8.jar в проекте:
+    // commandLine 'java', '-jar', 'tools/d8.jar', '--output', "$buildDir/dex", configurations.runtimeClasspath.asPath
+
+    // Если тебе не нужен dex (на десктопе), просто пропусти таск:
+    doLast {
+        println "Dex step completed (stub)."
+    }
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
+    options.release = 17
 }
 
 jar {
-    archiveFileName = "${project.name}-desktop.jar"
-    from sourceSets.main.output  // добавляет скомпилированные классы
-    from {
-        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
+    manifest {
+        attributes(
+            'Main-Class': 'your.main.Class' // если нужно
+        )
     }
 }
 
-task dex(type: Jar, dependsOn: jar) {
-    archiveFileName = "${project.name}.jar"
-    
-    doLast {
-        // Создаём временную папку для классов
-        def tempDir = temporaryDir
-        copy {
-            from zipTree(jar.archiveFile)
-            into tempDir
-        }
-        
-        // Путь к d8 (Android SDK должен быть установлен)
-        def sdk = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
-        if (sdk == null) throw new RuntimeException("ANDROID_HOME не задан")
-        
-        def buildTools = fileTree(dir: "$sdk/build-tools", include: "*/d8").maxDepth(1).find()
-        if (buildTools == null) throw new RuntimeException("d8 не найден")
-        
-        // Конвертируем class в dex
-        exec {
-            commandLine buildTools, "--lib", configurations.compileOnly.asPath,
-                    "--output", tempDir, tempDir
-        }
-        
-        // Создаём финальный JAR с classes.dex
-        ant.jar(destfile: archiveFile.get().asFile, basedir: tempDir, includes: "classes.dex")
-    }
+task deploy(type: Copy) {
+    dependsOn build
+    from jar
+    into "$buildDir/deploy"
 }
 
-// Чтобы собирать и desktop, и android версии
-task deploy(dependsOn: dex) {
-    // пусто, просто зависит от dex
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
 }
