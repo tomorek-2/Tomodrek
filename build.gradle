@@ -1,70 +1,54 @@
 plugins {
     id 'java'
-    id 'maven-publish'
 }
 
-group = 'your.group'
-version = '1.0.0'
+group = 'com.yourname'   // поменяйте на своё
+version = '1.0.0'        // версия мода
 
-sourceCompatibility = '17'
-targetCompatibility = '17'
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
 
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
-    maven { url 'https://repo.anvilpowered.dev/maven' } // если нужно
+    maven { url 'https://jitpack.io' } // JitPack — альтернатива недоступному repo.anvilpowered.dev
+    // Если хотите оставить оригинальный репозиторий как fallback, можно раскомментировать:
+    // maven { url 'https://repo.anvilpowered.dev/maven' }
 }
 
 dependencies {
-    implementation 'com.github.Anuken:mindustry:release-v8' // или нужная версия
-    // другие зависимости
-}
-
-task dex(type: Exec) {
-    // Простой и совместимый способ собрать dex через d8, если требуется.
-    // Укажи путь к d8 из Android SDK либо используй standalone d8 jar.
-    def outJar = "$buildDir/libs/${project.name}-dex.jar"
-    inputs.files configurations.runtimeClasspath
-    outputs.file outJar
-    doFirst {
-        file("$buildDir/dex").mkdirs()
-    }
-    // Пример использования d8 (если у тебя android sdk): заменить ANDROID_SDK на путь
-    // commandLine "$System.env.ANDROID_SDK/build-tools/33.0.0/d8", '--output', "$buildDir/dex", configurations.runtimeClasspath.asPath
-    // Если у тебя d8.jar в проекте:
-    // commandLine 'java', '-jar', 'tools/d8.jar', '--output', "$buildDir/dex", configurations.runtimeClasspath.asPath
-
-    // Если тебе не нужен dex (на десктопе), просто пропусти таск:
-    doLast {
-        println "Dex step completed (stub)."
-    }
+    // Подтянем Mindustry из GitHub через JitPack (tag/release: release-v8)
+    implementation 'com.github.Anuken:Mindustry:release-v8'
+    // Добавьте другие зависимости модификации при необходимости
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-    options.release = 17
 }
 
+// Обычный jar (не встраиваем зависимости — моды для Mindustry обычно не бандлят движок в себе)
 jar {
-    from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
-    exclude 'META-INF/*.SF', 'META-INF/*.DSA', 'META-INF/*.RSA'
     manifest {
         attributes(
-            'Main-Class': 'your.main.Class' // если нужно
+            'Implementation-Title': project.name,
+            'Implementation-Version': project.version
         )
     }
 }
 
+// Простой таск deploy: копирует все jar'ы из build/libs в build/deploy или в указанную папку mods
 task deploy(type: Copy) {
-    dependsOn build
-    from jar
-    into "$buildDir/deploy"
-}
+    dependsOn assemble
+    from("$buildDir/libs") {
+        include '*.jar'
+    }
 
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
+    // По умолчанию копируем в build/deploy. Можно задать -PmodsDir=/path/to/Mindustry/mods при запуске
+    def targetDir = project.hasProperty('modsDir') ? project.property('modsDir') : "${buildDir}/deploy"
+    into targetDir
+
+    doLast {
+        println "Deployed to: ${targetDir}"
     }
 }
