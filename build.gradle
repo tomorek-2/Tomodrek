@@ -2,33 +2,39 @@ plugins {
     id 'java'
 }
 
-group = 'com.yourname'   // поменяйте на своё
-version = '1.0.0'        // версия мода
 
 java {
     sourceCompatibility = JavaVersion.VERSION_1_8
     targetCompatibility = JavaVersion.VERSION_1_8
 }
 
+ext {
+    // По умолчанию используем v155 (замените на нужный тег: v126, release-v8 и т.д.)
+    mindustryVersion = project.hasProperty('mindustryVersion') ? project.property('mindustryVersion') : 'v155'
+    arcVersion = project.hasProperty('arcVersion') ? project.property('arcVersion') : mindustryVersion
+}
+
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' } // JitPack — альтернатива недоступному repo.anvilpowered.dev
-    // Если хотите оставить оригинальный репозиторий как fallback, можно раскомментировать:
-    // maven { url 'https://repo.anvilpowered.dev/maven' }
+    maven { url 'https://jitpack.io' }
 }
 
 dependencies {
-    // Подтянем Mindustry из GitHub через JitPack (tag/release: release-v8)
-    implementation 'com.github.Anuken:Mindustry:release-v8'
-    // Добавьте другие зависимости модификации при необходимости
+    // Не бандлим движок — только для компиляции
+    compileOnly "com.github.Anuken.Mindustry:core:${mindustryVersion}"
+    compileOnly "com.github.Anuken.Arc:arc-core:${arcVersion}"
+
+    // Пример: если нужны утилиты, добавьте их как implementation/compileOnly
+    // implementation 'org.some:lib:1.2.3'
 }
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
 }
 
-// Обычный jar (не встраиваем зависимости — моды для Mindustry обычно не бандлят движок в себе)
 jar {
+    // Обычный мод-jar: не бандлим движок
+    archiveFileName = "${project.name}.jar"
     manifest {
         attributes(
             'Implementation-Title': project.name,
@@ -37,18 +43,15 @@ jar {
     }
 }
 
-// Простой таск deploy: копирует все jar'ы из build/libs в build/deploy или в указанную папку mods
 task deploy(type: Copy) {
-    dependsOn assemble
+    dependsOn jar
     from("$buildDir/libs") {
         include '*.jar'
     }
-
-    // По умолчанию копируем в build/deploy. Можно задать -PmodsDir=/path/to/Mindustry/mods при запуске
     def targetDir = project.hasProperty('modsDir') ? project.property('modsDir') : "${buildDir}/deploy"
     into targetDir
-
     doLast {
         println "Deployed to: ${targetDir}"
     }
 }
+
