@@ -1,85 +1,101 @@
-plugins {
-    id 'java'
-}
+apply plugin: "java"
 
-group = 'com.tomodrek'
-version = '1.0.0'
+version = '1.0'
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-}
+sourceSets.main.java.srcDirs = ["src"]
 
-ext {
-    mindustryVersion = 'v155'
-    arcVersion = 'v155'
-}
-
-repositories {
+repositories{
     mavenCentral()
-    maven { url 'https://jitpack.io' }
+    maven{ url = "https://raw.githubusercontent.com/Zelaux/MindustryRepo/master/repository" }
+    maven{ url = 'https://www.jitpack.io' }
 }
 
-dependencies {
-    compileOnly "com.github.Anuken.Mindustry:core:${mindustryVersion}"
-    compileOnly "com.github.Anuken.Arc:arc-core:${arcVersion}"
+java{
+    targetCompatibility = 8
+    sourceCompatibility = JavaVersion.VERSION_17
 }
 
-tasks.withType(JavaCompile) {
-    options.encoding = 'UTF-8'
+ext{
+    //the build number that this mod is made for
+    mindustryVersion = 'v155'
+    jabelVersion = "93fde537c7"
+    //windows sucks
+    isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
+    sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
 }
 
-jar {
-    archiveFileName = "${project.name}-desktop.jar"
-    from sourceSets.main.output
-    manifest {
-        attributes('Implementation-Title': project.name, 'Implementation-Version': project.version)
+//java 8 backwards compatibility flag
+allprojects{
+    tasks.withType(JavaCompile).tap{
+        configureEach{
+            options.compilerArgs.addAll(['--release', '8'])
+        }
     }
 }
 
-task dex(type: Jar, dependsOn: jar) {
+dependencies{
+    compileOnly "com.github.Anuken.Arc:arc-core:$mindustryVersion"
+    compileOnly "com.github.Anuken.Mindustry:core:$mindustryVersion"
+
+    annotationProcessor "com.github.Anuken:jabel:$jabelVersion"
+}
+
+//force arc version
+configurations.configureEach{
+    resolutionStrategy.eachDependency { details ->
+        if(details.requested.group == 'com.github.Anuken.Arc'){
+            details.useVersion "$mindustryVersion"
+        }
+    }
+}
+
+tasks.register('jarAndroid'){
+    dependsOn "jar"
+
+    doLast{
+        if(!sdkRoot || !new File(sdkRoot).exists()) throw new GradleException("No valid Android SDK found. Ensure that ANDROID_HOME is set to your Android SDK directory.")
+
+        def platformRoot = new File("$sdkRoot/platforms/").listFiles().sort().reverse().find{ f -> new File(f, "android.jar").exists() }
+
+        if(!platformRoot) throw new GradleException("No android.jar found. Ensure that you have an Android platform installed.")
+
+        //collect dependencies needed for desugaring
+        def dependencies = (configurations.compileClasspath.asList() + configurations.runtimeClasspath.asList() + [new File(platformRoot, "android.jar")]).collect{ "--classpath $it.path" }.join(" ")
+
+        def d8 = isWindows ? "d8.bat" : "d8"
+
+        //dex and desugar files - this requires d8 in your PATH
+        "$d8 $dependencies --min-api 14 --output ${project.name}Android.jar ${project.name}Desktop.jar"
+                .execute(null, new File("build/libs")).waitForProcessOutput(System.out, System.err)
+    }
+}
+
+jar{
+    archiveFileName = "${project.name}Desktop.jar"
+
+    from{
+        configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
+    }
+
+    from(projectDir){
+        include "mod.hjson"
+    }
+
+    from("assets/"){
+        include "**"
+    }
+}
+
+tasks.register('deploy', Jar){
+    dependsOn jarAndroid
+    dependsOn jar
     archiveFileName = "${project.name}.jar"
-    
-    doLast {
-        def tempDir = temporaryDir
-        // Распаковываем desktop-версию (наши классы)
-        copy {
-            from zipTree(jar.archiveFile)
-            into tempDir
+
+    from{ [zipTree("build/libs/${project.name}Desktop.jar"), zipTree("build/libs/${project.name}Android.jar")] }
+
+    doLast{
+        delete{
+            delete "build/libs/${project.name}Android.jar"
         }
-        
-        def sdk = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
-        if (sdk == null) throw new RuntimeException("ANDROID_HOME не задан")
-        
-        def buildToolsDir = new File(sdk, "build-tools")
-        def d8File = null
-        buildToolsDir.eachDir { dir ->
-            def candidate = new File(dir, "d8")
-            if (candidate.exists()) {
-                d8File = candidate
-                return true
-            }
-        }
-        if (d8File == null) throw new RuntimeException("d8 не найден в $buildToolsDir")
-        
-        // Получаем все JAR-файлы зависимостей (compileClasspath)
-        def classpathFiles = sourceSets.main.compileClasspath.files
-        
-        // Формируем аргументы для d8
-        def d8Args = [d8File.absolutePath]
-        classpathFiles.each { file ->
-            d8Args += ["--lib", file.absolutePath]
-        }
-        d8Args += ["--output", tempDir.absolutePath, tempDir.absolutePath]
-        
-        // Запускаем d8
-        exec {
-            commandLine d8Args
-        }
-        
-        // Упаковываем полученный classes.dex в финальный JAR
-        ant.jar(destfile: archiveFile.get().asFile, basedir: tempDir, includes: "classes.dex")
     }
 }
-
-assemble.dependsOn dex
