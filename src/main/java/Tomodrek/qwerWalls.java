@@ -22,6 +22,6 @@ public class qwerWalls extends Mod {
             health = 50f;
             size = 1;
             category = Category.logic;
-        }} 
+        }};
     }
                          }
