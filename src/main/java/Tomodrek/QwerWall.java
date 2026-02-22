@@ -6,7 +6,7 @@ import mindustry.gen.Building;
 public class QwerWall extends Wall {
     public QwerWall(String name) {
         super(name);
-  update(); 
+  
   health = 450;
  size = 1;
     }
