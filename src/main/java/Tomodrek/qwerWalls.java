@@ -19,7 +19,7 @@ public class qwerWalls extends Mod {
             
         }};
         new QwerWall("qwerWallHeal") {{
-            health = 50f;
+            health = 50;
             size = 1;
             category = Category.logic;
         }};
