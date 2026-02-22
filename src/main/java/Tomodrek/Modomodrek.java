@@ -1,10 +1,10 @@
-package tomodrek;
+package Tomodrek;
 
 import mindustry.mod.Mod;
 
-public class TomodrekMod extends Mod {
+public class Modomodrek extends Mod {
     @Override
     public void loadContent() {
-        qwerWall.load();
+        qwerWalls.load();
     }
 }
