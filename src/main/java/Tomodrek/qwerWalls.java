@@ -9,7 +9,7 @@ import mindustry.world.meta.BuildVisibility;
 
 public class qwerWalls extends Mod {
     @Override
-    public void loadContent() {
+    public static void load() {
         
         Wall qwertyWall = new Wall("qwerWall") {{
             health = 50;
