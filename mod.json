@@ -1,4 +1,4 @@
 name: "Tomodrek" 
 minGameVersion: 155
 Java: true
-main: "main.java.Tomodrek.modomorek"
+main: "main.java.Tomodrek.Modomorek"
