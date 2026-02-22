@@ -1,4 +1,4 @@
 name: "Tomodrek" 
 minGameVersion: 155
 Java: true
-main: "qwerWalls"
+main: "main.java.Tomodrek.qwerWalls"
