@@ -1,12 +1,17 @@
 package Tomodrek;
 
+package Tomodrek;
+
+import arc.Core; // вместо mindustry.core
+import mindustry.net.Call; // оставьте если dependency подключён
+
+import mindustry.type;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.gen.*;
-import mindustry.core;
 
-import mindustry.net.Call; // Этот импорт правильный
 import mindustry.net.NetConnection; // Импортируем класс подключения
 import mindustry.Vars; // Импортируем Vars для tilesize
+
 
 public class PortalBlock extends Wall {
     // Адрес和目标 сервера
