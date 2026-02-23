@@ -3,7 +3,7 @@ package Tomodrek;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.gen.*;
 import mindustry.core;
-import mindustry;
+
 import mindustry.net.Call; // Этот импорт правильный
 import mindustry.net.NetConnection; // Импортируем класс подключения
 import mindustry.Vars; // Импортируем Vars для tilesize
