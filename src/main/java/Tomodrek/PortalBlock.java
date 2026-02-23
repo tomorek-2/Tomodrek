@@ -8,8 +8,8 @@ import mindustry.Vars; // Импортируем Vars для tilesize
 
 public class PortalBlock extends Wall {
     // Адрес和目标 сервера
-    private String targetIp = "155.212.218.241:6568";
-    //private int targetPort = 7070;
+    private String targetIp = "155.212.218.241";
+    private int targetPort = 6568;
 
     public PortalBlock(String name) {
         super(name);
@@ -34,7 +34,7 @@ public class PortalBlock extends Wall {
                     // 4. Отправляем команду на смену сервера.
                     // ВАЖНО: Этот метод отправляет пакет КЛИЕНТУ, чтобы тот начал процесс подключения.
                     // Он работает ТОЛЬКО на СТОРОНЕ СЕРВЕРА.
-                    Call.connect(connection, targetIp);
+                    Call.connect(connection, targetIp,targetPort);
                     return true; // Клик обработан
                 }
             }
