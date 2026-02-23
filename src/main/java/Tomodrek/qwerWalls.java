@@ -22,6 +22,8 @@ public class qwerWalls extends Mod {
             health = 500;
             size = 1;
             category = Category.logic;
+            buildVisibility = BuildVisibility.shown;
+            
         }};
     }
                          }
