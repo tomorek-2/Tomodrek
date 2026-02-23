@@ -11,7 +11,7 @@ import mindustry.type.Item;
 import mindustry.world.meta.BuildVisibility;
 
 
-public class qwerWall extends Wall {
+public class qwerWall extends Vault {
     public qwerWall(String name) {
         super(name);
   update = true;
