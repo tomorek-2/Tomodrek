@@ -18,8 +18,8 @@ public class qwerWalls extends Mod {
             buildVisibility = BuildVisibility.shown;
             
         }};
-       Wall qwertyHealWall new QwerWall("qwerWallHeal") {{
-            health = 50;
+        new QwerWall("qwerWallHeal") {{
+            health = 500;
             size = 1;
             category = Category.logic;
         }};
