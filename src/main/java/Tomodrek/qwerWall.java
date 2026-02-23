@@ -1,7 +1,6 @@
 package Tomodrek;
 
-import mindustry.world.blocks.defense.Wall;
-import mindustry.gen.Building;
+
 
 import mindustry.world.blocks.defense.Wall;
 import mindustry.type.Category;
@@ -29,7 +28,7 @@ public class qwerWall extends Wall {
                 heal(1f);
             } else {
                 damage(1f);
-                
+            } 
             }
             @Override
         public boolean acceptItem(Building source, Item item) {
@@ -37,5 +36,5 @@ public class qwerWall extends Wall {
             return item == Items.thorium && items.get(item) < itemCapacity;
                 }
         }
-    }
+    
 }
