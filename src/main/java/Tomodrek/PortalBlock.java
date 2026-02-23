@@ -34,7 +34,7 @@ public class PortalBlock extends Wall {
                     // 4. Отправляем команду на смену сервера.
                     // ВАЖНО: Этот метод отправляет пакет КЛИЕНТУ, чтобы тот начал процесс подключения.
                     // Он работает ТОЛЬКО на СТОРОНЕ СЕРВЕРА.
-                    Call.connect(connection, targetIp,targetPort);
+                    Call.connect(connection, targetIp, targetPort);
                     return true; // Клик обработан
                 }
             }
