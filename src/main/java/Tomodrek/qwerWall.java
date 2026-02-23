@@ -9,6 +9,7 @@ public class qwerWall extends Wall {
   update = true;
   health = 450;
  size = 1;
+        itemCapacity: 30
     }
 
     public class qwerWallBuild extends Building {
