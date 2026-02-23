@@ -13,11 +13,12 @@ public class qwerWall extends Wall {
 
     public class qwerWallBuild extends Building {
         @Override
-        public void update() {
-            super.update();
+        public void updateTile() {
+            super.updateTile();
             if (health() < 300) {
                 heal(1f);
             } else {
+                damage(1f);
                 
             }
         }
