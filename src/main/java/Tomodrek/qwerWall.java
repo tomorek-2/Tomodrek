@@ -7,6 +7,7 @@ import mindustry.type.Category;
 import mindustry.content.Items;
 import mindustry.gen.Building;      
 import mindustry.type.Item;        
+import mindustry.world.blocks.distribution.Router;
      
 import mindustry.world.meta.BuildVisibility;
 
