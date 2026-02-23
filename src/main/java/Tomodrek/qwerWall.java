@@ -29,7 +29,13 @@ public class qwerWall extends Wall {
             } else {
                 damage(1f);
             } 
+             
+            int CountThorium = items.get(Items.thorium);
+             if (CountThorium > 20) {
+                  heal(2f);
             }
+             else {
+             } 
             @Override
         public boolean acceptItem(Building source, Item item) {
             
