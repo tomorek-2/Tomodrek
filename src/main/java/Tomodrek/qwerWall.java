@@ -3,6 +3,12 @@ package Tomodrek;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.gen.Building;
 
+import mindustry.world.blocks.defense.Wall;
+import mindustry.type.Category;
+import mindustry.content.Items;
+import mindustry.world.meta.BuildVisibility;
+
+
 public class qwerWall extends Wall {
     public qwerWall(String name) {
         super(name);
