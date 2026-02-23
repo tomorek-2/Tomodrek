@@ -21,6 +21,11 @@ public class qwerWall extends Wall {
                 damage(1f);
                 
             }
+            @Override
+        public boolean acceptItem(Building source, Item item) {
+            
+            return item == Items.thorium && items.get(item) < itemCapacity;
+                }
         }
     }
 }
