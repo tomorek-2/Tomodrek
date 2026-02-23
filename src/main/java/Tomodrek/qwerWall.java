@@ -36,11 +36,12 @@ public class qwerWall extends Wall {
             }
              else {
              } 
-            @Override
-        public boolean acceptItem(Building source, Item item) {
+        } 
+           // @Override
+       // public boolean acceptItem(Building source, Item item) {
             
-            return item == Items.thorium && items.get(item) < itemCapacity;
-                }
+            //return item == Items.thorium && items.get(item) < itemCapacity;
+               // }
         }
     
 }
