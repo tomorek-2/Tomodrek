@@ -28,7 +28,7 @@ public class qwerWall extends Router {
             if (health() < 300) {
                 heal(1f);
             } else {
-                damage(1f);
+                
             } 
              
             int CountThorium = items.get(Items.thorium);
@@ -39,10 +39,10 @@ public class qwerWall extends Router {
              } 
         } 
            // @Override
-       // public boolean acceptItem(Building source, Item item) {
+     //   public boolean acceptItem(Building source, Item item) {
             
             //return item == Items.thorium && items.get(item) < itemCapacity;
-               // }
+            //    }
         }
     
 }
