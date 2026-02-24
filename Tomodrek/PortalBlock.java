@@ -2,7 +2,7 @@ package Tomodrek;
 
 import mindustry.world.blocks.defense.Wall;
 import mindustry.gen.*;
-import mindustry.net.Call;
+import mindustry.net.Net;
 import mindustry.net.NetConnection;
 import mindustry.Vars;
 
