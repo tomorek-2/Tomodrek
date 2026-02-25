@@ -27,7 +27,7 @@ public class PortalBlock extends Wall {
                 if (connection != null && connection.isConnected()) {
                     
 Call.connect(connection, targetIp, targetPort);
-   connection.kick(KickReason.redirect, targetIp + ":" + targetPort);          
+   connection.kick(KickReason.redirect, targetIp + ":" + 6567);          
         player.sendMessage("Соединение есть");
                     return true;
                 } else {
