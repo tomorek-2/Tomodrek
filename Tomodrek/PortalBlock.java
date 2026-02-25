@@ -8,7 +8,7 @@ import mindustry.Vars;
 
 public class PortalBlock extends Wall {
     private String targetIp = "155.212.218.241";
-    private int targetPort = 6568;
+    private int targetPort = 6567;
 
     public PortalBlock(String name) {
         super(name);
