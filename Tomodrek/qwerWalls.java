@@ -27,7 +27,7 @@ public class qwerWalls extends Mod {
         }};
 new PortalBlock("PortalBlocktoIP") {{
             health = 500;
-            description = "Этот блок отправляет игрока на сервер";
+            description = "Этот блок отправляет игрока на сервер, пока не работает";
             size = 1;
             category = Category.logic;
             buildVisibility = BuildVisibility.shown;
