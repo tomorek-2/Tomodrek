@@ -25,7 +25,7 @@ public class PortalBlock extends Wall {
             if (player != null) {
                 NetConnection connection = player.con;
                 if (connection != null) {
-                    player.connect("155.212.218.241", 6567);
+                    Call.connect(connect, "155.212.218.241", 6567);
                     return true;
                 } else {
                     player.sendMessage("[scarlet]Портал работает только на серверах!");
