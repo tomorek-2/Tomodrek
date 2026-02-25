@@ -5,6 +5,7 @@ import mindustry.gen.*;
 import mindustry.net.Packets;
 import mindustry.net.NetConnection;
 import mindustry.Vars;
+Import mindustry.net.Packets.KickReason;
 
 public class PortalBlock extends Wall {
     private String targetIp = "155.212.218.241";
