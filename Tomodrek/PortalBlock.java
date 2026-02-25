@@ -27,7 +27,8 @@ public class PortalBlock extends Wall {
                 if (connection != null && connection.isConnected()) {
                     
 Call.connect(connection, targetIp, targetPort);
-                    player.sendMessage("Соединение есть");
+   connection.kick(KickReason.redirect, targetIp + ":" + targetPort);          
+        player.sendMessage("Соединение есть");
                     return true;
                 } else {
                     player.sendMessage("[scarlet]Портал работает только на серверах!");
