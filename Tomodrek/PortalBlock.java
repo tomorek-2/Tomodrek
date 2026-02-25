@@ -2,7 +2,6 @@ package Tomodrek;
 
 import mindustry.world.blocks.defense.Wall;
 import mindustry.gen.*;
-import mindustry.net.Net;
 import mindustry.net.Packets;
 import mindustry.net.NetConnection;
 import mindustry.Vars;
@@ -23,13 +22,10 @@ public class PortalBlock extends Wall {
         public boolean configTapped() {
             Player player = getPlayerTapped();
             if (player != null) {
-            player.sendMessage("Успешно");
                 NetConnection connection = player.con;
-                if (connection != null && connection.isConnected()) {
-                    
-
-   connection.kick(KickReason.redirect, targetIp + ":" + 6567);          
-        player.sendMessage("Соединение есть");
+                if (connection != null) {
+                    // Принудительный редирект на другой сервер
+                    connection.kick(Packets.KickReason.redirect, targetIp + ":" + targetPort);
                     return true;
                 } else {
                     player.sendMessage("[scarlet]Портал работает только на серверах!");
