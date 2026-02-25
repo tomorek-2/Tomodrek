@@ -22,9 +22,11 @@ public class PortalBlock extends Wall {
         public boolean configTapped() {
             Player player = getPlayerTapped();
             if (player != null) {
+            player.sendMessage("Успешно");
                 NetConnection connection = player.con;
                 if (connection != null && connection.isConnected()) {
                     Call.connect(connection, targetIp, targetPort);
+                    player.sendMessage("Соединение есть");
                     return true;
                 } else {
                     player.sendMessage("[scarlet]Портал работает только на серверах!");
