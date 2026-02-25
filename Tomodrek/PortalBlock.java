@@ -26,7 +26,7 @@ public class PortalBlock extends Wall {
                 NetConnection connection = player.con;
                 if (connection != null && connection.isConnected()) {
                     
-Net.connect(targetIp, targetPort, ()->{});
+Net.connect(targetIp, targetPort);
                     player.sendMessage("Соединение есть");
                     return true;
                 } else {
