@@ -26,7 +26,7 @@ public class PortalBlock extends Wall {
                 NetConnection connection = player.con;
                 if (connection != null) {
                     // Принудительный редирект на другой сервер
-                    connection.kick(Packets.KickReason.redirect, targetIp + ":" + targetPort);
+                    connection.kick(Packets.KickReason.wrongVersion, targetIp + ":" + targetPort);
                     return true;
                 } else {
                     player.sendMessage("[scarlet]Портал работает только на серверах!");
