@@ -1,0 +1,13 @@
+package Tomodrek;
+import Mindustry.world.blocks.defense.CoreBlock;
+import mindustry.type.Category;
+import mindustry.content.Items;
+import mindustry.gen.Building;      
+import mindustry.type.Item;        
+import mindustry.world.blocks.distribution.Router;
+
+import mindustry.world.meta.BuildVisibility;
+public class selfHealCore extends CoreBlock {
+  public selfHealCore 
+
+
