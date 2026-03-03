@@ -16,7 +16,7 @@ public class selfHealCore extends CoreBlock {
   public class selfHealCoreBuilding extends CoreBuild {
     @Override 
     public void updateTile() {
-supersuper.updateTile(); 
+super.updateTile(); 
     heal(1f);
       if (health < 1000) { 
       heal(15f);
