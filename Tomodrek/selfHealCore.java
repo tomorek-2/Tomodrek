@@ -8,6 +8,20 @@ import mindustry.world.blocks.distribution.Router;
 
 import mindustry.world.meta.BuildVisibility;
 public class selfHealCore extends CoreBlock {
-  public selfHealCore 
-
-
+  public selfHealCore(String name) { 
+    super(name);
+    health = 4500;
+    size = 3;
+  } 
+  public class selfHealCoreBuilding extends CoreBuild {
+    @Override 
+    public void updateTile() {
+supersuper.updateTile(); 
+    heal(1f);
+      if (health < 1000) { 
+      heal(15f);
+      }
+      else {
+      } 
+    } 
+  } 
