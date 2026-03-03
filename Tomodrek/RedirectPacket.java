@@ -2,6 +2,7 @@ package Tomodrek;
 
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import mindustry.gen.Con;
 import mindustry.net.Packet;
 
 public class RedirectPacket extends Packet {
@@ -31,7 +32,9 @@ public class RedirectPacket extends Packet {
     @Override
     public void handled() {
         // Этот метод вызывается, когда пакет получен на клиенте
-        // Здесь нужно выполнить редирект
-        mindustry.core.NetClient.setConnecting(ip, port);
+        // Выполняем редирект через Vars.netClient.connect()
+        if (Vars.netClient != null) {
+            Vars.netClient.connect(ip, port);
+        }
     }
 }
