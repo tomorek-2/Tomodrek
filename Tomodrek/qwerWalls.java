@@ -25,9 +25,9 @@ public class qwerWalls extends Mod {
             buildVisibility = BuildVisibility.shown;
             
         }};
-new PortalBlock("PortalBlocktoIP") {{
+new SelfHealCore("selfHealCore") {{
             health = 500;
-            description = "Этот блок отправляет игрока на сервер, пока не работает";
+            description = "Ядро которое само исцеляется на 1 ХП, если здоровье меньше 1000 ХП то хилиться больше";
             size = 1;
             category = Category.logic;
             buildVisibility = BuildVisibility.shown;
