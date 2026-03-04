@@ -31,7 +31,7 @@ new selfHealCore("selfHealCore") {{
             size = 3;
             category = Category.defense;
             buildVisibility = BuildVisibility.shown;
-}} :
+}};
 new laserTurret("SuperArcProMax") {{
 size = 2;
 buildVisibility = BuildVisibility.shown;
