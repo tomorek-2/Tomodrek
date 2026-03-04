@@ -28,11 +28,16 @@ public class qwerWalls extends Mod {
 new selfHealCore("selfHealCore") {{
             health = 500;
             description = "Ядро которое само исцеляется на 1 ХП, если здоровье меньше 1000 ХП то хилиться больше";
-            size = 1;
-            category = Category.logic;
+            size = 3;
+            category = Category.defense;
             buildVisibility = BuildVisibility.shown;
+}} :
+new laserTurret("SuperArcProMax") {{
+size = 2;
+buildVisibility = BuildVisibility.shown;
+enabled = false;
             
-        }};
+  }} ;
     }
     
                          }
