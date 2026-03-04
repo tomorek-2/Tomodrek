@@ -5,6 +5,8 @@ import mindustry.world.blocks.defense.Wall;
 import mindustry.type.Category;
 import mindustry.content.Items;
 import mindustry.world.meta.BuildVisibility;
+import mindustry.type.Item;        
+import mindustry.world.blocks.distribution.Router;
 
 
 public class qwerWalls extends Mod {
@@ -31,6 +33,7 @@ new selfHealCore("selfHealCore") {{
             size = 3;
             category = Category.defense;
             buildVisibility = BuildVisibility.shown;
+itemCapacity = 3000;
 }};
 new laserTurret("SuperArcProMax") {{
 size = 2;
