@@ -36,8 +36,22 @@ new laserTurret("SuperArcProMax") {{
 size = 2;
 buildVisibility = BuildVisibility.shown;
 enabled = false;
-            
-  }} ;
+hasPower = true;
+hasLiquid = true;
+consumes: {
+power: 20;
+}
+weapon: [
+{
+type = LaserBulletType
+range = 40;
+
+   bullet: {
+damage = 135;
+}
+}
+]        
+  }};
     }
     
                          }
