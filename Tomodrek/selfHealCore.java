@@ -4,7 +4,9 @@ import mindustry.type.Category;
 import mindustry.content.Items;
 import mindustry.gen.Building;      
 import mindustry.type.Item;        
-import mindustry.world.blocks.distribution.Router;
+import mindustry.world.blocks.storage.CoreBlock;
+
+import mindustry.world.blocks.defense.CoreBlock;
 
 import mindustry.world.meta.BuildVisibility;
 public class selfHealCore extends CoreBlock {
