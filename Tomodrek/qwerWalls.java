@@ -2,15 +2,15 @@ package Tomodrek;
 
 import mindustry.mod.Mod;
 import mindustry.world.blocks.defense.Wall;
-import mindustry.world.blocks.defense.turrets.laserTurret;
-import mindustry.world.blocks.defense;
+import mindustry.world.blocks.defense.*;
+import mindustry.world.blocks.defense.turrets.*;
 import mindustry.type.Category;
 import mindustry.content.Items;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.type.Item;        
 import mindustry.world.blocks.distribution.Router;
 
-import mindustry.world.blocks.defense.turrets;
+
 public class qwerWalls extends Mod {
     
     public static void load() {
