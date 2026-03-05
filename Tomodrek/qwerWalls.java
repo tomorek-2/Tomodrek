@@ -10,6 +10,16 @@ import mindustry.world.meta.BuildVisibility;
 import mindustry.type.Item;        
 import mindustry.world.blocks.distribution.Router;
 
+import mindustry.world.blocks.defense.turrets.LaserTurret;
+import mindustry.world.blocks.defense.turrets.PowerTurret;
+import mindustry.entities.bullet.ContinuousLaserBulletType;
+
+import mindustry.content.Liquids;
+import mindustry.world.consumers.ConsumePower;
+import mindustry.gen.Sound;
+import mindustry.Vars;
+
+
 
 public class qwerWalls extends Mod {
     
