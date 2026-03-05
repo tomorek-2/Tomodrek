@@ -2,7 +2,7 @@ package Tomodrek;
 
 import mindustry.mod.Mod;
 import mindustry.world.blocks.defense.Wall;
-import mindustry.world.blocks.defense.laserTurret;
+import mindustry.world.blocks.defense.turrets.laserTurret;
 import mindustry.world.blocks.defense;
 import mindustry.type.Category;
 import mindustry.content.Items;
