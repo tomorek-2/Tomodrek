@@ -1,6 +1,7 @@
 package Tomodrek;
 
 import mindustry.mod.Mod;
+import mindustry.world.meta.BuildVisibility;
 
 public class Modomodrek extends Mod {
     @Override
