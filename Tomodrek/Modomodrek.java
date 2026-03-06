@@ -18,8 +18,13 @@ Blocks.oreLead.buildVisibility = BuildVisibility.shown;
 Blocks.sand.buildVisibility = BuildVisibility.shown;
 Blocks.sand.requirements(Category.defense, ItemStack.with(Items.copper, 500, Items.lead, 500, Items.coal, 450));
 Blocks.oreTitanium.buildVisibility = BuildVisibility.shown;
+Blocks.oreTitanium.requirements(Category.defense, ItemStack.with(Items.copper, 650, Items.lead, 650, Items.coal, 500, Items.sand, 500));
 
 Blocks.removeOre.buildVisibility = BuildVisibility.shown; 
-Blocks.oreThorium.buildVisibility = BuildVisibility.shown; 
+Blocks.oreThorium.buildVisibility = BuildVisibility.shown;
+Blocks.oreThorium.requirements(Category.defense, ItemStack.with(titanium, 2500, plastanium, 1250));
+blocks.space.buildVisibility = BuildVisibility.shown;
+
+
     }
 }
