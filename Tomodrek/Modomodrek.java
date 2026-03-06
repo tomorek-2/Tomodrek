@@ -22,8 +22,9 @@ Blocks.oreTitanium.requirements(Category.defense, ItemStack.with(Items.copper, 6
 
 Blocks.removeOre.buildVisibility = BuildVisibility.shown; 
 Blocks.oreThorium.buildVisibility = BuildVisibility.shown;
-Blocks.oreThorium.requirements(Category.defense, ItemStack.with(titanium, 2500, plastanium, 1250));
-blocks.space.buildVisibility = BuildVisibility.shown;
+Blocks.oreThorium.requirements(Category.defense, ItemStack.with(Items.titanium, 2500, Items.plastanium, 1250));
+Blocks.space.buildVisibility = BuildVisibility.shown;
+Blocks.basalt.buildVisibility = BuildVisibility.shown;
 
 
     }
