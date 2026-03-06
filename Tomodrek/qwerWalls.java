@@ -47,13 +47,8 @@ new selfHealCore("selfHealCore") {{
             buildVisibility = BuildVisibility.shown;
 itemCapacity = 3000;
 }};
-new laserTurret("SuperArcProMax") {{
-size = 2;
-buildVisibility = BuildVisibility.shown;
-enabled = false;
-hasPower = true;
-hasLiquid = true;        
-  }};
+     
+ 
     }
     
                          }
