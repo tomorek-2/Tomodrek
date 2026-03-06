@@ -7,9 +7,9 @@ public class Modomodrek extends Mod {
     @Override
     public void loadContent() {
         qwerWalls.load();
-blocks.oreCopper.BuildVisibility = BuildVisibility.shown;
-blocks.oreCoal.BuildVisibilty = BuildVisibility.shown;
-blocks.oreLead.BuildVisibility = BuildVisibility.shown;
-blocks.sand.BuildVisibility = BuildVisibility.shown;
+oreCopper.BuildVisibility = BuildVisibility.shown;
+oreCoal.BuildVisibilty = BuildVisibility.shown;
+oreLead.BuildVisibility = BuildVisibility.shown;
+sand.BuildVisibility = BuildVisibility.shown;
     }
 }
