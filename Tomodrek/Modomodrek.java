@@ -4,6 +4,7 @@ import mindustry.mod.Mod;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
+import mindustry.type.ItemStack;
 
 public class Modomodrek extends Mod {
     @Override
