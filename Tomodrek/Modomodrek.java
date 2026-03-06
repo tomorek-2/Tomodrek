@@ -12,5 +12,8 @@ Blocks.oreCopper.buildVisibility = BuildVisibility.shown;
 Blocks.oreCoal.buildVisibility = BuildVisibility.shown;
 Blocks.oreLead.buildVisibility = BuildVisibility.shown;
 Blocks.sand.buildVisibility = BuildVisibility.shown;
+Blocks.oreTitanium.buildVisibility = BuildVisibility.shown;
+Blocks.removeOre.buildVisibility = BuildVisibility.shown; 
+Blocks.oreThorium.buildVisibility = BuildVisibility.shown; 
     }
 }
