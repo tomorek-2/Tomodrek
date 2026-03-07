@@ -27,6 +27,10 @@ Blocks.oreThorium.buildVisibility = BuildVisibility.shown;
 Blocks.oreThorium.requirements(Category.defense, ItemStack.with(Items.titanium, 2500, Items.plastanium, 1250));
 Blocks.space.buildVisibility = BuildVisibility.shown;
 Blocks.basalt.buildVisibility = BuildVisibility.shown;
+} 
+@Override
+
+public void init() {
 Vars.state.rules.unitAmmo = true;
 for(Team team : Team.all) {
 Vars.state.rules.teams.get(team).infiniteAmmo = false;
