@@ -18,6 +18,7 @@ public class qwerWall extends Wall {
   update = true;
   health = 450;
  size = 1;
+hasItems = true;
         itemCapacity = 30;
     }
 
