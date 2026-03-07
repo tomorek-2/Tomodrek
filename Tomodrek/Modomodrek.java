@@ -6,6 +6,8 @@ import mindustry.content.Blocks;
 import mindustry.content.Items;
 import mindustry.type.ItemStack;
 import mindustry.type.Category;
+import mindustry.Vars;
+import mindustry.game.Team;
 
 public class Modomodrek extends Mod {
     @Override
@@ -25,7 +27,10 @@ Blocks.oreThorium.buildVisibility = BuildVisibility.shown;
 Blocks.oreThorium.requirements(Category.defense, ItemStack.with(Items.titanium, 2500, Items.plastanium, 1250));
 Blocks.space.buildVisibility = BuildVisibility.shown;
 Blocks.basalt.buildVisibility = BuildVisibility.shown;
+Vars.state.rules.unitAmmo = true;
+for(Team team : Team.all) {
+Vars.state.rules.teams.get(team).infiniteAmmo = false;
 
-
+} 
     }
 }
