@@ -55,6 +55,7 @@ size = 1;
 
      category = Category.defense;
             buildVisibility = BuildVisibility.shown;
+            powerProduction = 1f;
 }};
  
     }
