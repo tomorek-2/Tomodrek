@@ -47,7 +47,14 @@ new selfHealCore("selfHealCore") {{
             buildVisibility = BuildVisibility.shown;
 itemCapacity = 3000;
 }};
-     
+new BadSolarPanel("BadSolarPanel") {{
+health = 25;
+description = "Солнечная панель которая из хлама разрушается сама по себе но пока единственный вариант";
+category = Category.power;
+size = 1;
+
+     category = Category.defense;
+            buildVisibility = BuildVisibility.shown;
  
     }
     
