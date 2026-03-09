@@ -27,7 +27,7 @@ import mindustry.world.draw.*;
 import mindustry.world.meta.*; 
 import mindustry.Vars.*;
 
-public class BadSolarPanel extends solarGenerator{
+public class BadSolarPanel extends SolarGenerator{
   public BadSolarPanel(String name) {
     super(name);
   } 
