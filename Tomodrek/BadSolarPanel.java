@@ -28,7 +28,7 @@ import mindustry.Vars.*;
 
 public class BadSolarPanel extends solarGenerator{
   public BadSolarPanel(String name) {
-    super(name) 
+    super(name);
   } 
 public class BadSolarPanelBuild extends SolarGeneratorBuild{
   @Override 
