@@ -35,7 +35,9 @@ powerProduction = 1f;
 public class BadSolarPanelBuild extends SolarGeneratorBuild{
   @Override 
   public void updateTile() {
-    damage(0.1f);
+    if(health > 0) {
+health -= 0.1;
+}
   }
 } 
 } 
