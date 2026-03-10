@@ -36,9 +36,10 @@ public class BadSolarPanelBuild extends SolarGeneratorBuild{
   @Override 
   public void updateTile() {
 super.updateTile();
-    if(health > 0) {
-health -= 0.1;
-}
+    
+health -= 0.05f;
+damage(0.05f);
+
   }
 } 
 } 
