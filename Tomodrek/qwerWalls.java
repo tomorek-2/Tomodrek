@@ -53,7 +53,7 @@ description = "Солнечная панель которая из хлама р
 category = Category.power;
 size = 1;
 
-     category = Category.defense;
+     
             buildVisibility = BuildVisibility.shown;
             powerProduction = 1f;
 }};
