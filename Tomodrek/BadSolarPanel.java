@@ -30,6 +30,7 @@ import mindustry.Vars.*;
 public class BadSolarPanel extends SolarGenerator{
   public BadSolarPanel(String name) {
     super(name);
+powerProduction = 1f;
   } 
 public class BadSolarPanelBuild extends SolarGeneratorBuild{
   @Override 
