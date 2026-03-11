@@ -26,8 +26,8 @@ hasItems = true;
         itemCapacity = 30;
     }
 @Override
-public boolean canPlaceOn(Tile tile, Team team) {
-    return team == 2 && super.canPlaceOn(tile, team);
+public boolean canPlaceOn(Tile tile, Team team, int rotation) {
+    return team == Team.crux && super.canPlaceOn(tile, team);
 }
     public class qwerWallBuild extends Building {
         @Override
