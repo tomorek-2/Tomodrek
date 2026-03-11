@@ -8,6 +8,8 @@ import mindustry.type.ItemStack;
 import mindustry.type.Category;
 import mindustry.Vars;
 import mindustry.game.Team;
+import arc.Events;
+import mindustry.game.EventType;
 
 public class Modomodrek extends Mod {
     @Override
@@ -42,5 +44,5 @@ Blocks.basalt.buildVisibility = BuildVisibility.shown;
             }
         });
    
- 
+} 
 }
