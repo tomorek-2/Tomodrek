@@ -36,9 +36,11 @@ Blocks.basalt.buildVisibility = BuildVisibility.shown;
 
     @Override
     public void init() {
+vars.state.rules.unitAmmo = true;
  
         Events.on(EventType.WorldLoadEvent.class, event -> {
             Vars.state.rules.unitAmmo = true;
+System.out.println("unitAmmo = true");
             for (Team team : Team.all) {
                 Vars.state.rules.teams.get(team).infiniteAmmo = false;
             }
