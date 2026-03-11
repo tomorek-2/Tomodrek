@@ -40,7 +40,7 @@ public class qwerWalls extends Mod {
             
         }};
 new selfHealCore("selfHealCore") {{
-            health = 500;
+            health = 5000;
             description = "Ядро которое само исцеляется на 1 ХП, если здоровье меньше 1000 ХП то хилиться больше";
             size = 3;
             category = Category.defense;
