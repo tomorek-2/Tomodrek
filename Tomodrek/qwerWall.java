@@ -44,6 +44,10 @@ hasItems = true;
             
             return item == Items.thorium && items.get(item) < itemCapacity;
                }
+@Override
+public boolean canPlaceOn(Tile tile, Team team) {
+    return team == 2 && super.canPlaceOn(tile, team);
+}
         }
     
 }
