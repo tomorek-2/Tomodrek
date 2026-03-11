@@ -28,13 +28,19 @@ Blocks.oreThorium.requirements(Category.defense, ItemStack.with(Items.titanium, 
 Blocks.space.buildVisibility = BuildVisibility.shown;
 Blocks.basalt.buildVisibility = BuildVisibility.shown;
 } 
-@Override
 
-public void init() {
-Vars.state.rules.unitAmmo = true;
-for(Team team : Team.all) {
-Vars.state.rules.teams.get(team).infiniteAmmo = false;
 
-} 
-    }
+
+
+    @Override
+    public void init() {
+ 
+        Events.on(EventType.WorldLoadEvent.class, event -> {
+            Vars.state.rules.unitAmmo = true;
+            for (Team team : Team.all) {
+                Vars.state.rules.teams.get(team).infiniteAmmo = false;
+            }
+        });
+   
+ 
 }
