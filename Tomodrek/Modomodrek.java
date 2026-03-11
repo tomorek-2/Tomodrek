@@ -36,7 +36,7 @@ Blocks.basalt.buildVisibility = BuildVisibility.shown;
 
     @Override
     public void init() {
-vars.state.rules.unitAmmo = true;
+Vars.state.rules.unitAmmo = true;
  
         Events.on(EventType.WorldLoadEvent.class, event -> {
             Vars.state.rules.unitAmmo = true;
