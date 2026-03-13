@@ -11,6 +11,8 @@ import mindustry.game.Team;
 import arc.Events;
 import mindustry.game.EventType;
 import mindustry.world.Block;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
 
 
 public class Modomodrek extends Mod {
