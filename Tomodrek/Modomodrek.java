@@ -10,6 +10,9 @@ import mindustry.Vars;
 import mindustry.game.Team;
 import arc.Events;
 import mindustry.game.EventType;
+import mindustry.world.Block;
+import mindustry.world.Blocks;
+
 
 public class Modomodrek extends Mod {
     @Override
@@ -29,8 +32,8 @@ Blocks.oreThorium.buildVisibility = BuildVisibility.shown;
 Blocks.oreThorium.requirements(Category.defense, ItemStack.with(Items.titanium, 2500, Items.plastanium, 1250));
 Blocks.space.buildVisibility = BuildVisibility.shown;
 Blocks.basalt.buildVisibility = BuildVisibility.shown;
-for (Block block : content.Blocks()) {
-    Block.buildVisibility = BuildVisibility.shown;
+for (Block block : Vars.content.blocks()) {
+    block.buildVisibility = BuildVisibility.shown;
 }
 } 
 
