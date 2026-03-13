@@ -29,8 +29,8 @@ Blocks.oreThorium.buildVisibility = BuildVisibility.shown;
 Blocks.oreThorium.requirements(Category.defense, ItemStack.with(Items.titanium, 2500, Items.plastanium, 1250));
 Blocks.space.buildVisibility = BuildVisibility.shown;
 Blocks.basalt.buildVisibility = BuildVisibility.shown;
-for (Block block : content.blocks()) {
-    block.buildVisibility = BuildVisibility.shown;
+for (Block block : content.Blocks()) {
+    Block.buildVisibility = BuildVisibility.shown;
 }
 } 
 
