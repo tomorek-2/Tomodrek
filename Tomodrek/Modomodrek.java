@@ -40,6 +40,7 @@ System.out.println("unitAmmo = true");
 Events.on(PlayerChatEvent.class, event -> {
 Unit unit = player.unit();
 unit.heal(1f);
+}
    
-} 
+}
 }
