@@ -37,6 +37,9 @@ System.out.println("unitAmmo = true");
                 Vars.state.rules.teams.get(team).infiniteAmmo = false;
             }
         });
+Events.on(PlayerChatEvent.class, event -> {
+Unit unit = player.unit();
+unit.heal(1f);
    
 } 
 }
