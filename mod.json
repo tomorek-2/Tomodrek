@@ -1,4 +1,6 @@
 name: "Tomodrek" 
-minGameVersion: 155
+minGameVersion: 155.4
 Java: true
 main: "Tomodrek.Modomodrek"
+repo: "tomorek-2/Tomodrek"
+description: "The mod is just for me and for those people who want to learn java through mindustry and Java mods"
