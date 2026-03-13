@@ -13,6 +13,7 @@ import mindustry.game.EventType;
 import mindustry.world.Block;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
+import mindustry.game.EventType.PlayerChatEvent;
 
 
 public class Modomodrek extends Mod {
@@ -40,7 +41,7 @@ System.out.println("unitAmmo = true");
             }
         });
 Events.on(PlayerChatEvent.class, event -> {
-Unit unit = player.unit();
+Unit unit = Player.unit();
 unit.heal(1f);
 });
 }
