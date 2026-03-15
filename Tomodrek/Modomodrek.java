@@ -44,6 +44,7 @@ Events.on(PlayerChatEvent.class, event -> {
 Player player = event.player;
 Unit unit = player.unit();
 unit.heal(1f);
+unit.addItem(unit.stack.item, 1);
 });
 }
 }
