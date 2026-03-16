@@ -12,13 +12,13 @@ import mindustry.game.EventType;
 import arc.Events;
 import mindustry.game.Team;
 import mindustry.world.Tile;
-import mindustry.logic;
+
 import mindustry.world.blocks.logic.MemoryBlock;
      
 import mindustry.world.meta.BuildVisibility;
 
 
-public class qwerWall extends MemoryBlock {
+public class qwerWall extends Wall {
     public qwerWall(String name) {
         super(name);
   update = true;
@@ -33,18 +33,18 @@ hasItems = true;
 public boolean canPlaceOn(Tile tile, Team team, int rotation) {
     return team == Team.crux && super.canPlaceOn(tile, team, rotation);
 }
-    public class qwerWallBuild extends MemoryBuild {
+    public class qwerWallBuild extends Building {
         @Override
         public void updateTile() {
             super.updateTile();
           //  if (health() < 300) {
         //        heal(1f);
     //        } 
-double valueInt = memory[0];
-if(valueInt < 100) {
-double valueInt0 = valueInt / 100;
-heal(valueInt0);
-} 
+//double valueInt = memory[0];
+//if(valueInt < 100) {
+//double valueInt0 = valueInt / 100;
+//heal(valueInt0);
+//} 
                 
              
              
