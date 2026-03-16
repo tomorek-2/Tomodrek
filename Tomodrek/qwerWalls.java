@@ -60,6 +60,8 @@ size = 1;
 new LogicWall("LogicWall") {{
 health = 500;
 size = 1;
+buildVisibility = BuildVisibility.shown;
+category = Category.logic;
 }};
  
     }
