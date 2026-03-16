@@ -57,6 +57,9 @@ size = 1;
             buildVisibility = BuildVisibility.shown;
             powerProduction = 1f;
 }};
+new LogicWall("LogicWall") {{
+health = 500;
+size = 1;
  
     }
     
