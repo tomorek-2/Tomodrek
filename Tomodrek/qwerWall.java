@@ -13,7 +13,7 @@ import arc.Events;
 import mindustry.game.Team;
 import mindustry.world.Tile;
 import mindustry.logic;
-import mindustry.blocks.logic.MemoryBlock;
+import mindustry.world.blocks.logic.MemoryBlock;
      
 import mindustry.world.meta.BuildVisibility;
 
@@ -33,7 +33,7 @@ hasItems = true;
 public boolean canPlaceOn(Tile tile, Team team, int rotation) {
     return team == Team.crux && super.canPlaceOn(tile, team, rotation);
 }
-    public class qwerWallBuild extends Building {
+    public class qwerWallBuild extends MemoryBuild {
         @Override
         public void updateTile() {
             super.updateTile();
@@ -43,7 +43,7 @@ public boolean canPlaceOn(Tile tile, Team team, int rotation) {
 double valueInt = memory[0];
 if(valueInt < 100) {
 double valueInt0 = valueInt / 100;
-heal(valueInt0)
+heal(valueInt0);
 } 
                 
              
