@@ -60,6 +60,7 @@ size = 1;
 new LogicWall("LogicWall") {{
 health = 500;
 size = 1;
+}};
  
     }
     
