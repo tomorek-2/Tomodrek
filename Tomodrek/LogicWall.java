@@ -28,7 +28,7 @@ solid = true;
  size = 1;
    }
 
-    public class LogicWallBuild extends MemoryBuild {
+    public class LogicWallBuild extends building {
         @Override
         public void updateTile() {
             super.updateTile();
