@@ -39,6 +39,7 @@ if(valueInt < 100) {
 double valueInt0 = valueInt / 100;
 heal((float)valueInt0);
 } 
+} 
     
 
         @Override
@@ -57,7 +58,7 @@ heal((float)valueInt0);
 
             
 
-        } 
+         
             
         }
 
