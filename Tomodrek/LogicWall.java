@@ -15,9 +15,10 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.logic.MemoryBlock;
 
 import mindustry.world.meta.BuildVisibility;
+import Arc.util.io;
 
 
-public class LogicWall extends MemoryBlock {
+public class LogicWall extends Wall {
     public LogicWall(String name) {
         super(name);
   update = true;
@@ -34,11 +35,11 @@ solid = true;
           //  if (health() < 300) {
         //        heal(1f);
     //        } 
-double valueInt = memory[0];
-if(valueInt < 100) {
-double valueInt0 = valueInt / 100;
-heal((float)valueInt0);
-} 
+//double valueInt = memory[0];
+//if(valueInt < 100) {
+//double valueInt0 = valueInt / 100;
+//heal((float)valueInt0);
+//} 
 } 
     
 
