@@ -15,7 +15,8 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.logic.MemoryBlock;
 
 import mindustry.world.meta.BuildVisibility;
-import arc.util.io;
+import arc.util.io.writes;
+import arc.util.io.Reads;
 
 
 public class LogicWall extends Wall {
