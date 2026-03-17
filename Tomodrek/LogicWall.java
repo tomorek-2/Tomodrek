@@ -39,7 +39,7 @@ if(valueInt < 100) {
 double valueInt0 = valueInt / 100;
 heal((float)valueInt0);
 } 
-    public class CommandBuild extends Building{
+    
 
         @Override
         public void write(Writes write){
