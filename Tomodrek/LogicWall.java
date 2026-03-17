@@ -15,7 +15,7 @@ import mindustry.world.Tile;
 import mindustry.world.blocks.logic.MemoryBlock;
 
 import mindustry.world.meta.BuildVisibility;
-import Arc.util.io;
+import arc.util.io;
 
 
 public class LogicWall extends Wall {
@@ -28,7 +28,7 @@ solid = true;
  size = 1;
    }
 
-    public class LogicWallBuild extends building {
+    public class LogicWallBuild extends Building {
         @Override
         public void updateTile() {
             super.updateTile();
