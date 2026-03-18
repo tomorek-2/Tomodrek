@@ -47,16 +47,19 @@ System.out.println("unitAmmo = true");
 Events.on(PlayerChatEvent.class, event -> {
 Player player = event.player;
 Unit unit = player.unit();
+    if(unit == null) {}
+    else {
+        
 unit.heal(1f);
 unit.addItem(unit.stack.item, 1);
+    }
 });
 
 Events.run(Trigger.update, () -> {
 if(Core.input.keyTap(KeyCode.f6)) {
 Player player = Vars.player;
 Unit unit = player.unit();
-unit.heal(1f);
-unit.addItem(unit.stack.item, 1);
+
     if(Vars.state.rules.unitAmmo == true) {
         Vars.state.rules.unitAmmo = false;
     } 
