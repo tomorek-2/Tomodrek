@@ -49,8 +49,8 @@ unit.heal(1f);
 unit.addItem(unit.stack.item, 1);
 });
 
-Events.on(KeyDown, event -> {
-if(Key == KeyCode.F) {
+Events.on(EventType.KeyDown.class, event -> {
+if(Event.Key == KeyCode.F6) {
 Player player = event.player;
 Unit unit = player.unit();
 unit.heal(1f);
