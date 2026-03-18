@@ -49,7 +49,7 @@ unit.heal(1f);
 unit.addItem(unit.stack.item, 1);
 });
 
-Events.on(KeyDown.class, event -> {
+Events.on(KeyDown, event -> {
 if(Key == KeyCode.F) {
 Player player = event.player;
 Unit unit = player.unit();
