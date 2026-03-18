@@ -17,6 +17,7 @@ import mindustry.game.EventType.PlayerChatEvent;
 import arc.Input;
 import arc.input.KeyCode;
 import mindustry.game.EventType.Trigger;
+import arc.Core;
 
 
 public class Modomodrek extends Mod {
