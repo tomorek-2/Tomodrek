@@ -52,12 +52,12 @@ unit.addItem(unit.stack.item, 1);
 });
 
 Events.run(Trigger.update, () -> {
-if(Core.input.keyPressed(KeyCode.F6)) {
+if(Core.input.keyPressed(KeyCode.f6)) {
 Player player = Vars.player;
 Unit unit = player.unit();
 unit.heal(1f);
 unit.addItem(unit.stack.item, 1);
-} 
+}      //Я этот код не понимаю с клавишами
 });
 } 
 } 
