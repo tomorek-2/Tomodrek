@@ -16,7 +16,7 @@ import mindustry.gen.Unit;
 import mindustry.game.EventType.PlayerChatEvent;
 import arc.Input;
 import arc.input.KeyCode;
-import arc.input.KeyDownEvent;
+import mindustry.game.EventType.Trigger;
 
 
 public class Modomodrek extends Mod {
@@ -50,9 +50,9 @@ unit.heal(1f);
 unit.addItem(unit.stack.item, 1);
 });
 
-Events.on(EventType.KeyDown.class, event -> {
-if(Event.Key == KeyCode.F6) {
-Player player = event.player;
+Events.run(Trigger.update, () -> {
+if(Core.input.keyPressed(KeyCode.F6)) {
+Player player = Vars.player;
 Unit unit = player.unit();
 unit.heal(1f);
 unit.addItem(unit.stack.item, 1);
