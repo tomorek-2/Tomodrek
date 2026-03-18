@@ -14,6 +14,7 @@ import mindustry.world.Block;
 import mindustry.gen.Player;
 import mindustry.gen.Unit;
 import mindustry.game.EventType.PlayerChatEvent;
+import arc.input.KeyCode;
 
 
 public class Modomodrek extends Mod {
@@ -46,5 +47,14 @@ Unit unit = player.unit();
 unit.heal(1f);
 unit.addItem(unit.stack.item, 1);
 });
-}
-}
+
+Events.on(EventType.KeyDownEvent.class, event -> {
+if(event.key == KeyCode.F) {
+Player player = event.player;
+Unit unit = player.unit();
+unit.heal(1f);
+unit.addItem(unit.stack.item, 1);
+} 
+});
+} 
+} 
