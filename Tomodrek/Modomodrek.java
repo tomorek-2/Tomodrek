@@ -57,6 +57,12 @@ Player player = Vars.player;
 Unit unit = player.unit();
 unit.heal(1f);
 unit.addItem(unit.stack.item, 1);
+    if(Vars.state.rules.unitAmmo == true) {
+        Vars.state.rules.unitAmmo == false;
+    } 
+    else {
+         Vars.state.rules.unitAmmo == true;
+    }
 }      //Я этот код не понимаю с клавишами
 });
 } 
