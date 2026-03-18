@@ -52,7 +52,7 @@ unit.addItem(unit.stack.item, 1);
 });
 
 Events.run(Trigger.update, () -> {
-if(Core.input.keyPressed(KeyCode.f6)) {
+if(Core.input.keyTap(KeyCode.f6)) {
 Player player = Vars.player;
 Unit unit = player.unit();
 unit.heal(1f);
