@@ -32,7 +32,9 @@ allprojects{
 dependencies{
     compileOnly "com.github.Anuken.Arc:arc-core:v155.4"
     compileOnly "com.github.Anuken.Mindustry:core:v155.4"
+    compileOnly "https://github.com/Anuken/Mindustry/releases/download/v155.4/Mindustry.jar"
 }
+
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
