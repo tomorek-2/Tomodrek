@@ -25,9 +25,7 @@ public class Modomodrek extends Mod {
     public void loadContent() {
         qwerWalls.load();
 
-for (Block block : Vars.content.blocks()) {
-    block.buildVisibility = BuildVisibility.shown;
-}
+
 } 
 
 
@@ -68,5 +66,17 @@ Unit unit = player.unit();
     }
 }      //Я этот код не понимаю с клавишами
 });
+     Events.run(Trigger.update, () -> {
+if(Core.input.keyTap(KeyCode.f5)) {   
+    for (Block block : Vars.content.blocks()) {
+    block.buildVisibility = BuildVisibility.shown;
+}
+}
+         if(Core.input.keyTap(KeyCode.f4)) {   
+    for (Block block : Vars.content.blocks()) {
+    block.buildVisibility = BuildVisibility.editorOnly;
+}
+         }
+     });
 } 
 } 
