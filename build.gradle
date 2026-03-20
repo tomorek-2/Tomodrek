@@ -6,8 +6,25 @@ sourceSets.main.java.srcDirs = ["Tomodrek"]
 
 repositories{
     mavenCentral()
-    // Убираем лишние репозитории, оставляем только jitpack
-    maven{ url = 'https://www.jitpack.io' }
+
+    
+    ivy{
+        url 'https://github.com/'
+        patternLayout{artifact '/[organisation]/[module]/releases/download/[revision]/dependencies.jar'}
+        metadataSources{ artifact() }
+    }
+
+    ivy{
+        url 'https://github.com/'
+        patternLayout{artifact '/[organisation]/[module]/releases/download/master/[revision].jar'}
+        metadataSources{ artifact() }
+    }
+
+    ivy{
+        url 'https://github.com/'
+        patternLayout{artifact '/[organisation]/[module]/releases/download/[revision]/jabel.jar'}
+        metadataSources{ artifact() }
+    }
 }
 
 java{
@@ -28,13 +45,11 @@ allprojects{
         }
     }
 }
-
 dependencies{
-    compileOnly "com.github.Anuken.Arc:arc-core:v155.4"
-    compileOnly "com.github.Anuken.Mindustry:core:v155.4"
-   // compileOnly "https://github.com/Anuken/Mindustry/releases/download/v155.4/Mindustry.jar"
+    def useLatest = false // BE? БЕ БЕ
+    compileOnly useLatest ? "Anuken:MindustryBuilds:latest" : "Anuken:Mindustry:$mindustryVersion"
+    annotationProcessor "Anuken:jabel:v1.0.0"
 }
-
 
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
