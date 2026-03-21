@@ -18,7 +18,7 @@ import arc.Input;
 import arc.input.KeyCode;
 import mindustry.game.EventType.Trigger;
 import arc.Core;
-
+import mindustry.game.Rules;
 
 public class Modomodrek extends Mod {
     @Override
@@ -75,6 +75,7 @@ if(Core.input.keyTap(KeyCode.f5)) {
          if(Core.input.keyTap(KeyCode.f4)) {   
     for (Block block : Vars.content.blocks()) {
     block.buildVisibility = BuildVisibility.editorOnly;
+        Rules.allowEditRules = true;
 }
          }
      });
