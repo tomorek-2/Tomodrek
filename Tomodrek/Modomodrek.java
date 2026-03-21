@@ -78,6 +78,7 @@ if(Core.input.keyTap(KeyCode.f5)) {
         Vars.state.rules.allowEditRules = true;
         Vars.state.rules.instantBuild = true;
         Vars.state.rules.fog = false;
+        Vars.state.rules.infiniteResources = true;
 }
          }
      });
