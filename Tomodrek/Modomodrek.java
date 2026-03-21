@@ -75,7 +75,7 @@ if(Core.input.keyTap(KeyCode.f5)) {
          if(Core.input.keyTap(KeyCode.f4)) {   
     for (Block block : Vars.content.blocks()) {
     block.buildVisibility = BuildVisibility.editorOnly;
-        Vars.state.Rules.allowEditRules = true;
+        Vars.state.rules.allowEditRules = true;
 }
          }
      });
