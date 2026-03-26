@@ -8,6 +8,7 @@ import mindustry.type.ItemStack;
 import mindustry.type.Category;
 import mindustry.Vars;
 import mindustry.game.Team;
+import mindustry.game.Schematics;
 import arc.Events;
 import mindustry.game.EventType;
 import mindustry.world.Block;
