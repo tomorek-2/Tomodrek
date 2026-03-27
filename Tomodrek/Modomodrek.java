@@ -96,5 +96,12 @@ if(Core.input.keyTap(KeyCode.f3)) {
 }
          }
      });
+       
+    Events.run(Trigger.update, () -> {
+        if (Vars.state.rules.fog) {
+            Vars.state.rules.fog = false;
+        }
+    });
+}
 } 
 } 
