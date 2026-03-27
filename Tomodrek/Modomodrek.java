@@ -21,6 +21,8 @@ import mindustry.game.EventType.Trigger;
 import arc.Core;
 import mindustry.game.Rules;
 import mindustry.core.World;
+import java.lang.reflect.Field;
+import mindustry.game.FogControl;
 
 public class Modomodrek extends Mod {
     @Override
