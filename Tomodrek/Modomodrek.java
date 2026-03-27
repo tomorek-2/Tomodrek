@@ -78,7 +78,9 @@ if(Core.input.keyTap(KeyCode.f5)) {
     
         Vars.state.rules.allowEditRules = true;
         Vars.state.rules.instantBuild = true;
-mindustry.game.Schematics.limitSchematicSize = false;
+if(Core.input.keyTap(KeyCode.f3)) {   
+    Events.fire(EventType.WorldLoadEvent);
+}
         
 }
          }
