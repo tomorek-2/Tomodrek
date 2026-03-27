@@ -82,8 +82,13 @@ if(Core.input.keyTap(KeyCode.f5)) {
 if(Core.input.keyTap(KeyCode.f3)) {   
     Events.fire(EventType.WorldLoadEvent.class);
     mindustry.Vars.enableLight = false;
-    
-Vars.fogControl.enabled = false;
+    try {
+    Field field = FogControl.class.getDeclaredField("enabled");
+    field.setAccessible(true);
+    field.set(Vars.fogControl, false);
+} catch (Exception e) {
+    e.printStackTrace();
+}
 }
         
 }
