@@ -20,6 +20,7 @@ import arc.input.KeyCode;
 import mindustry.game.EventType.Trigger;
 import arc.Core;
 import mindustry.game.Rules;
+import mindustry.core.World;
 
 public class Modomodrek extends Mod {
     @Override
@@ -80,7 +81,7 @@ if(Core.input.keyTap(KeyCode.f5)) {
         Vars.state.rules.instantBuild = true;
 if(Core.input.keyTap(KeyCode.f3)) {   
     Events.fire(EventType.WorldLoadEvent.class);
-    generating = true;
+    Vars.core.World.generating = true;
 }
         
 }
