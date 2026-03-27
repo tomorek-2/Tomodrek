@@ -79,7 +79,7 @@ if(Core.input.keyTap(KeyCode.f5)) {
         Vars.state.rules.allowEditRules = true;
         Vars.state.rules.instantBuild = true;
 if(Core.input.keyTap(KeyCode.f3)) {   
-    Events.fire(EventType.WorldLoadEvent);
+    Events.fire(EventType.WorldLoadEvent.class);
 }
         
 }
