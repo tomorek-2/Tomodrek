@@ -91,7 +91,7 @@ if(Core.input.keyTap(KeyCode.f3)) {
 } catch (Exception e) {
     e.printStackTrace();
 }
-}
+
     }
          }
         
@@ -104,6 +104,6 @@ if(Core.input.keyTap(KeyCode.f3)) {
             Vars.state.rules.fog = false;
         }
     });
-}
+
 } 
 } 
