@@ -42,25 +42,10 @@ public class Modomodrek extends Mod {
 
     @Override
     public void init() {
-
-    Log.info("[Tomodrek] Инициализация...");
-    try {
-        Field limitField = Schematics.class.getDeclaredField("limitSchematicSize");
-        limitField.setAccessible(true);
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(limitField, limitField.getModifiers() & ~Modifier.FINAL);
-        limitField.set(null, false);
-        Vars.maxSchematicSize = 512;
-        Log.info("[Tomodrek] ✓ Лимит размера схем снят (до 512×512)");
-    } catch (NoSuchFieldException e) {
-        Log.err("[Tomodrek] ✗ Поле 'limitSchematicSize' не найдено");
-    } catch (IllegalAccessException e) {
-        Log.err("[Tomodrek] ✗ Нет доступа к полю");
-    } catch (Exception e) {
-        Log.err("[Tomodrek] ✗ Ошибка: " + e.getMessage());
-        e.printStackTrace();
-    }
+Field field = mindustry.game.Schematics.getDeclaredField("limitSchematicSize");
+field.setAccessible(true);           
+field.set(mindustry.game.Schematics.limitSchematicSize, false);   
+   
 
  
         Events.on(EventType.WorldLoadEvent.class, event -> {
