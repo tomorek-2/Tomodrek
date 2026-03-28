@@ -50,6 +50,13 @@ field0.set(null, false);
             e.printStackTrace();
             
         }
+        try {
+    Field field1 = mindustry.game.Schematics.class.getDeclaredField("limitSchematicSize");
+    field1.setAccessible(true);
+    field1.set(null, false);
+} catch (NoSuchFieldException | IllegalAccessException e) {
+    e.printStackTrace();
+}
    
 
  
