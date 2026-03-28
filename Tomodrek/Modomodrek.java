@@ -42,8 +42,7 @@ public class Modomodrek extends Mod {
 
     @Override
     public void init() {
-@Override
-public void init() {
+
     Log.info("[Tomodrek] Инициализация...");
     try {
         Field limitField = Schematics.class.getDeclaredField("limitSchematicSize");
