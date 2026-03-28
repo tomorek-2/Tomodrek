@@ -46,8 +46,8 @@ public class Modomodrek extends Mod {
 Field field0 = mindustry.game.Schematics.class.getDeclaredField("limitSchematicSize");
 field0.setAccessible(true);           
 field0.set(null, false);   
-        } catch ()
-            {
+        } catch () {
+            
         }
    
 
