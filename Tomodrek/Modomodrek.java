@@ -57,6 +57,17 @@ field0.set(null, false);
 } catch (NoSuchFieldException | IllegalAccessException e) {
     e.printStackTrace();
 }
+        try {
+    Field field2 = mindustry.game.Schematics.class.getDeclaredField("limitSchematicSize");
+    field2.setAccessible(true);
+    // Убираем final
+    Field modifiersField2 = Field.class.getDeclaredField("modifiers");
+    modifiersField2.setAccessible(true);
+    modifiersField2.setInt(field2, field2.getModifiers() & ~Modifier.FINAL);
+    field2.set(null, false);
+} catch (Exception e) {
+    e.printStackTrace();
+}
    
 
  
