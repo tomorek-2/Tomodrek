@@ -24,6 +24,11 @@ import mindustry.core.World;
 import java.lang.reflect.Field;
 import mindustry.game.FogControl;
 
+import java.lang.reflect.Modifier;
+import arc.util.Log;
+
+import mindustry.game.Schematics;
+
 public class Modomodrek extends Mod {
     @Override
     public void loadContent() {
@@ -37,7 +42,27 @@ public class Modomodrek extends Mod {
 
     @Override
     public void init() {
-Vars.state.rules.unitAmmo = true;
+@Override
+public void init() {
+    Log.info("[Tomodrek] Инициализация...");
+    try {
+        Field limitField = Schematics.class.getDeclaredField("limitSchematicSize");
+        limitField.setAccessible(true);
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(limitField, limitField.getModifiers() & ~Modifier.FINAL);
+        limitField.set(null, false);
+        Vars.maxSchematicSize = 512;
+        Log.info("[Tomodrek] ✓ Лимит размера схем снят (до 512×512)");
+    } catch (NoSuchFieldException e) {
+        Log.err("[Tomodrek] ✗ Поле 'limitSchematicSize' не найдено");
+    } catch (IllegalAccessException e) {
+        Log.err("[Tomodrek] ✗ Нет доступа к полю");
+    } catch (Exception e) {
+        Log.err("[Tomodrek] ✗ Ошибка: " + e.getMessage());
+        e.printStackTrace();
+    }
+
  
         Events.on(EventType.WorldLoadEvent.class, event -> {
             Vars.state.rules.unitAmmo = true;
@@ -108,4 +133,5 @@ if(Core.input.keyTap(KeyCode.f3)) {
     });
 
 } 
+    
 } 
