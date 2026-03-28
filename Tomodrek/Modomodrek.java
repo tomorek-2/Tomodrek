@@ -42,7 +42,7 @@ public class Modomodrek extends Mod {
 
     @Override
     public void init() {
-Field field0 = mindutry.game.Schematics.class.getDeclaredField("limitSchematicSize");
+Field field0 = mindustry.game.Schematics.class.getDeclaredField("limitSchematicSize");
 field0.setAccessible(true);           
 field0.set(null, false);   
    
