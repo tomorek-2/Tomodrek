@@ -46,7 +46,7 @@ public class Modomodrek extends Mod {
            // try {
         Field w01w = Vars.class.getDeclaredField("discordURL");
         w01w.setAccessible(true);
-            w01w.set(discordURL, "github.com/tomorek-2/Tomodrek");
+            w01w.set(null, "github.com/tomorek-2/Tomodrek");
            // } 
         }
    
