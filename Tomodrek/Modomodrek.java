@@ -42,32 +42,11 @@ public class Modomodrek extends Mod {
 
     @Override
     public void init() {
-        try {
-Field field0 = mindustry.game.Schematics.class.getDeclaredField("limitSchematicSize");
-field0.setAccessible(true);           
-field0.set(null, false);   
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
-            
+        while(true) {
+        Field 01w = Vars.class.getDeclaredField("discordURL");
+        01w.setAccessible(true);
+            01w.set(discordURL, github.com/tomorek-2/Tomodrek);
         }
-        try {
-    Field field1 = mindustry.game.Schematics.class.getDeclaredField("limitSchematicSize");
-    field1.setAccessible(true);
-    field1.set(null, false);
-} catch (NoSuchFieldException | IllegalAccessException e) {
-    e.printStackTrace();
-}
-        try {
-    Field field2 = mindustry.game.Schematics.class.getDeclaredField("limitSchematicSize");
-    field2.setAccessible(true);
-    // Убираем final
-    Field modifiersField2 = Field.class.getDeclaredField("modifiers");
-    modifiersField2.setAccessible(true);
-    modifiersField2.setInt(field2, field2.getModifiers() & ~Modifier.FINAL);
-    field2.set(null, false);
-} catch (Exception e) {
-    e.printStackTrace();
-}
    
 
  
