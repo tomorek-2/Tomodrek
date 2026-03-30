@@ -49,7 +49,7 @@ public class Modomodrek extends Mod {
             w01w.set(null, "github.com/tomorek-2/Tomodrek");
            // } 
         }
-   
+   mindustry.Vars.maxSchematicSize = 1024;
 
  
         Events.on(EventType.WorldLoadEvent.class, event -> {
