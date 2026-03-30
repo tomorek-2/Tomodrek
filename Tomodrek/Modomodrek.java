@@ -129,10 +129,9 @@ if(Core.input.keyTap(KeyCode.f3)) {
         
     });
 
-} 
-@Override
-public void init() {
-    Log.info("[Tomodrek] Инициализация...");
+
+
+    
     try {
         Field limitField = Schematics.class.getDeclaredField("limitSchematicSize");
         limitField.setAccessible(true);
