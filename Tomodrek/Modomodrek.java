@@ -130,5 +130,21 @@ if(Core.input.keyTap(KeyCode.f3)) {
     });
 
 } 
+@Override
+public void init() {
+    Log.info("[Tomodrek] Инициализация...");
+    try {
+        Field limitField = Schematics.class.getDeclaredField("limitSchematicSize");
+        limitField.setAccessible(true);
+        Field modifiersField = Field.class.getDeclaredField("modifiers");
+        modifiersField.setAccessible(true);
+        modifiersField.setInt(limitField, limitField.getModifiers() & ~Modifier.FINAL);
+        limitField.set(null, false);
+        Vars.maxSchematicSize = 512;
+        Log.info("[Tomodrek] Sucess limitSchematicSize = false; ");
+    } catch (NoSuchFieldException e) {
+        Log.err("[Tomodrek] NoSuchFieldException");
+    } 
+}    
     
 } 
