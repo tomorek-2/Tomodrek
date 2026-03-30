@@ -31,7 +31,7 @@ import mindustry.game.Schematics;
 public class Momodrek001 extends Plugin {
  // @Override
   public void init() {
-    Blocks.vault.requirements(ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.Thorium, 4000));
+    Blocks.vault.requirements(ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
     mindustry.Vars.maxSchematicSize = 1024;
   }
 }
