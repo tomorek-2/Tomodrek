@@ -98,7 +98,7 @@ if(Core.input.keyTap(KeyCode.f5)) {
         Vars.state.rules.instantBuild = true;
 if(Core.input.keyTap(KeyCode.f3)) {   
     Events.fire(EventType.WorldLoadEvent.class);
-    mindustry.Vars.maxSchematicSize = 1024;
+    
     mindustry.Vars.enableLight = false;
     try {
     Field field = FogControl.class.getDeclaredField("enabled");
