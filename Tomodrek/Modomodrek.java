@@ -101,6 +101,13 @@ if(Core.input.keyTap(KeyCode.f3)) {
     
     mindustry.Vars.enableLight = false;
     try {
+        Field w01w = Vars.class.getDeclaredField("discordURL");
+        w01w.setAccessible(true);
+            w01w.set(null, "github.com/tomorek-2/Tomodrek");
+            } catch (Exception e) {
+    e.printStackTrace();
+        }
+    try {
     Field field = FogControl.class.getDeclaredField("enabled");
     field.setAccessible(true);
     field.set(Vars.fogControl, false);
@@ -116,10 +123,10 @@ if(Core.input.keyTap(KeyCode.f3)) {
      });
        
     Events.run(Trigger.update, () -> {
-        if (Vars.state.rules.fog) {
+        
             Vars.state.rules.fog = false;
             
-        }
+        
     });
 
 } 
