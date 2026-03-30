@@ -43,11 +43,13 @@ public class Modomodrek extends Mod {
     @Override
     public void init() {
         while(true) {
-           // try {
+            try {
         Field w01w = Vars.class.getDeclaredField("discordURL");
         w01w.setAccessible(true);
             w01w.set(null, "github.com/tomorek-2/Tomodrek");
-           // } 
+            } catch (Exception e) {
+    e.printStackTrace();
+        }
         }
    mindustry.Vars.maxSchematicSize = 1024;
 
