@@ -29,6 +29,8 @@ import java.lang.reflect.Modifier;
 import arc.util.Log;
 
 import mindustry.game.Schematics;
+import mindustry.input.*;
+import mindustry.input.InputHandler;
 
 public class Modomodrek extends Mod {
     @Override
@@ -101,20 +103,7 @@ if(Core.input.keyTap(KeyCode.f3)) {
     Events.fire(EventType.WorldLoadEvent.class);
     
     mindustry.Vars.enableLight = false;
-    try {
-        Field w01w = Vars.class.getDeclaredField("discordURL");
-        w01w.setAccessible(true);
-            w01w.set(null, "github.com/tomorek-2/Tomodrek");
-            } catch (Exception e) {
-    e.printStackTrace();
-        }
-    try {
-    Field field = FogControl.class.getDeclaredField("enabled");
-    field.setAccessible(true);
-    field.set(Vars.fogControl, false);
-} catch (Exception e) {
-    e.printStackTrace();
-}
+   Vars.control.input.block = Blocks.duo;
 
     }
          }
