@@ -42,7 +42,7 @@ public class Modomodrek extends Mod {
 
 
     @Override
-    public void init(throws Exception) {
+    public void init() {
         
             try {
         Field w01w = Vars.class.getDeclaredField("discordURL");
@@ -146,8 +146,11 @@ if(Core.input.keyTap(KeyCode.f3)) {
         Log.info("[Tomodrek] ✓ Лимит размера схем снят (до 512×512)");
     } catch (NoSuchFieldException e) {
         Log.err("[Tomodrek] ✗ Поле не найдено: " + e.getMessage());
-    } 
-
+    } catch (IllegalAccessException e) {
+        Log.err("[Tomodrek] IllegalAccessException");
+    } catch (Exception e) {
+        Log.err("[Tomodrek] Exception");
+    }
     
     
 }    
