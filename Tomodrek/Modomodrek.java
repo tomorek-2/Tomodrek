@@ -42,7 +42,7 @@ public class Modomodrek extends Mod {
 
 
     @Override
-    public void init() {
+    public void init(throws Exception) {
         
             try {
         Field w01w = Vars.class.getDeclaredField("discordURL");
