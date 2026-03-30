@@ -23,6 +23,7 @@ import mindustry.game.Rules;
 import mindustry.core.World;
 import java.lang.reflect.Field;
 import mindustry.game.FogControl;
+import java.lang.reflect.*;
 
 import java.lang.reflect.Modifier;
 import arc.util.Log;
