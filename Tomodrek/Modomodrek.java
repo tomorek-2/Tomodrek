@@ -42,7 +42,7 @@ public class Modomodrek extends Mod {
 
     @Override
     public void init() {
-        while(true) {
+        
             try {
         Field w01w = Vars.class.getDeclaredField("discordURL");
         w01w.setAccessible(true);
@@ -50,7 +50,7 @@ public class Modomodrek extends Mod {
             } catch (Exception e) {
     e.printStackTrace();
         }
-        }
+        
    mindustry.Vars.maxSchematicSize = 1024;
 
  
