@@ -29,7 +29,7 @@ public class Modomodrek002 extends Mod {
             playSound(packet.audioData);
         });
         // Основной цикл игры
-    while(true) {
+    Events.run(Trigger.update, () -> {
             if (!Vars.net.active()) return;
 
             // Кнопка V
