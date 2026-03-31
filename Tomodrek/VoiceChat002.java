@@ -34,8 +34,5 @@ public class VoiceChat002 extends Packet {
        
     }
 
- public static void register() {
-int packetId = 100;
-Net.registerPacket(packetId, VoiceChat002::new);
-} 
+
 } 
