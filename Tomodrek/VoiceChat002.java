@@ -7,6 +7,7 @@ import arc.util.io.ByteBufferInput;
 import arc.util.io.ByteBufferOutput;
 import arc.util.Buffers;
 import mindustry.net.Packet;
+import mindustry.net.*;
 
 public class VoiceChat002 extends Packet {
     public byte[] audioData;
