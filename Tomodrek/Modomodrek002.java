@@ -21,17 +21,15 @@ public class Modomodrek002 extends Mod {
     }
 
     @Override
-    public void load() {
+    public void init() {
         Log.info("[Tomodrek] Инициализация голосового чата...");
         micRecorder = new VoiceChat001();
 
-        // ✅ ПОДПИСКА НА ПАКЕТЫ (Используем VoiceChat002!)
-        Vars.net.addListener(VoiceChat002.class, packet -> {
+        Vars.netClient.addListener(VoiceChat002.class, packet -> {
             playSound(packet.audioData);
         });
-
         // Основной цикл игры
-        Vars.state.onUpdate(() -> {
+    while(true) {
             if (!Vars.net.active()) return;
 
             // Кнопка V
