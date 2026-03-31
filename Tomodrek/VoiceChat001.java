@@ -32,6 +32,22 @@ public AudioFormat format;
             
             return false;
         }
+        
+    public byte[] readBuffer(int size) {
+        if (!recording || line == null) return new byte[0];
+        
+        byte[] buffer = new byte[size];
+        int count = line.read(buffer, 0, size);
+        
+        return count > 0 ? java.util.Arrays.copyOf(buffer, count) : new byte[0];
+    }
+if(line == null) {
+} else {
+    if(line.isOpen()) {
+        line.closed();
+        line.end();
+    }
+}
     }
 }
 
