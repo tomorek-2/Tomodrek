@@ -15,14 +15,14 @@ public class VoiceChat002 extends Packet {
     
     @Override
     public void write(Writes write) {
-        write.byte(audioData);
+        write.arrb(audioData);
         write.i(senderId);
         
     }
 
     @Override
     public void read(Reads read) {
-        audioData = read.byte();
+        audioData = read.arrb();
         senderId = read.i();
        
     }
