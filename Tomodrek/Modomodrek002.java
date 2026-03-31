@@ -68,7 +68,7 @@ public class Modomodrek002 extends Mod {
 
         // Обработка на сервере (Пересылка всем игрокам)
         if (Vars.net.server()) {
-            Vars.netServer.addListener(VoicePacket.class, packet -> {
+            Vars.netServer.addListener(VoiceChat002.class, packet -> {
                 for (Player p : Groups.player) {
                     if (p.id != packet.senderId) {
                         p.sendPacketReliable(packet);
@@ -111,10 +111,10 @@ public class Modomodrek002 extends Mod {
     }
 
     // Отправка пакета на сервер
-    private void sendVoicePacket(byte[] data) {
+    private void sendVoiceChat002(byte[] data) {
         if (Vars.player == null || Vars.player.unit() == null) return;
         
-        VoicePacket pkt = new VoicePacket();
+        VoiceChat002 pkt = new VoiceChat002();
         pkt.audioData = data;
         pkt.senderId = Vars.player.id;
         
