@@ -31,3 +31,5 @@ public class VoiceChat002 extends Packet {
     }
 }
   
+int packetId = 100;
+Net.registerPacket(packetId, VoicePacket::new);
