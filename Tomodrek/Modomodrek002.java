@@ -17,7 +17,7 @@ public class Modomodrek002 extends Mod {
     private int timer = 0;
     private boolean pushToTalk = false;
 
-    }
+    
 
     @Override
     public void init() {
