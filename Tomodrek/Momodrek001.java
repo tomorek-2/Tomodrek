@@ -29,7 +29,7 @@ import mindustry.mod.Plugin;
 
 import mindustry.game.Schematics;
 public class Momodrek001 extends Plugin {
- // @Override
+  @Override
   public void init() {
     Blocks.vault.requirements(Category.effect, ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
     mindustry.Vars.maxSchematicSize = 1024;
