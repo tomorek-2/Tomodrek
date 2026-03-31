@@ -6,6 +6,38 @@ import arc.events.*;
 import arc.util.*;
 import mindustry.*;
 import mindustry.game.*;
+import mindustry.mod.Mod;
+import mindustry.world.meta.BuildVisibility;
+import mindustry.content.Blocks;
+import mindustry.content.Items;
+import mindustry.type.ItemStack;
+import mindustry.type.Category;
+import mindustry.Vars;
+import mindustry.game.Team;
+import mindustry.game.Schematics;
+
+import mindustry.game.EventType;
+import mindustry.world.Block;
+import mindustry.gen.Player;
+import mindustry.gen.Unit;
+import mindustry.game.EventType.PlayerChatEvent;
+import arc.Input;
+import arc.input.KeyCode;
+import mindustry.game.EventType.Trigger;
+import arc.Core;
+import mindustry.game.Rules;
+import mindustry.core.World;
+import java.lang.reflect.Field;
+import mindustry.game.FogControl;
+import java.lang.reflect.*;
+
+import java.lang.reflect.Modifier;
+import arc.util.Log;
+
+import mindustry.game.Schematics;
+import mindustry.input.*;
+import mindustry.input.InputHandler;
+
 import mindustry.mod.*;
 
 
