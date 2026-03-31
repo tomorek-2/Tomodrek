@@ -1,8 +1,8 @@
 package Tomodrek;
 
 
-import arc.io.Read;
-import arc.io.Write;
+import arc.util.io.Read;
+import arc.util.io.Write;
 import mindustry.net.Packet;
 
 public class VoiceChat002 extends Packet {
