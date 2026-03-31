@@ -29,7 +29,7 @@ public class Modomodrek002 extends Mod {
  Net.registerPacket(() -> new VoiceChat002());
 
         
-        Vars.netClient.handleClient(VoiceChat002.class, packet -> {
+        Vars.Net.handleClient(VoiceChat002.class, packet -> {
             
             playSound(packet.audioData);
             Vars.player.sendPacket(new VoiceChat002(audioData));
