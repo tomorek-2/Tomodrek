@@ -25,20 +25,27 @@ public class Modomodrek002 extends Mod {
     public void init() {
         Log.info("[Tomodrek] Инициализация голосового чата...");
         micRecorder = new VoiceChat001();
+ Net.registerPacket(() -> new VoiceChat002());
 
+        
+        Vars.netClient.handleClient(VoiceChat002.class, packet -> {
+            
+            playSound(packet.audioData);
+        });
+
+        // Если пакет обрабатывается на сервере:
+        Vars.netServer.handleServer(VoiceChat002.class, (packet, sender) -> {
+            Player pla = Vars.player();
+            pla.send(packet.audioData, false);
+            
+        });
       
-Vars.netClient.handleClient(VoiceChat002.class, packet -> {
-     
-// Net.handleClient(VoiceChat002.class, packet -> {
+
     
-    byte[] audio = packet.audioData;
-playSound(packet.audioData);
+  //  byte[] audio = packet.audioData;
+//playSound(packet.audioData);
     
-}); //Events.on(EventType.ClientLoadEvent.class, e -> {
-            //Vars.netClient.addListener(VoiceChat002.class, packet -> {
-                //playSound(packet.audioData);
-           // });
-      //  });
+
         // Основной цикл игры
     Events.run(Trigger.update, () -> {
             if (!Vars.net.active()) return;
