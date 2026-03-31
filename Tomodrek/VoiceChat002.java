@@ -11,7 +11,10 @@ import mindustry.net.Packet;
 public class VoiceChat002 extends Packet {
     public byte[] audioData;
     public int senderId;
-    
+    public VoicePacket() {}  обязательный пустой конструктор
+
+        public VoicePacket(byte[] data) {
+            this.audioData = data;
     
     @Override
     public void write(Writes write) {
@@ -30,7 +33,8 @@ public class VoiceChat002 extends Packet {
        
     }
 
-  
+ public static void register() {
 int packetId = 100;
 Net.registerPacket(packetId, VoicePacket::new);
+} 
 } 
