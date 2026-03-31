@@ -8,7 +8,9 @@ import javax.sound.sampled.LineUnavailableException;
 
 public class VoiceChat001 {
     private TargetDataLine line;
-  
+  public TargetDataLine line;
+public AudioFormat format;
+    public boolean recoding = false;
     
     public boolean start() {
         try {
