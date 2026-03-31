@@ -26,7 +26,10 @@ public class Modomodrek002 extends Mod {
         Log.info("[Tomodrek] Инициализация голосового чата...");
         micRecorder = new VoiceChat001();
 
-      Net.handleClient(VoiceChat002.class, packet -> {
+      
+Vars.netClient.handleClient(VoiceChat002.class, packet -> {
+     
+// Net.handleClient(VoiceChat002.class, packet -> {
     
     byte[] audio = packet.audioData;
 playSound(packet.audioData);
