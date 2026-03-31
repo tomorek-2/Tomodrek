@@ -5,6 +5,7 @@ import arc.util.io.Reads;
 import arc.util.io.Writes;
 import arc.util.io.ByteBufferInput;
 import arc.util.io.ByteBufferOutput;
+import arc.util.Buffers;
 import mindustry.net.Packet;
 
 public class VoiceChat002 extends Packet {
