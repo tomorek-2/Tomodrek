@@ -46,8 +46,8 @@ if(line == null) {
 }
 else {
     if(line.isOpen()) {
-        line.closed();
-        line.end();
+        line.stop();
+        line.close();
     }
 }
     }
