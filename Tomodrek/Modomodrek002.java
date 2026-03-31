@@ -7,7 +7,7 @@ import arc.util.*;
 import mindustry.*;
 import mindustry.game.*;
 import mindustry.mod.*;
-import modomodrek.packets.*;
+
 
 import javax.sound.sampled.*;
 import java.io.*;
@@ -17,13 +17,11 @@ public class Modomodrek002 extends Mod {
     private int timer = 0;
     private boolean pushToTalk = false;
 
-    public Modomodrek() {
-        Log.info("[Tomodrek] Конструктор загружен");
     }
 
     @Override
     public void init() {
-        Log.info("[Tomodrek] Инициализация голосового чата...");
+       
         micRecorder = new VoiceChat001();
     }
 
