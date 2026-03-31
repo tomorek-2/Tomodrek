@@ -6,7 +6,7 @@ import arc.util.*;
 import mindustry.*;
 import mindustry.game.*;
 import mindustry.mod.*;
-import modomodrek.packets.*; // Импортируем наш пакет
+
 
 import javax.sound.sampled.*;
 import java.io.*;
