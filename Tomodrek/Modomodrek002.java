@@ -31,12 +31,13 @@ public class Modomodrek002 extends Mod {
         Vars.netClient.handleClient(VoiceChat002.class, packet -> {
             
             playSound(packet.audioData);
+            Vars.player.send(new VoiceChat002(audioData));
         });
 
         // Если пакет обрабатывается на сервере:
         Vars.netServer.handleServer(VoiceChat002.class, (packet, sender) -> {
-            Player pla = Vars.player();
-            pla.send(packet.audioData, false);
+            
+            Vars.net.send(new VoiceChat002(audioData), true);
             
         });
       
