@@ -15,7 +15,9 @@ public class VoiceChat002 extends Packet {
     
     @Override
     public void write(Writes write) {
+         write.write(audioData.length);
         write.array(audioData);
+        
         write.i(senderId);
         
     }
