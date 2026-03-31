@@ -11,8 +11,7 @@ import mindustry.net.Packet;
 public class VoiceChat002 extends Packet {
     public byte[] audioData;
     public int senderId;
-    public VoicePacket() {}  обязательный пустой конструктор
-
+    public VoicePacket() {}  
         public VoicePacket(byte[] data) {
             this.audioData = data;
     
