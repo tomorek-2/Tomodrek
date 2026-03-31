@@ -3,6 +3,8 @@ package Tomodrek;
 
 import arc.util.io.Reads;
 import arc.util.io.Writes;
+import arc.util.io.ByteBufferInput;
+import arc.util.io.ByteBufferOutput;
 import mindustry.net.Packet;
 
 public class VoiceChat002 extends Packet {
@@ -12,15 +14,15 @@ public class VoiceChat002 extends Packet {
     
     @Override
     public void write(Writes write) {
-        write.arrb(audioData);
+        write.bytes(audioData);
         write.i(senderId);
         
     }
 
     @Override
     public void read(Reads read) {
-        audioData = Reads.arrb();
-        senderId = Reads.i();
+        audioData = read.bytes();
+        senderId = read.i();
        
     }
 }
