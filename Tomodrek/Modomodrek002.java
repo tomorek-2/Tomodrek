@@ -7,6 +7,7 @@ import mindustry.*;
 import mindustry.game.*;
 import mindustry.mod.*;
 import mindustry.game.EventType.*;
+import mindustry.net.Net;
 
 import javax.sound.sampled.*;
 import java.io.*;
