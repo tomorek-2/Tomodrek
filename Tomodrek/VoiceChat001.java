@@ -41,6 +41,7 @@ public AudioFormat format;
         
         return count > 0 ? java.util.Arrays.copyOf(buffer, count) : new byte[0];
     }
+    public void stop() {
 if(line == null) {
 }
 else {
@@ -49,7 +50,7 @@ else {
         line.end();
     }
 }
-    
+    }
 }
 
 
