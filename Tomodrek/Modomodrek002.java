@@ -65,7 +65,7 @@ public class Modomodrek002 extends Mod {
         pkt.audioData = data;
         pkt.senderId = Vars.player.id;
         
-        Vars.net.sendPacket(pkt, false);
+        Vars.net.send(pkt, false);
     }
 
     private void playSound(byte[] data) {
