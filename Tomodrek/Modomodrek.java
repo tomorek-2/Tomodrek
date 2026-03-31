@@ -58,7 +58,7 @@ public class Modomodrek extends Mod {
 
  
         Events.on(EventType.WorldLoadEvent.class, event -> {
-            Vars.state.rules.unitAmmo = true;
+        
 System.out.println("unitAmmo = true");
             for (Team team : Team.all) {
                 Vars.state.rules.teams.get(team).infiniteAmmo = false;
