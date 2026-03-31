@@ -29,7 +29,8 @@ public class VoiceChat002 extends Packet {
         senderId = read.i();
        
     }
-}
+
   
 int packetId = 100;
 Net.registerPacket(packetId, VoicePacket::new);
+} 
