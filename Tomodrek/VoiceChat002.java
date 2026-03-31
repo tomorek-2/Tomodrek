@@ -14,7 +14,7 @@ public class VoiceChat002 extends Packet {
     public VoicePacket() {}  
         public VoicePacket(byte[] data) {
             this.audioData = data;
-    
+        }
     @Override
     public void write(Writes write) {
          write.i(audioData.length);
