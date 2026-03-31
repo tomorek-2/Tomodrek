@@ -6,7 +6,7 @@ import javax.sound.sampled.DataLine;
 import javax.sound.sampled.TargetDataLine;
 import javax.sound.sampled.LineUnavailableException;
 
-public class VoicePacket001 {
+public class VoiceChat001 {
     private TargetDataLine line;
   
     
@@ -27,7 +27,7 @@ public class VoicePacket001 {
             return true;
         } catch (Exception e) {
           
-            Log.err("[Tomodrek] VoicePacket001Error: " + e.getMessage());
+            
             return false;
         }
     }
