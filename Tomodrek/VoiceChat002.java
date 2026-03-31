@@ -12,9 +12,9 @@ import mindustry.net.*;
 public class VoiceChat002 extends Packet {
     public byte[] audioData;
     public int senderId;
-    public  VoicePacket() {
+    public  VoiceChat002() {
     }
-        public VoicePacket(byte[] data) {
+        public VoiceChat002(byte[] data) {
             this.audioData = data;
         }
     @Override
