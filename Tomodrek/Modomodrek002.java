@@ -38,7 +38,7 @@ public class Modomodrek002 extends Mod {
             if (Core.input.keyDown(KeyCode.f2) && !pushToTalk) {
                 pushToTalk = micRecorder.start();
             }
-            if (Core.input.keyReleased(KeyCode.f2) && pushToTalk) {
+            if (Core.input.keyDown(KeyCode.f2) && pushToTalk) {
                 micRecorder.stop();
                 pushToTalk = false;
             }
