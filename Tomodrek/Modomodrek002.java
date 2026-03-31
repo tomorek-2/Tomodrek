@@ -6,7 +6,7 @@ import arc.util.*;
 import mindustry.*;
 import mindustry.game.*;
 import mindustry.mod.*;
-
+import mindustry.game.EventType.*;
 
 import javax.sound.sampled.*;
 import java.io.*;
