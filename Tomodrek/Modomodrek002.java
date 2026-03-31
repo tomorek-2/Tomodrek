@@ -61,7 +61,7 @@ public class Modomodrek002 extends Mod {
     public void load() {
         // Подписка на входящие пакеты (Клиент)
         Events.on(EventType.ClientLoadEvent.class, e -> {
-            Vars.netClient.addListener(VoicePacket.class, packet -> {
+            Vars.netClient.addListener(VoiceChat002.class, packet -> {
                 playSound(packet.audioData);
             });
         });
@@ -82,13 +82,13 @@ public class Modomodrek002 extends Mod {
             if (!Vars.net.active()) return;
 
             // Управление кнопкой V (Запись)
-            if (Core.input.keyDown(KeyCode.V) && !pushToTalk) {
+            if (Core.input.keyDown(KeyCode.f2) && !pushToTalk) {
                 pushToTalk = micRecorder.start();
                 if (pushToTalk) {
                     Log.info("[Tomodrek] Микрофон включён");
                 }
             }
-            if (Core.input.keyReleased(KeyCode.f2) && pushToTalk) {
+            if (Core.input.keyDown(KeyCode.f2) && pushToTalk) {
                 micRecorder.stop();
                 pushToTalk = false;
                 Log.info("[Tomodrek] Микрофон выключен");
@@ -102,7 +102,7 @@ public class Modomodrek002 extends Mod {
                     
                     // Проверка на тишину (чтобы не слать мусор)
                     if (data.length > 0 && hasVoice(data)) {
-                        sendVoicePacket(data);
+                        sendVoiceChat002(data);
                     }
                     timer = 0;
                 }
