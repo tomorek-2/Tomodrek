@@ -1,4 +1,4 @@
-package modomodrek;
+package Tomodrek;
 
 import arc.*;
 import arc.input.*;
@@ -35,10 +35,10 @@ public class Modomodrek002 extends Mod {
             if (!Vars.net.active()) return;
 
             // Кнопка V
-            if (Core.input.keyDown(KeyCode.V) && !pushToTalk) {
+            if (Core.input.keyDown(KeyCode.f2) && !pushToTalk) {
                 pushToTalk = micRecorder.start();
             }
-            if (Core.input.keyReleased(KeyCode.V) && pushToTalk) {
+            if (Core.input.keyReleased(KeyCode.f2) && pushToTalk) {
                 micRecorder.stop();
                 pushToTalk = false;
             }
