@@ -51,17 +51,7 @@ else {
     }
 }
     }
-public byte[] readBuffer(int size) {
-    if (!recording || line == null) return new byte[0]; 
-    
-    byte[] buffer = new byte[size];
-    int count = line.read(buffer, 0, size);
-    
-    if (count > 0.1) {
-        return java.util.Arrays.copyOf(buffer, count);
-    }
-    return new byte[0];
-}
+
 }
 
 
