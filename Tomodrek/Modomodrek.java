@@ -50,7 +50,11 @@ public class Modomodrek extends Mod {
             try {
         Field w01w = Vars.class.getDeclaredField("discordURL");
         w01w.setAccessible(true);
-            w01w.set(null, "github.com/tomorek-2/Tomodrek");
+           // w01w.set(null, "github.com/tomorek-2/Tomodrek");
+               
+        
+        w01w.setInt(field, field.getModifiers() & ~java.lang.reflect.Modifier.FINAL);
+                w01w.set(null, "github.com/tomorek-2/Tomodrek");
             } catch (Exception e) {
     e.printStackTrace();
         }
