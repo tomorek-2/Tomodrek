@@ -21,9 +21,12 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Build with Gradle
-        run: "./gradlew jar --no-daemon --refresh-dependencies"
-
+      -- name: Build with Gradle
+  run: ./gradlew jar
+  env:
+    ORG_GRADLE_PROJECT_mindustryVersion: 'v155.4'
+    JVM_OPTS: "--add-opens java.base/java.lang=ALL-UNNAMED --add-opens java.base/java.util=ALL-UNNAMED"
+    
       - name: Upload mod JAR
         uses: actions/upload-artifact@v4
         with:
