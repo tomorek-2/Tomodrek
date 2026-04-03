@@ -31,6 +31,7 @@ import arc.util.Log;
 import mindustry.game.Schematics;
 import mindustry.input.*;
 import mindustry.input.InputHandler;
+import arc.util.Reflect;
 
 public class Modomodrek extends Mod {
     @Override
