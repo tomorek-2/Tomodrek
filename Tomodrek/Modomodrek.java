@@ -60,7 +60,7 @@ public class Modomodrek extends Mod {
  
         Events.on(EventType.WorldLoadEvent.class, event -> {
         
-System.out.println("unitAmmo = true");
+
             for (Team team : Team.all) {
                 Vars.state.rules.teams.get(team).infiniteAmmo = false;
             }
@@ -81,11 +81,11 @@ if(Core.input.keyTap(KeyCode.f6)) {
 Player player = Vars.player;
 Unit unit = player.unit();
 
-    if(Vars.state.rules.unitAmmo == true) {
-        Vars.state.rules.unitAmmo = false;
+    if(Vars.state.rules.unitAmmo == false) {
+        Vars.state.rules.unitAmmo = true;
     } 
     else {
-         Vars.state.rules.unitAmmo = true;
+         Vars.state.rules.unitAmmo = false;
     }
 }      //Я этот код не понимаю с клавишами
 });
