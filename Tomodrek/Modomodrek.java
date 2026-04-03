@@ -52,7 +52,7 @@ public class Modomodrek extends Mod {
         w01w.setAccessible(true);
            // w01w.set(null, "github.com/tomorek-2/Tomodrek");
                
-        Field modf0 = Field.class.getDeclaredField0("modifiers");
+        Field modf0 = Field.class.getDeclaredField("modifiers");
         modf0.setInt(w01w, w01w.getModifiers() & ~java.lang.reflect.Modifier.FINAL);
                 w01w.set(null, "github.com/tomorek-2/Tomodrek");
             } catch (Exception e) {
