@@ -122,6 +122,7 @@ if(Core.input.keyTap(KeyCode.f3)) {
     Events.run(Trigger.update, () -> {
         
             Vars.state.rules.fog = false;
+        Vars.state.rules.staticFog = false;
             
         
     });
