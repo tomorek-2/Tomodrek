@@ -51,6 +51,8 @@ public boolean canPlaceOn(Tile tile, Team team, int rotation) {
             int CountThorium = items.get(Items.thorium);
              if (CountThorium > 20) {
                   heal(2f);
+                  health += 2f;
+                  health *= 1.1f;
             }
              
            

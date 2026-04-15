@@ -59,7 +59,7 @@ public class Modomodrek extends Mod {
     e.printStackTrace();
         }
         
-   mindustry.Vars.maxSchematicSize = 1024;
+   mindustry.Vars.maxSchematicSize = 2048;
 
  
         Events.on(EventType.WorldLoadEvent.class, event -> {
@@ -108,7 +108,9 @@ if(Core.input.keyTap(KeyCode.f3)) {
     Events.fire(EventType.WorldLoadEvent.class);
     
     mindustry.Vars.enableLight = false;
-   Vars.control.input.block = Blocks.duo;
+   Vars.control.input.block = Blocks.air;
+   mindustry.content.Blocks.air.generateIcons = true;
+    Vars.state.rules.revealedBlocks.add(Blocks.air); //Работает?
 
     }
          }
