@@ -76,7 +76,7 @@ Unit unit = player.unit();
     else {
         
 unit.heal(1f);
-unit.addItem(unit.stack.item, 1);
+unit.addItem(unit.stack.item, 2);
     }
 });
 
