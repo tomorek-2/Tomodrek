@@ -37,14 +37,7 @@ public boolean canPlaceOn(Tile tile, Team team, int rotation) {
         @Override
         public void updateTile() {
             super.updateTile();
-          //  if (health() < 300) {
-        //        heal(1f);
-    //        } 
-//double valueInt = memory[0];
-//if(valueInt < 100) {
-//double valueInt0 = valueInt / 100;
-//heal(valueInt0);
-//} 
+
                 
              
              

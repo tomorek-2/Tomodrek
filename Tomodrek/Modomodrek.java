@@ -97,4 +97,4 @@ if(Core.input.keyTap(KeyCode.f3)) {
         Vars.state.rules.staticFog = false;
     });
 }
-}
+} //

