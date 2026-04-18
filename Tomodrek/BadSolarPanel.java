@@ -40,6 +40,7 @@ super.updateTile();
 
 health /= 1.01f;
     powerProduction = health / 25;
+    damage(0.01f);
 
   }
 } 
