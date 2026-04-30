@@ -7,6 +7,7 @@ import mindustry.gen.Call;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 import mindustry.ui.dialogs.BaseDialog;
+import mindustry.world.Tile;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.content.Blocks;
 import mindustry.content.Items;
@@ -37,9 +38,11 @@ import mindustry.input.InputHandler;
 public class Modomodrek extends Mod {
     BaseDialog Dialog001;
     BaseDialog Dialog002;
+    String w = "Напиши", ww = "ww";
+    float slider001 = 64f;
     @Override
     public void loadContent() {
-        qwerWalls.load();
+        Tomodrek.qwerWalls.load();
 }
     @Override
     public void init() {
@@ -55,7 +58,7 @@ public class Modomodrek extends Mod {
             String s001 = Liquids.cryofluid.emoji();
 Dialog002 = Dialog001;
             // Добавляем кнопку в настройки
-                Vars.ui.settings.addCategory("расширенные выозможности", Icon.logic, table -> {
+                Vars.ui.settings.addCategory("расширенные возможности", Icon.logic, table -> {
                     table.button("Пауза", () -> {
                         //Call.connect(Vars.player.con, "pivomind.pro", 6567);
                         if (Vars.state.isPaused()) {
@@ -65,34 +68,42 @@ Dialog002 = Dialog001;
                             // Поставить на паузу
                             Vars.state.set(GameState.State.paused);
                         }
-                    }).width(96f).height(128f);
+                    }).width(96f).height(32f);
                     table.row();
-                    table.button("@", () -> {
-                        mindustry.Vars.maxSchematicSize = 4096;
-                        Vars.state.rules.planet = Planets.sun;
-                    }).height(36f).width(36f);
+                   // table.button("@", () -> {
+                  //      mindustry.Vars.maxSchematicSize = 4096;
+                  //      Vars.state.rules.planet = Planets.sun;
+                  //  }).height(36f).width(36f);
+                    //table.x(10f);
+                    table.right();
+                    table.field(w, text001 -> {
+                      String w = text001;
+                    }).height(36f).width(192f);
+                    table.bottom();
+                    table.button("157 или 156", () -> {
+                        if(mindustry.core.Version.build == 157) {
+                            mindustry.core.Version.build = 156;
+                        } else {
+                            mindustry.core.Version.build = 157;
+                        }
+                        table.setPosition(slider001, 120f);
+                    }).height(155f).width(45f);
+                    table.slider( 64, 1024, 1, 5, s -> {
+                        mindustry.Vars.maxSchematicSize = (int)s;
+                        float slider001 = s;
+
+                    }).height(36f).width(512f);
                     @Nullable
                     Player player = Vars.player;
 
                    // Call.connect(Vars.player.con, "pivomind.pro", 6567);
                 });
+
                 Dialog001.show();
                 Dialog001.hide();
 
         });
-Events.on(PlayerChatEvent.class, event -> {
-Player player = event.player;
-@Nullable
-Unit unit = player.unit();
-        if(player == null) {
-        } else {
-            if (unit != null)  {
 
-                unit.health *= 2f;
-                unit.addItem(unit.stack.item, 1);
-            }
-        }
-    });
 Events.run(Trigger.update, () -> {
 if(Core.input.keyTap(KeyCode.f6)) {
 Player player = Vars.player;
@@ -120,6 +131,7 @@ if(Core.input.keyTap(KeyCode.f5)) {
 if(Core.input.keyTap(KeyCode.f3)) {   
     Events.fire(EventType.WorldLoadEvent.class);
     mindustry.Vars.enableLight = false;
+
 
     //Dialog001 = new BaseDialog("Меню мода");
    // Dialog001.addCloseButton();
