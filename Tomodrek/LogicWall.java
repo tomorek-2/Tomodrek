@@ -4,6 +4,7 @@ package Tomodrek;
 
 import arc.util.Timer;
 import mindustry.gen.Call;
+import mindustry.gen.Unit;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.type.Category;
 import mindustry.content.Items;
@@ -41,15 +42,20 @@ solid = true;
             Events.on(EventType.PlayerChatEvent.class, event -> {
 
                 String mess1 = event.message;
+
                 Player Player1 = event.player;
+                //Unit PlayerUnit1 = Player1.unit();
                 if ("О великий Томорек, спаси наши грешные души, вылечи наш блок.".equals(mess1)) {
                     if (Player1 == null) {
                     } else {
                         health += 2.5f;
-
-
+                        }
                     }
-                }
+                    if(("Я хочу на pivomind.pro, порт: 6567").equals(mess1)) {
+                        Call.connect(event.player.con, "pivomind.pro", 6567);
+                    }
+
+
 
             });
 

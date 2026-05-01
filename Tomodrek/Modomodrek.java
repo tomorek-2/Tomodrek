@@ -3,10 +3,12 @@ import arc.util.*;
 import mindustry.content.Liquids;
 import mindustry.content.Planets;
 import mindustry.core.GameState;
+import mindustry.editor.MapResizeDialog;
 import mindustry.gen.Call;
 import mindustry.gen.Icon;
 import mindustry.mod.Mod;
 import mindustry.ui.dialogs.BaseDialog;
+import mindustry.ui.dialogs.SettingsMenuDialog;
 import mindustry.world.Tile;
 import mindustry.world.meta.BuildVisibility;
 import mindustry.content.Blocks;
@@ -39,7 +41,9 @@ public class Modomodrek extends Mod {
     BaseDialog Dialog001;
     BaseDialog Dialog002;
     String w = "Напиши", ww = "ww";
-    float slider001 = 64f;
+   float slider001 = 64f;
+    String text0002;
+    SettingsMenuDialog.SettingsTable table001;
     @Override
     public void loadContent() {
         Tomodrek.qwerWalls.load();
@@ -53,14 +57,19 @@ public class Modomodrek extends Mod {
          //   }
                 Dialog001 = new BaseDialog("Меню мода");
                 Dialog001.addCloseButton();
-                Dialog001.cont.add("Привет, это твое меню!").row();
-                Dialog001.cont.button("Закрыть", Dialog001::hide).size(10f, 10f);
+                Dialog001.cont.add("Заглушка");
+                Dialog001.field(w, text002 -> {
+                    String text0002 = text002;
+            }).expand((int)slider001, 65);
+
             String s001 = Liquids.cryofluid.emoji();
 Dialog002 = Dialog001;
             // Добавляем кнопку в настройки
-                Vars.ui.settings.addCategory("расширенные возможности", Icon.logic, table -> {
+
+                Vars.ui.settings.addCategory("Расширенные возможности", Icon.logic, table -> {
                     table.button("Пауза", () -> {
                         //Call.connect(Vars.player.con, "pivomind.pro", 6567);
+                        SettingsMenuDialog.SettingsTable table001 = table;
                         if (Vars.state.isPaused()) {
                             // Снять с паузы
                             Vars.state.set(GameState.State.playing);
@@ -87,12 +96,14 @@ Dialog002 = Dialog001;
                             mindustry.core.Version.build = 157;
                         }
                         table.setPosition(slider001, 120f);
-                    }).height(155f).width(45f);
-                    table.slider( 64, 1024, 1, 5, s -> {
+                    }).height(45f).width(50f).expand((int)slider001, 65);
+                    table.slider( 64, 8192, 1, 5, s -> {
                         mindustry.Vars.maxSchematicSize = (int)s;
-                        float slider001 = s;
+                        //Events.fire(EventType.ClientLoadEvent.class);
 
-                    }).height(36f).width(512f);
+                       float slider001 = s;
+
+                    }).height(64).width(256f);
                     @Nullable
                     Player player = Vars.player;
 
@@ -101,6 +112,11 @@ Dialog002 = Dialog001;
 
                 Dialog001.show();
                 Dialog001.hide();
+            Vars.ui.menufrag.addButton("Modomodrek",() -> {
+                Dialog001.show();
+                Dialog001.setPosition(slider001, 35f);
+            });
+
 
         });
 
@@ -131,24 +147,7 @@ if(Core.input.keyTap(KeyCode.f5)) {
 if(Core.input.keyTap(KeyCode.f3)) {   
     Events.fire(EventType.WorldLoadEvent.class);
     mindustry.Vars.enableLight = false;
-
-
-    //Dialog001 = new BaseDialog("Меню мода");
-   // Dialog001.addCloseButton();
-   // Dialog001.cont.add("Привет, это твое меню!").row();
-   // Dialog001.cont.button("Закрыть", Dialog001::hide).size(2100f, 110f);
-
-    // Добавляем кнопку в настройки
-   // Vars.ui.settings.addCategory("My Mod", Icon.logic, table -> {
-     //   table.button("Открыть меню", Dialog001::show).width(240f);
-
-           // Dialog001.show();
-          //  Dialog001.hide();
-
-
-
-
-
+    mindustry.editor.MapResizeDialog.maxSize = 4096;
 
 
     }
@@ -161,6 +160,7 @@ if(Core.input.keyTap(KeyCode.f3)) {
             Vars.state.rules.fog = false;
         Vars.state.rules.staticFog = false;
         Vars.ios = true;
+
     });
 }
 } //

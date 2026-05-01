@@ -33,6 +33,8 @@ hasItems = true;
 public boolean canPlaceOn(Tile tile, Team team, int rotation) {
     return team == Team.crux && super.canPlaceOn(tile, team, rotation);
 }
+
+
     public class qwerWallBuild extends Building {
         @Override
         public void updateTile() {
