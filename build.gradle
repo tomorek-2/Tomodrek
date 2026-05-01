@@ -92,3 +92,20 @@ tasks.register('deploy', Jar){
         }
     }
 }
+
+def mindustryModsDir = file(System.getProperty("user.home") + "/AppData/Roaming/Mindustry/mods")
+
+// Создаём задачу для копирования JAR-файла
+task copyToMods(type: Copy) {
+    // Задача зависит от сборки JAR, поэтому она выполнится после неё
+    dependsOn jar
+    // Берём только что созданный JAR-файл
+    from jar.archiveFile
+    // Указываем папку назначения
+    into mindustryModsDir
+    // Переименовываем файл в "имя_проекта.jar" для удобства
+    rename { String fileName -> "${project.name}.jar" }
+}
+
+// Делаем так, чтобы задача копирования запускалась автоматически после сборки
+jar.finalizedBy copyToMods

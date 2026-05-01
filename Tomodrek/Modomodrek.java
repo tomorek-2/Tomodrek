@@ -1,4 +1,7 @@
 package Tomodrek;
+import arc.math.Mathf;
+import arc.scene.ui.TextField;
+import arc.scene.ui.layout.Table;
 import arc.util.*;
 import mindustry.content.Liquids;
 import mindustry.content.Planets;
@@ -36,6 +39,8 @@ import java.lang.reflect.Modifier;
 import mindustry.game.Schematics;
 import mindustry.input.*;
 import mindustry.input.InputHandler;
+
+import static mindustry.Vars.editor;
 
 public class Modomodrek extends Mod {
     BaseDialog Dialog001;
@@ -79,10 +84,10 @@ Dialog002 = Dialog001;
                         }
                     }).width(96f).height(32f);
                     table.row();
-                   // table.button("@", () -> {
-                  //      mindustry.Vars.maxSchematicSize = 4096;
-                  //      Vars.state.rules.planet = Planets.sun;
-                  //  }).height(36f).width(36f);
+                   table.button("Другое", () -> {
+                      mindustry.Vars.maxSchematicSize = 4096;
+                       Vars.state.rules.planet = Planets.sun;
+                   }).height(36f).width(36f);
                     //table.x(10f);
                     table.right();
                     table.field(w, text001 -> {
@@ -164,3 +169,22 @@ if(Core.input.keyTap(KeyCode.f3)) {
     });
 }
 } //
+//class MapRezingDialog2 extends MapResizeDialog {
+   // int width, height;
+   // public MapRezingDialog2(ResizeListener cons) {
+    //    super(cons);
+    //    Table table = new Table();
+     //   width = editor.width();
+     //   height = editor.height();
+     //   for(boolean w : Mathf.booleans) {
+      //      table.add(w ? "@width" : "@height").padRight(8f);
+      //      table.defaults().height(60f).padTop(8);
+
+        //    table.field((w ? width : height) + "", TextField.TextFieldFilter.digitsOnly, value -> {
+          //      int val = Integer.parseInt(value);
+         //       if (w) width = val;
+          //      else height = val;
+         //   }).valid(value -> Strings.canParsePositiveInt(value) && Integer.parseInt(value) <= maxSize && Integer.parseInt(value) >= minSize).maxTextLength(4);
+     //   }
+  //  }
+//}
