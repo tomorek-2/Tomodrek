@@ -40,6 +40,7 @@ import mindustry.game.Schematics;
 import mindustry.input.*;
 import mindustry.input.InputHandler;
 
+import static mindustry.Vars.discordURL;
 import static mindustry.Vars.editor;
 
 public class Modomodrek extends Mod {
@@ -153,7 +154,8 @@ if(Core.input.keyTap(KeyCode.f3)) {
     Events.fire(EventType.WorldLoadEvent.class);
     mindustry.Vars.enableLight = false;
     mindustry.editor.MapResizeDialog.maxSize = 4096;
-
+//mindustry.net.NetConnection.uuid = "AOAEAOAEAOAEAOA==";
+    Core.app.openURI("https://google.com");
 
     }
         }
