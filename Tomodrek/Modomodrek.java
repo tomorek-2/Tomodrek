@@ -155,7 +155,7 @@ if(Core.input.keyTap(KeyCode.f3)) {
     mindustry.Vars.enableLight = false;
     mindustry.editor.MapResizeDialog.maxSize = 4096;
 //mindustry.net.NetConnection.uuid = "AOAEAOAEAOAEAOA==";
-    Core.app.openURI("https://google.com");
+
 
     }
         }
