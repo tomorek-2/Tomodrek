@@ -21,6 +21,8 @@ public class Momodrek001 extends Plugin {
     int menuId;
     String name001;
     String uuid001;
+    int kickMenuId;
+
 
     private Seq<String> uuids = new Seq<>();
     private Seq<String[]> name002 = new Seq<>();
@@ -30,15 +32,67 @@ public class Momodrek001 extends Plugin {
     //Blocks.vault.requirements(Category.effect, ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
    // mindustry.Vars.maxSchematicSize = 1024;
       menuId = Menus.registerMenu((player, selection) -> {
-          // Действие по клику: получаем UUID из массива
+
           if (uuids != null && selection >= 0 && selection < uuids.size) {
-             name001 = player.name();
-             uuid001 = player.uuid();
+               name001 = name002.get(selection)[0];
+               uuid001 = uuids.get(selection);
+
+              Player targetPlayer = Groups.player.find(p -> p.uuid().equals(uuid001));
+
+              String[][] timeOptions = {
+                      {"1 день"},
+                      {"1 неделя"},
+                      {"1 месяц"},
+                      {"Навсегда"}
+              };
+              Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name001 + " " + uuid001, timeOptions);
           }
-
-
       });
+          kickMenuId = Menus.registerMenu((player, selection) -> {
+              if (uuid001 == null) return;
+              Player target = Groups.player.find(p ->p.uuid().equals(uuid001));
+              long duration = 0;
+              String reason = "";
+              switch (selection) {
+                  case 0: duration = 24 * 60 * 60 * 1000; reason = "1 день";
+                      Administration.PlayerInfo info002 = Vars.netServer.admins.getInfo(uuid001);
+                      //Player target = Groups.player.find(p ->p.uuid().equals(uuid001));
+                      if (target != null) {
 
+                          target.con.kick("Вы наказаны на " + reason, duration);
+                      }
+                  break;
+                  case 1: duration = 7 * 24 * 60 * 60 * 1000; reason = "1 неделя";
+
+                      if (target != null) {
+
+                          target.con.kick("Вы наказаны на " + reason, duration);
+                      }
+                  break;
+                  case 2: duration = 30L * 24 * 60 * 60 * 1000; reason = "1 месяц";
+
+                      if (target != null) {
+
+                          target.con.kick("Вы наказаны на " + reason, duration);
+                      }
+                  break;
+                  case 3: duration = 0; reason = "навсегда (бан)";
+                      Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
+                      if (info003 != null && info003.banned) {
+
+
+                      Vars.netServer.admins.unbanPlayerID(uuid001);
+                  } else
+                  {
+                      Vars.netServer.admins.banPlayerID(uuid001);
+              }
+                  break;
+                  default: return;
+              }
+
+
+
+          });
     Events.on(EventType.PlayerJoin.class, event -> {
 
    });
@@ -58,7 +112,8 @@ public class Momodrek001 extends Plugin {
             Call.openURI("https://t.me/LazyCatV");
         });
         handler.<Player>register("amenu", "Для администрации", (args, player) -> {
-
+name002.clear();
+uuids.clear();
 
         for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
             uuids.add(info.id);
