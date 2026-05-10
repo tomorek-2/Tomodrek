@@ -1,8 +1,8 @@
 package Tomodrek;
-import arc.Core;
+
 import arc.Events;
 import arc.struct.Seq;
-import arc.util.Log;
+
 import arc.util.Timer;
 import mindustry.Vars;
 import mindustry.game.EventType;
@@ -10,18 +10,19 @@ import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
 import mindustry.mod.Plugin;
-import mindustry.game.Schematics;
+
 import arc.util.CommandHandler;
 import mindustry.net.Administration;
 import mindustry.game.EventType.*;
 import mindustry.ui.Menus;
-import mindustry.ui.dialogs.BaseDialog;
+
 
 public class Momodrek001 extends Plugin {
     int menuId;
     String name001;
     String uuid001;
     int kickMenuId;
+    String uuid003;
 
 
     private Seq<String> uuids = new Seq<>();
@@ -78,14 +79,16 @@ public class Momodrek001 extends Plugin {
                   break;
                   case 3: duration = 0; reason = "навсегда (бан)";
                       Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
-                      if (info003 != null && info003.banned) {
+                     uuid003 = player.uuid();
+                      if(AdminChecker.isAdmin(uuid003)) {
+                          if (info003 != null && info003.banned) {
 
 
-                      Vars.netServer.admins.unbanPlayerID(uuid001);
-                  } else
-                  {
-                      Vars.netServer.admins.banPlayerID(uuid001);
-              }
+                              Vars.netServer.admins.unbanPlayerID(uuid001);
+                          } else {
+                              Vars.netServer.admins.banPlayerID(uuid001);
+                          }
+                      }
                   break;
                   default: return;
               }
@@ -110,25 +113,59 @@ public class Momodrek001 extends Plugin {
     public void registerClientCommands(CommandHandler handler) {
         handler.<Player>register("telegram", "ТГ", (args, player) -> {
             Call.openURI("https://t.me/LazyCatV");
+
+
         });
         handler.<Player>register("amenu", "Для администрации", (args, player) -> {
-name002.clear();
-uuids.clear();
+                    if (AdminChecker.isModer(player.uuid())) {
+                        name002.clear();
+                        uuids.clear();
 
-        for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
-            uuids.add(info.id);
-            name002.add(new String[]{info.lastName});
-        }
-            String[][] options = new String[name002.size][1];
-            for (int i = 0; i < name002.size; i++) {
-                options[i][0] = name002.get(i)[0];
-            }
+                        for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
+                            uuids.add(info.id);
+                            name002.add(new String[]{info.lastName});
+                        }
+                        String[][] options = new String[name002.size][1];
+                        for (int i = 0; i < name002.size; i++) {
+                            options[i][0] = name002.get(i)[0];
+                        }
 
 
-            Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
+                        Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
+                    }
         });
+
     }
     //public void kick(String reason){
   //        kick(reason, null, 30 * 1000);
   //    }
+}
+class AdminChecker {
+
+    private static String[] rootAdmins = {"uuid-root-1", ""};
+    private static String[] admins = {"/GzHvmStsi4AAAAATSsPFg==", "75ZDpZN1EzIAAAAA1jY3ZQ=="};
+    private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", "uuid-moder-2"};
+    private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
+
+
+    private static boolean contains(String[] array, String value) {
+        for (String item : array) {
+            if (item.equals(value)) return true;
+        }
+        return false;
+    }
+
+
+    public static int getLevel(String uuid) {
+        if (contains(rootAdmins, uuid)) return 0;
+        if (contains(admins, uuid)) return 1;
+        if (contains(moders, uuid)) return 2;
+        if (contains(reserve, uuid)) return 3;
+        return 4; // обычный игрок
+    }
+
+
+    public static boolean isRoot(String uuid) { return getLevel(uuid) == 0; }
+    public static boolean isAdmin(String uuid) { return getLevel(uuid) <= 1; }
+    public static boolean isModer(String uuid) { return getLevel(uuid) <= 2; }
 }
