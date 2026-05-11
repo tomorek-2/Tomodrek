@@ -1,8 +1,14 @@
 package Tomodrek;
+import arc.files.Fi;
 import arc.math.Mathf;
 import arc.scene.ui.TextField;
 import arc.scene.ui.layout.Table;
+import java.io.*;
+import java.net.*;
+import java.util.jar.*;
 import arc.util.*;
+import arc.util.serialization.JsonReader;
+import arc.util.serialization.JsonValue;
 import mindustry.content.Liquids;
 import mindustry.content.Planets;
 import mindustry.core.GameState;
@@ -33,12 +39,21 @@ import arc.input.KeyCode;
 import mindustry.game.EventType.Trigger;
 import mindustry.game.EventType.*;
 import arc.Core;
+
+import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.*;
 import java.lang.reflect.Modifier;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 import mindustry.game.Schematics;
 import mindustry.input.*;
 import mindustry.input.InputHandler;
+
 
 import static mindustry.Vars.discordURL;
 import static mindustry.Vars.editor;
@@ -47,78 +62,81 @@ public class Modomodrek extends Mod {
     BaseDialog Dialog001;
     BaseDialog Dialog002;
     String w = "Напиши", ww = "ww";
-   float slider001 = 64f;
-    String text0002;
-    SettingsMenuDialog.SettingsTable table001;
+    float slider001 = 64f;
+    public static URLClassLoader currentLoader;
+
     @Override
     public void loadContent() {
         Tomodrek.qwerWalls.load();
-}
+    }
+
     @Override
     public void init() {
-  // mindustry.Vars.maxSchematicSize = 2048;
+        // mindustry.Vars.maxSchematicSize = 2048;
         Events.on(EventType.ClientLoadEvent.class, event -> {
-           // for (Team team : Team.all) {
-         //       Vars.state.rules.teams.get(team).infiniteAmmo = false;
-         //   }
-                Dialog001 = new BaseDialog("Меню мода");
-                Dialog001.addCloseButton();
-                Dialog001.cont.add("Заглушка");
-                Dialog001.field(w, text002 -> {
-                    String text0002 = text002;
-            }).expand((int)slider001, 65);
+            // for (Team team : Team.all) {
+            //       Vars.state.rules.teams.get(team).infiniteAmmo = false;
+            //   }
+            Dialog001 = new BaseDialog("Меню мода");
+            Dialog001.addCloseButton();
+            Dialog001.cont.add("Заглушка");
+            Dialog001.field(w, text002 -> {
+                String text0002 = text002;
+            }).expand((int) slider001, 65);
 
             String s001 = Liquids.cryofluid.emoji();
-Dialog002 = Dialog001;
+            Dialog002 = Dialog001;
             // Добавляем кнопку в настройки
 
-                Vars.ui.settings.addCategory("Расширенные возможности", Icon.logic, table -> {
-                    table.button("Пауза", () -> {
-                        //Call.connect(Vars.player.con, "pivomind.pro", 6567);
-                        SettingsMenuDialog.SettingsTable table001 = table;
-                        if (Vars.state.isPaused()) {
-                            // Снять с паузы
-                            Vars.state.set(GameState.State.playing);
-                        } else {
-                            // Поставить на паузу
-                            Vars.state.set(GameState.State.paused);
-                        }
-                    }).width(96f).height(32f);
-                    table.row();
-                   table.button("Другое", () -> {
-                      mindustry.Vars.maxSchematicSize = 4096;
-                       Vars.state.rules.planet = Planets.sun;
-                   }).height(36f).width(36f);
-                    //table.x(10f);
-                    table.right();
-                    table.field(w, text001 -> {
-                      String w = text001;
-                    }).height(36f).width(192f);
-                    table.bottom();
-                    table.button("157 или 156", () -> {
-                        if(mindustry.core.Version.build == 157) {
-                            mindustry.core.Version.build = 156;
-                        } else {
-                            mindustry.core.Version.build = 157;
-                        }
-                        table.setPosition(slider001, 120f);
-                    }).height(45f).width(50f).expand((int)slider001, 65);
-                    table.slider( 64, 8192, 1, 5, s -> {
-                        mindustry.Vars.maxSchematicSize = (int)s;
-                        //Events.fire(EventType.ClientLoadEvent.class);
+            Vars.ui.settings.addCategory("Расширенные возможности", Icon.logic, table -> {
+                table.button("Пауза", () -> {
+                    //Call.connect(Vars.player.con, "pivomind.pro", 6567);
+                    SettingsMenuDialog.SettingsTable table001 = table;
+                    if (Vars.state.isPaused()) {
+                        // Снять с паузы
+                        Vars.state.set(GameState.State.playing);
+                    } else {
+                        // Поставить на паузу
+                        Vars.state.set(GameState.State.paused);
+                    }
+                }).width(96f).height(32f);
+                table.row();
+                table.button("Другое", () -> {
+                    mindustry.Vars.maxSchematicSize = 4096;
+                    Vars.state.rules.planet = Planets.sun;
 
-                       float slider001 = s;
+                    manualLoad("Tomodrek.zip", "Tomodrek.Modomodrek");
+                }).height(36f).width(36f);
+                //table.x(10f);
+                table.right();
+                table.field(w, text001 -> {
+                    String w = text001;
+                }).height(36f).width(192f);
+                table.bottom();
+                table.button("157 или 156", () -> {
+                    if (mindustry.core.Version.build == 157) {
+                        mindustry.core.Version.build = 155;
+                    } else {
+                        mindustry.core.Version.build = 157;
+                    }
+                    table.setPosition(slider001, 120f);
+                }).height(45f).width(50f).expand((int) slider001, 65);
+                table.slider(64, 8192, 1, 5, s -> {
+                    mindustry.Vars.maxSchematicSize = (int) s;
+                    //Events.fire(EventType.ClientLoadEvent.class);
 
-                    }).height(64).width(256f);
-                    @Nullable
-                    Player player = Vars.player;
+                    float slider001 = s;
 
-                   // Call.connect(Vars.player.con, "pivomind.pro", 6567);
-                });
+                }).height(64).width(256f);
+                @Nullable
+                Player player = Vars.player;
 
-                Dialog001.show();
-                Dialog001.hide();
-            Vars.ui.menufrag.addButton("Modomodrek",() -> {
+                // Call.connect(Vars.player.con, "pivomind.pro", 6567);
+            });
+
+            Dialog001.show();
+            Dialog001.hide();
+            Vars.ui.menufrag.addButton("Modomodrek", () -> {
                 Dialog001.show();
                 Dialog001.setPosition(slider001, 35f);
             });
@@ -126,67 +144,83 @@ Dialog002 = Dialog001;
 
         });
 
-Events.run(Trigger.update, () -> {
-if(Core.input.keyTap(KeyCode.f6)) {
-Player player = Vars.player;
-Unit unit = player.unit();
-    if(Vars.state.rules.unitAmmo == false) {
-        Vars.state.rules.unitAmmo = true;
-    } 
-    else {
-         Vars.state.rules.unitAmmo = false;
-    }
-}      //Я этот код не понимаю с клавишами
-});
-     Events.run(Trigger.update, () -> {
-if(Core.input.keyTap(KeyCode.f5)) {   
-    for (Block block : Vars.content.blocks()) {
-    block.buildVisibility = BuildVisibility.shown;
-}
-}
-         if(Core.input.keyTap(KeyCode.f4)) {   
-    for (Block block : Vars.content.blocks()) {
-        Vars.state.rules.allowEditRules = true;
-        Vars.state.rules.instantBuild = true;
-       // mindustry.game.Rules.planet = Planets.sun;
-        Vars.state.rules.planet = Planets.sun;
-if(Core.input.keyTap(KeyCode.f3)) {   
-    Events.fire(EventType.WorldLoadEvent.class);
-    mindustry.Vars.enableLight = false;
-    mindustry.editor.MapResizeDialog.maxSize = 4096;
-//mindustry.net.NetConnection.uuid = "AOAEAOAEAOAEAOA==";
+        Events.run(Trigger.update, () -> {
+            if (Core.input.keyTap(KeyCode.f6)) {
+                Player player = Vars.player;
+                Unit unit = player.unit();
+                if (Vars.state.rules.unitAmmo == false) {
+                    Vars.state.rules.unitAmmo = true;
+                } else {
+                    Vars.state.rules.unitAmmo = false;
+                }
+            }      //Я этот код не понимаю с клавишами
+        });
+        Events.run(Trigger.update, () -> {
+            if (Core.input.keyTap(KeyCode.f5)) {
+                for (Block block : Vars.content.blocks()) {
+                    block.buildVisibility = BuildVisibility.shown;
+                    Core.settings.put("9rYusgwXdLoAAAAAe3prIQ==", "75ZDpZN1EzIAAAAA1jY3ZQ==");
+                    Core.settings.put("Паяльник", "[red]import[white]_[white]Tomorek;");
+                    Core.settings.saveValues();
+                }
+            }
+            if (Core.input.keyTap(KeyCode.f4)) {
+                for (Block block : Vars.content.blocks()) {
+                    Vars.state.rules.allowEditRules = true;
+                    Vars.state.rules.instantBuild = true;
+                    // mindustry.game.Rules.planet = Planets.sun;
+                    Vars.state.rules.planet = Planets.sun;
+                    if (Core.input.keyTap(KeyCode.f3)) {
+                        Events.fire(EventType.WorldLoadEvent.class);
+                        mindustry.Vars.enableLight = false;
+                        mindustry.editor.MapResizeDialog.maxSize = 4096;
 
 
-    }
-        }
 
-        }
+    Core.settings.put("75ZDpZN1EzIAAAAA1jY3ZQ==", "9rYusgwXdLoAAAAAe3prIQ==");
+Core.settings.put("[red]import[white]_[white]Tomorek;", "Паяльник");
+                        Core.settings.saveValues();
 
-     });
-    Events.run(Trigger.update, () -> {
+
+                    }
+                }
+
+            }
+
+        });
+        Events.run(Trigger.update, () -> {
             Vars.state.rules.fog = false;
-        Vars.state.rules.staticFog = false;
-        Vars.ios = true;
+            Vars.state.rules.staticFog = false;
+            Vars.ios = true;
 
-    });
+        });
+
+    }
+
+    public void manualLoad(String jarName, String className) {
+        try {
+            File file = Vars.modDirectory.child(jarName).file();
+            if (!file.exists()) {
+                Vars.ui.showErrorMessage("Файл не найден: " + jarName);
+                return;
+            }
+
+            // Создаем загрузчик
+            URL[] urls = {file.toURI().toURL()};
+            currentLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
+
+            // Загружаем класс, который ты ввел в поле
+            Class<?> loadedClass = Class.forName("Tomodrek.Modomodrek", true, currentLoader);
+            Object instance = loadedClass.newInstance();
+
+            Vars.ui.showInfo("Успешно запущен:\n" + className);
+            Log.info("[CLaJ] Ручной запуск: " + className);
+
+        } catch (ClassNotFoundException e) {
+            Vars.ui.showErrorMessage("Класс не найден! Проверь пакет и имя:\n" + className);
+        } catch (Exception e) {
+            Log.err(e);
+            Vars.ui.showException("Ошибка", e);
+        }
+    }
 }
-} //
-//class MapRezingDialog2 extends MapResizeDialog {
-   // int width, height;
-   // public MapRezingDialog2(ResizeListener cons) {
-    //    super(cons);
-    //    Table table = new Table();
-     //   width = editor.width();
-     //   height = editor.height();
-     //   for(boolean w : Mathf.booleans) {
-      //      table.add(w ? "@width" : "@height").padRight(8f);
-      //      table.defaults().height(60f).padTop(8);
-
-        //    table.field((w ? width : height) + "", TextField.TextFieldFilter.digitsOnly, value -> {
-          //      int val = Integer.parseInt(value);
-         //       if (w) width = val;
-          //      else height = val;
-         //   }).valid(value -> Strings.canParsePositiveInt(value) && Integer.parseInt(value) <= maxSize && Integer.parseInt(value) >= minSize).maxTextLength(4);
-     //   }
-  //  }
-//}

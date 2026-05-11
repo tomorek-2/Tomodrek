@@ -1,14 +1,20 @@
 package Tomodrek;
 
+import arc.Core;
 import arc.Events;
+import arc.files.Fi;
 import arc.struct.Seq;
 
+import arc.util.Log;
 import arc.util.Timer;
+import arc.util.serialization.JsonReader;
+import arc.util.serialization.JsonValue;
 import mindustry.Vars;
 import mindustry.game.EventType;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
+import mindustry.io.JsonIO;
 import mindustry.mod.Plugin;
 
 import arc.util.CommandHandler;
@@ -23,20 +29,21 @@ public class Momodrek001 extends Plugin {
     String uuid001;
     int kickMenuId;
     String uuid003;
-
-
+    private int page = 0;
+    Seq<String[]> b;
+    Administration.PlayerInfo info002;
     private Seq<String> uuids = new Seq<>();
     private Seq<String[]> name002 = new Seq<>();
 
   @Override
   public void init() {
-    //Blocks.vault.requirements(Category.effect, ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
-   // mindustry.Vars.maxSchematicSize = 1024;
+      //Blocks.vault.requirements(Category.effect, ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
+      // mindustry.Vars.maxSchematicSize = 1024;
       menuId = Menus.registerMenu((player, selection) -> {
-
+          AdminChecker.loadConfig();
           if (uuids != null && selection >= 0 && selection < uuids.size) {
-               name001 = name002.get(selection)[0];
-               uuid001 = uuids.get(selection);
+              name001 = name002.get(selection)[0];
+              uuid001 = uuids.get(selection);
 
               Player targetPlayer = Groups.player.find(p -> p.uuid().equals(uuid001));
 
@@ -44,58 +51,77 @@ public class Momodrek001 extends Plugin {
                       {"1 день"},
                       {"1 неделя"},
                       {"1 месяц"},
-                      {"Навсегда"}
+                      {"Навсегда"},
+                      {"Разкик"}
               };
               Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name001 + " " + uuid001, timeOptions);
           }
       });
-          kickMenuId = Menus.registerMenu((player, selection) -> {
-              if (uuid001 == null) return;
-              Player target = Groups.player.find(p ->p.uuid().equals(uuid001));
-              long duration = 0;
-              String reason = "";
-              switch (selection) {
-                  case 0: duration = 24 * 60 * 60 * 1000; reason = "1 день";
-                      Administration.PlayerInfo info002 = Vars.netServer.admins.getInfo(uuid001);
-                      //Player target = Groups.player.find(p ->p.uuid().equals(uuid001));
-                      if (target != null) {
+      kickMenuId = Menus.registerMenu((player, selection) -> {
+          if (uuid001 == null) return;
+          Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
+          long duration = 0;
+          String reason = "";
+          Administration.PlayerInfo info002 = Vars.netServer.admins.getInfo(uuid001);
+          switch (selection) {
+              case 0:
+                  duration = 24 * 60 * 60 * 1000;
+                  reason = "1 день";
+                 // Administration.PlayerInfo info002 = Vars.netServer.admins.getInfo(uuid001);
+                  //Player target = Groups.player.find(p ->p.uuid().equals(uuid001));
+                  if (target != null) {
 
-                          target.con.kick("Вы наказаны на " + reason, duration);
-                      }
+                      target.con.kick("Вы наказаны на " + reason, duration);
+                      Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, duration);
+                  }
                   break;
-                  case 1: duration = 7 * 24 * 60 * 60 * 1000; reason = "1 неделя";
+              case 1:
+                  duration = 7 * 24 * 60 * 60 * 1000;
+                  reason = "1 неделя";
 
-                      if (target != null) {
+                  if (target != null) {
+                      Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, duration);
 
-                          target.con.kick("Вы наказаны на " + reason, duration);
-                      }
+                      target.con.kick("Вы наказаны на " + reason, duration);
+                  }
                   break;
-                  case 2: duration = 30L * 24 * 60 * 60 * 1000; reason = "1 месяц";
+              case 2:
+                  duration = 30L * 24 * 60 * 60 * 1000;
+                  reason = "1 месяц";
 
-                      if (target != null) {
+                  if (target != null) {
+                      Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, duration);
 
-                          target.con.kick("Вы наказаны на " + reason, duration);
-                      }
+                      target.con.kick("Вы наказаны на " + reason, duration);
+                  }
                   break;
-                  case 3: duration = 0; reason = "навсегда (бан)";
-                      Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
-                     uuid003 = player.uuid();
-                      if(AdminChecker.isAdmin(uuid003)) {
-                          if (info003 != null && info003.banned) {
+              case 3:
+                  duration = 0;
+                  reason = "навсегда (бан)";
+                  Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
+                  uuid003 = player.uuid();
+                  if (AdminChecker.isAdmin(uuid003)) {
+                      if (info003 != null && info003.banned) {
 
 
-                              Vars.netServer.admins.unbanPlayerID(uuid001);
-                          } else {
-                              Vars.netServer.admins.banPlayerID(uuid001);
-                          }
+                          Vars.netServer.admins.unbanPlayerID(uuid001);
+                      } else {
+                          Vars.netServer.admins.banPlayerID(uuid001);
                       }
+                  }
                   break;
-                  default: return;
-              }
+              case 4:
+                  if (target != null) {
+                      Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, 0);
+                  }
+              default:
+                  return;
 
 
+          }
+      });
 
-          });
+
     Events.on(EventType.PlayerJoin.class, event -> {
 
    });
@@ -117,33 +143,37 @@ public class Momodrek001 extends Plugin {
 
         });
         handler.<Player>register("amenu", "Для администрации", (args, player) -> {
-                    if (AdminChecker.isModer(player.uuid())) {
-                        name002.clear();
-                        uuids.clear();
+            if (AdminChecker.isModer(player.uuid())) {
+                name002.clear();
+                uuids.clear();
 
-                        for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
-                            uuids.add(info.id);
-                            name002.add(new String[]{info.lastName});
-                        }
-                        String[][] options = new String[name002.size][1];
-                        for (int i = 0; i < name002.size; i++) {
-                            options[i][0] = name002.get(i)[0];
-                        }
+                for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
+                    uuids.add(info.id);
 
 
-                        Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
-                    }
+                    name002.add(new String[] { info.lastName," ", info.lastSentMessage, info.id});
+
+                }
+                String[][] options = new String[name002.size][1];
+                for (int i = 0; i < name002.size; i++) {
+                    options[i][0] = name002.get(i)[0];
+                }
+
+                Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
+            }
+
         });
+        }
 
-    }
     //public void kick(String reason){
   //        kick(reason, null, 30 * 1000);
   //    }
+
 }
 class AdminChecker {
 
     private static String[] rootAdmins = {"uuid-root-1", ""};
-    private static String[] admins = {"/GzHvmStsi4AAAAATSsPFg==", "75ZDpZN1EzIAAAAA1jY3ZQ=="};
+    private static String[] admins = {"", ""};
     private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", "uuid-moder-2"};
     private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
 
@@ -154,6 +184,28 @@ class AdminChecker {
         }
         return false;
     }
+    public static void loadConfig() {
+        try {
+            Fi file = Core.files.local("config/config/admins.json");
+            if (file.exists()) {
+                String content = file.readString();
+                JsonValue json = new JsonReader().parse(content);
+                rootAdmins = json.get("rootAdmins").asStringArray();
+                admins = json.get("admins").asStringArray();
+                moders = json.get("moders").asStringArray();
+                reserve = json.get("reserve").asStringArray();
+            } else {
+                Log.warn("Файл конфигурации не найден по пути: " + file.path());
+
+                return;
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
 
 
     public static int getLevel(String uuid) {
@@ -161,7 +213,7 @@ class AdminChecker {
         if (contains(admins, uuid)) return 1;
         if (contains(moders, uuid)) return 2;
         if (contains(reserve, uuid)) return 3;
-        return 4; // обычный игрок
+        return 4;
     }
 
 
