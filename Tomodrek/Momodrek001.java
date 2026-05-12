@@ -34,6 +34,7 @@ public class Momodrek001 extends Plugin {
     Administration.PlayerInfo info002;
     private Seq<String> uuids = new Seq<>();
     private Seq<String[]> name002 = new Seq<>();
+    int playerMenuId;
 
   @Override
   public void init() {
@@ -57,6 +58,38 @@ public class Momodrek001 extends Plugin {
               Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name001 + " " + uuid001, timeOptions);
           }
       });
+      playerMenuId = Menus.registerMenu((player, selection) -> {
+          String[][] timeOptions = {
+                  {"Банить/кикать игроков"},
+                  {"Не сделано"},
+                  {"Не сделано"},
+                  {"Не сделано"},
+                  {"Не сделано"}
+          };
+          switch (selection) {
+              case 0:
+                 // Call.menu(player.con, menuId, " ", "Меню для фич", timeOptions);
+                  for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
+                      uuids.add(info.id);
+
+
+                      name002.add(new String[] { info.lastName," ", info.lastSentMessage, info.id});
+
+                  }
+                  String[][] options = new String[name002.size][1];
+                  for (int i = 0; i < name002.size; i++) {
+                      options[i][0] = name002.get(i)[0];
+                  }
+
+                  Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
+
+
+              break;
+              default:
+                  return;
+
+          }
+              });
       kickMenuId = Menus.registerMenu((player, selection) -> {
           if (uuid001 == null) return;
           Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
@@ -147,7 +180,7 @@ public class Momodrek001 extends Plugin {
                 name002.clear();
                 uuids.clear();
 
-                for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
+            /*    for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
                     uuids.add(info.id);
 
 
@@ -157,9 +190,15 @@ public class Momodrek001 extends Plugin {
                 String[][] options = new String[name002.size][1];
                 for (int i = 0; i < name002.size; i++) {
                     options[i][0] = name002.get(i)[0];
-                }
-
-                Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
+                } */
+                String[][] timeOptions = {
+                        {"Банить/кикать игроков"},
+                        {"Не сделано"},
+                        {"Не сделано"},
+                        {"Не сделано"},
+                        {"Не сделано"}
+                };
+                Call.menu(player.con, playerMenuId, "Игроки", "Выберите игрока:", timeOptions);
             }
 
         });
@@ -172,7 +211,7 @@ public class Momodrek001 extends Plugin {
 }
 class AdminChecker {
 
-    private static String[] rootAdmins = {"uuid-root-1", ""};
+    private static String[] rootAdmins = {"ass", ""};
     private static String[] admins = {"", ""};
     private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", "uuid-moder-2"};
     private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
