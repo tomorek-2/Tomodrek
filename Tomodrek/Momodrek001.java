@@ -35,6 +35,7 @@ public class Momodrek001 extends Plugin {
     private Seq<String> uuids = new Seq<>();
     private Seq<String[]> name002 = new Seq<>();
     int playerMenuId;
+    int dopMenuId;
 
   @Override
   public void init() {
@@ -58,6 +59,10 @@ public class Momodrek001 extends Plugin {
               Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name001 + " " + uuid001, timeOptions);
           }
       });
+      dopMenuId = Menus.registerMenu((player, selection) -> {
+          
+      });
+
       playerMenuId = Menus.registerMenu((player, selection) -> {
           String[][] timeOptions = {
                   {"Банить/кикать игроков"},
@@ -85,6 +90,9 @@ public class Momodrek001 extends Plugin {
 
 
               break;
+              case 1:
+
+                  break;
               default:
                   return;
 
