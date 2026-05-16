@@ -54,6 +54,7 @@ import mindustry.game.Schematics;
 import mindustry.input.*;
 import mindustry.input.InputHandler;
 
+import Tomodrek.*;
 
 import static mindustry.Vars.discordURL;
 import static mindustry.Vars.editor;
@@ -64,6 +65,13 @@ public class Modomodrek extends Mod {
     String w = "Напиши", ww = "ww";
     float slider001 = 64f;
     public static URLClassLoader currentLoader;
+    public static Object custom3DScene;
+
+
+    private float timeTracker = 0f;
+   // public static Tomodrek.CustomSceneRender custom3DScene;
+    public static boolean show3DScene = false;
+    private float animTime = 0f;
 
     @Override
     public void loadContent() {
@@ -72,6 +80,36 @@ public class Modomodrek extends Mod {
 
     @Override
     public void init() {
+
+            // Запуск самой отрисовки на карте
+
+
+
+            // 2. СОЗДАНИЕ ОБЪЕКТА (записываем в глобальный Object)
+            custom3DScene = new Tomodrek.CustomSceneRender();
+
+            // Пример: задаем начальные параметры куба извне при старте
+            // Приводим Object к вашему классу через круглые скобки
+            ((Tomodrek.CustomSceneRender) custom3DScene).objectY = 0f;
+            ((Tomodrek.CustomSceneRender) custom3DScene).objectZ = 0f;
+            ((Tomodrek.CustomSceneRender) custom3DScene).objectX = 0f;
+            ((Tomodrek.CustomSceneRender) custom3DScene).objectScale = 0.5f;
+
+            // 3. ЛОГИКА ИЗМЕНЕНИЯ ИЗВНЕ (Анимация покачивания)
+        arc.Events.run(Trigger.drawOver, () -> {
+            // ИСПРАВЛЕНИЕ: Убираем проверку юнита! Рисуем куб всегда, когда show3DScene = true
+           // if(show3DScene && custom3DScene != null){
+                ((Tomodrek.CustomSceneRender) custom3DScene).render();
+
+           // }
+        });
+
+            // 4. РЕГИСТРАЦИЯ ОТРИСОВКИ (строка 123, где была ошибка)
+
+
+       // custom3DScene = new Tomodrek.CustomSceneRender();
+        //Tomodrek.CustomSceneRender renderer = (Tomodrek.CustomSceneRender) custom3DScene;
+
         // mindustry.Vars.maxSchematicSize = 2048;
         Events.on(EventType.ClientLoadEvent.class, event -> {
             // for (Team team : Team.all) {
@@ -102,10 +140,16 @@ public class Modomodrek extends Mod {
                 }).width(96f).height(32f);
                 table.row();
                 table.button("Другое", () -> {
-                    mindustry.Vars.maxSchematicSize = 4096;
+                    Vars.maxSchematicSize = 4096;
                     Vars.state.rules.planet = Planets.sun;
 
-                    manualLoad("Tomodrek.zip", "Tomodrek.Modomodrek");
+                    if(show3DScene == true) {
+                        show3DScene = false;
+                    } else {
+                        show3DScene = true;
+                    }
+
+                        manualLoad("Tomodrek.zip", "Tomodrek.Modomodrek");
                 }).height(36f).width(36f);
                 //table.x(10f);
                 table.right();
@@ -122,6 +166,8 @@ public class Modomodrek extends Mod {
                     table.setPosition(slider001, 120f);
                 }).height(45f).width(50f).expand((int) slider001, 65);
                 table.slider(64, 8192, 1, 5, s -> {
+                    Tomodrek.CustomSceneRender renderer = (Tomodrek.CustomSceneRender) custom3DScene;
+renderer.objectZ = s;
                     mindustry.Vars.maxSchematicSize = (int) s;
                     //Events.fire(EventType.ClientLoadEvent.class);
 
@@ -160,7 +206,7 @@ public class Modomodrek extends Mod {
                 for (Block block : Vars.content.blocks()) {
                     block.buildVisibility = BuildVisibility.shown;
                     Core.settings.put("9rYusgwXdLoAAAAAe3prIQ==", "75ZDpZN1EzIAAAAA1jY3ZQ==");
-                    Core.settings.put("Паяльник", "[red]import[white]_[white]Tomorek;");
+
                     Core.settings.saveValues();
                 }
             }
@@ -174,11 +220,15 @@ public class Modomodrek extends Mod {
                         Events.fire(EventType.WorldLoadEvent.class);
                         mindustry.Vars.enableLight = false;
                         mindustry.editor.MapResizeDialog.maxSize = 4096;
-
+                        if(show3DScene) {
+                            show3DScene = false;
+                        } else {
+                            show3DScene = true;
+                        }
 
 
     Core.settings.put("75ZDpZN1EzIAAAAA1jY3ZQ==", "9rYusgwXdLoAAAAAe3prIQ==");
-Core.settings.put("[red]import[white]_[white]Tomorek;", "Паяльник");
+
                         Core.settings.saveValues();
 
 

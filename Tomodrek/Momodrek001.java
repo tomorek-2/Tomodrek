@@ -11,6 +11,7 @@ import arc.util.serialization.JsonReader;
 import arc.util.serialization.JsonValue;
 import mindustry.Vars;
 import mindustry.game.EventType;
+import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
@@ -37,10 +38,15 @@ public class Momodrek001 extends Plugin {
     int playerMenuId;
     int dopMenuId;
 
-  @Override
+
+    @Override
   public void init() {
       //Blocks.vault.requirements(Category.effect, ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
       // mindustry.Vars.maxSchematicSize = 1024;
+
+      //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
+
+    //  });
       menuId = Menus.registerMenu((player, selection) -> {
           AdminChecker.loadConfig();
           if (uuids != null && selection >= 0 && selection < uuids.size) {
@@ -60,13 +66,17 @@ public class Momodrek001 extends Plugin {
           }
       });
       dopMenuId = Menus.registerMenu((player, selection) -> {
-          
+          if(selection == 0) {
+              Call.updateGameOver(Team.derelict);
+             // Call.
+          }
+
       });
 
       playerMenuId = Menus.registerMenu((player, selection) -> {
           String[][] timeOptions = {
                   {"Банить/кикать игроков"},
-                  {"Не сделано"},
+                  {"Улучшение процесса"},
                   {"Не сделано"},
                   {"Не сделано"},
                   {"Не сделано"}
@@ -91,7 +101,10 @@ public class Momodrek001 extends Plugin {
 
               break;
               case 1:
-
+                 String[][] options2 = {
+                         {"Скип карты"}
+                 };
+Call.menu(player.con, dopMenuId, "Выбор действия", "", options2);
                   break;
               default:
                   return;
