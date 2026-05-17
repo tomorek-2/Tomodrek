@@ -242,6 +242,7 @@ renderer.objectZ = s;
             Vars.state.rules.fog = false;
             Vars.state.rules.staticFog = false;
             Vars.ios = true;
+Vars.mobile = false;
 
         });
 
