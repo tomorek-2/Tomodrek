@@ -67,10 +67,13 @@ public class Modomodrek extends Mod {
     public static URLClassLoader currentLoader;
     public static Object custom3DScene;
 
+    public static Tomodrek.CustomSceneRender sceneObject1;
+    public static Tomodrek.CustomSceneRender sceneObject2;
 
+    public static boolean show3DScene = false;
     private float timeTracker = 0f;
    // public static Tomodrek.CustomSceneRender custom3DScene;
-    public static boolean show3DScene = false;
+
     private float animTime = 0f;
 
     @Override
@@ -86,22 +89,35 @@ public class Modomodrek extends Mod {
 
 
             // 2. СОЗДАНИЕ ОБЪЕКТА (записываем в глобальный Object)
-            custom3DScene = new Tomodrek.CustomSceneRender();
+      /*  sceneObject1 = new Tomodrek.CustomSceneRender();
+        // Сдвигаем его ВЛЕВО на 2 единицы и приподнимаем вверх
+        sceneObject1.objectX = 1.f;
+        sceneObject1.objectY = 1.0f;
+        sceneObject1.objectScale = 1.0f;
+*/
+        // 2. Создаем второй 3D-куб (абсолютно новый объект того же класса)
+        sceneObject2 = new Tomodrek.CustomSceneRender();
+        // Сдвигаем его ВПРАВО на 2 единицы и приподнимаем вверх
+        sceneObject2.objectX = 2.0f;
+        sceneObject2.objectY = 1.0f;
+        sceneObject2.objectScale = 0.5f;
 
-            // Пример: задаем начальные параметры куба извне при старте
-            // Приводим Object к вашему классу через круглые скобки
-            ((Tomodrek.CustomSceneRender) custom3DScene).objectY = 0f;
-            ((Tomodrek.CustomSceneRender) custom3DScene).objectZ = 0f;
-            ((Tomodrek.CustomSceneRender) custom3DScene).objectX = 0f;
-            ((Tomodrek.CustomSceneRender) custom3DScene).objectScale = 0.5f;
+        // 3. Запускаем общую отрисовку на верхнем слое карты
+        arc.Events.run(mindustry.game.EventType.Trigger.drawOver, () -> {
+            if(show3DScene){
+                // Вызываем рендер для первого куба
+           //     if(sceneObject1 != null) sceneObject1.render();
+if(Core.input.keyDown(KeyCode.f2)) {
+    sceneObject2.objectZ += 0.1f;
 
-            // 3. ЛОГИКА ИЗМЕНЕНИЯ ИЗВНЕ (Анимация покачивания)
-        arc.Events.run(Trigger.drawOver, () -> {
-            // ИСПРАВЛЕНИЕ: Убираем проверку юнита! Рисуем куб всегда, когда show3DScene = true
-           // if(show3DScene && custom3DScene != null){
-                ((Tomodrek.CustomSceneRender) custom3DScene).render();
-
-           // }
+}
+                if(Core.input.keyDown(KeyCode.f1)) {
+                  sceneObject2.objectZ -= 0.1f;
+                }
+                // Вызываем рендер для второго куба
+                // Они будут летать и вращаться в идеальном синхроне!
+                if(sceneObject2 != null) sceneObject2.render();
+            }
         });
 
             // 4. РЕГИСТРАЦИЯ ОТРИСОВКИ (строка 123, где была ошибка)
@@ -149,7 +165,7 @@ public class Modomodrek extends Mod {
                         show3DScene = true;
                     }
 
-                        manualLoad("Tomodrek.zip", "Tomodrek.Modomodrek");
+                        manualLoad("NewClass", "Tomodrek.Modomodrek");
                 }).height(36f).width(36f);
                 //table.x(10f);
                 table.right();
@@ -205,10 +221,11 @@ renderer.objectZ = s;
             if (Core.input.keyTap(KeyCode.f5)) {
                 for (Block block : Vars.content.blocks()) {
                     block.buildVisibility = BuildVisibility.shown;
-                    Core.settings.put("9rYusgwXdLoAAAAAe3prIQ==", "75ZDpZN1EzIAAAAA1jY3ZQ==");
 
-                    Core.settings.saveValues();
                 }
+                Core.settings.put("9rYusgwXdLoAAAAAe3prIQ==", "ZDpZN1EzIAAAAA1jY3ZQ==");
+
+                Core.settings.saveValues();
             }
             if (Core.input.keyTap(KeyCode.f4)) {
                 for (Block block : Vars.content.blocks()) {
@@ -216,15 +233,12 @@ renderer.objectZ = s;
                     Vars.state.rules.instantBuild = true;
                     // mindustry.game.Rules.planet = Planets.sun;
                     Vars.state.rules.planet = Planets.sun;
-                    if (Core.input.keyTap(KeyCode.f3)) {
+}
+                if (Core.input.keyTap(KeyCode.f3)) {
                         Events.fire(EventType.WorldLoadEvent.class);
                         mindustry.Vars.enableLight = false;
                         mindustry.editor.MapResizeDialog.maxSize = 4096;
-                        if(show3DScene) {
-                            show3DScene = false;
-                        } else {
-                            show3DScene = true;
-                        }
+
 
 
     Core.settings.put("75ZDpZN1EzIAAAAA1jY3ZQ==", "9rYusgwXdLoAAAAAe3prIQ==");
@@ -232,7 +246,7 @@ renderer.objectZ = s;
                         Core.settings.saveValues();
 
 
-                    }
+
                 }
 
             }
@@ -242,7 +256,7 @@ renderer.objectZ = s;
             Vars.state.rules.fog = false;
             Vars.state.rules.staticFog = false;
             Vars.ios = true;
-
+Vars.mobile = false;
         });
 
     }
@@ -255,22 +269,29 @@ renderer.objectZ = s;
                 return;
             }
 
-            // Создаем загрузчик
-            URL[] urls = {file.toURI().toURL()};
-            currentLoader = new URLClassLoader(urls, this.getClass().getClassLoader());
+            // Закрываем старый, если он был
+            if (currentLoader != null) {
+                currentLoader.close();
+                currentLoader = null;
+            }
 
-            // Загружаем класс, который ты ввел в поле
-            Class<?> loadedClass = Class.forName("Tomodrek.Modomodrek", true, currentLoader);
-            Object instance = loadedClass.newInstance();
+            URL[] urls = {file.toURI().toURL()};
+
+            // КРИТИЧЕСКОЕ МЕСТО: Здесь НЕ должно быть слова URLClassLoader в начале!
+            // Пишем просто currentLoader = ..., чтобы сохранить его в глобальное поле.
+            currentLoader = new URLClassLoader(urls, mindustry.Vars.class.getClassLoader());
+
+            // Теперь эта строка выполнится без ошибок, так как currentLoader инициализирован
+            Class<?> loadedClass = currentLoader.loadClass(className);
+            Object instance = loadedClass.getDeclaredConstructor().newInstance();
 
             Vars.ui.showInfo("Успешно запущен:\n" + className);
-            Log.info("[CLaJ] Ручной запуск: " + className);
 
         } catch (ClassNotFoundException e) {
-            Vars.ui.showErrorMessage("Класс не найден! Проверь пакет и имя:\n" + className);
+            Vars.ui.showErrorMessage("Класс не найден:\n" + className);
         } catch (Exception e) {
             Log.err(e);
-            Vars.ui.showException("Ошибка", e);
+            Vars.ui.showException("Ошибка горячей загрузки", e);
         }
     }
 }

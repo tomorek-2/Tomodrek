@@ -15,7 +15,10 @@ public class CustomSceneRender {
     public float objectY = 0f;
     public float objectZ = 0f;
     public float objectScale = 1.2f;
-
+    public float camX = 0f;     // Влево (-) / Вправо (+)
+    public float camY = 0f;     // Вниз (-) / Вверх (+) — высота камеры
+    public float camZ = 15f;     // Расстояние до куба (Приближение/Отдаление)
+    public float fov = 700f;
     // Переменные анимации и вращения
     private float rotationAngleX = 0f;
     private float rotationAngleY = 0f;
@@ -108,7 +111,7 @@ public class CustomSceneRender {
                 continue;
             }
 
-            float fov = 700f;
+
             screenX[i] = centerX + (viewX / -viewZ) * fov;
             screenY[i] = centerY + (viewY / -viewZ) * fov;
             visible[i] = true;
@@ -126,8 +129,9 @@ public class CustomSceneRender {
         }
 
         // Корректно возвращаем матрицу 2D камеры мира Mindustry
-        Draw.flush();
-        Draw.proj(Core.camera.mat);
+       //
+        // Draw.flush();
+       Draw.proj(Core.camera.mat);
     }
 
     private void drawFace(int p1, int p2, int p3, int p4) {

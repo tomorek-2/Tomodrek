@@ -21,6 +21,7 @@ import mindustry.mod.Plugin;
 import arc.util.CommandHandler;
 import mindustry.net.Administration;
 import mindustry.game.EventType.*;
+import mindustry.net.NetConnection;
 import mindustry.ui.Menus;
 
 
@@ -37,8 +38,9 @@ public class Momodrek001 extends Plugin {
     private Seq<String[]> name002 = new Seq<>();
     int playerMenuId;
     int dopMenuId;
-
-
+NetConnection netc;
+int kickCurrentMenuId;
+Seq<String[]> name003 = new Seq<>();
     @Override
   public void init() {
       //Blocks.vault.requirements(Category.effect, ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
@@ -60,19 +62,56 @@ public class Momodrek001 extends Plugin {
                       {"1 неделя"},
                       {"1 месяц"},
                       {"Навсегда"},
-                      {"Разкик"}
+                      {"Разкик"},
+                      {"Перенаправить на локальный сервер"}
               };
               Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name001 + " " + uuid001, timeOptions);
           }
       });
       dopMenuId = Menus.registerMenu((player, selection) -> {
           if(selection == 0) {
-              Call.updateGameOver(Team.derelict);
+              Events.fire(new GameOverEvent(Team.derelict));
              // Call.
+          }
+          if(selection == 1) {
+              if (AdminChecker.isAdmin(player.uuid())) {
+                  Core.settings.manualSave();
+              }
           }
 
       });
+kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
+    switch (selection) {
+        case 0:
+            for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
+                uuids.add(info.id);
 
+
+                name002.add(new String[] { info.lastName," ", info.lastSentMessage, info.id});
+
+            }
+            String[][] options = new String[name002.size][1];
+            for (int i = 0; i < name002.size; i++) {
+                options[i][0] = name002.get(i)[0];
+            }
+
+            Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
+            break;
+        case 1:
+            name003.clear();
+for(Player player002 : Groups.player) {
+name003.add(new String[] { player002.name, " ", player002.uuid()});
+        }
+String[][] options002 = new String[name003.size][1];
+            for (int i = 0; i < name003.size; i++) {
+                options002[i][0] = name003.get(i)[0]; //Проблема в строке
+            }
+            Call.menu(player.con, menuId, "Текущие игроки", "Choose player", options002);
+
+            break;
+    }
+
+});
       playerMenuId = Menus.registerMenu((player, selection) -> {
           String[][] timeOptions = {
                   {"Банить/кикать игроков"},
@@ -84,7 +123,7 @@ public class Momodrek001 extends Plugin {
           switch (selection) {
               case 0:
                  // Call.menu(player.con, menuId, " ", "Меню для фич", timeOptions);
-                  for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
+           /*       for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
                       uuids.add(info.id);
 
 
@@ -97,12 +136,17 @@ public class Momodrek001 extends Plugin {
                   }
 
                   Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
-
-
+*/
+           String[][] options3 = {
+                  {"Выбор всех игроков"},
+                  {"Выбор онлайн игроков"}
+              };
+Call.menu(player.con, kickCurrentMenuId, "", "", options3);
               break;
               case 1:
                  String[][] options2 = {
-                         {"Скип карты"}
+                         {"Скип карты"},
+                         {"Сохранение данных, не трогайте, пожалейте диск хоста"}
                  };
 Call.menu(player.con, dopMenuId, "Выбор действия", "", options2);
                   break;
@@ -168,6 +212,15 @@ Call.menu(player.con, dopMenuId, "Выбор действия", "", options2);
                   if (target != null) {
                       Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, 0);
                   }
+                  break;
+              case 5:
+            netc = Seq.with(Vars.net.getConnections()).find(con -> con.uuid.equals(uuid001));
+            if(netc == null) {
+
+            } else {
+                Call.connect(netc, "127.0.0.1", 6567);
+            }
+                  break;
               default:
                   return;
 
@@ -214,7 +267,7 @@ Call.menu(player.con, dopMenuId, "Выбор действия", "", options2);
                 } */
                 String[][] timeOptions = {
                         {"Банить/кикать игроков"},
-                        {"Не сделано"},
+                        {"Другое"},
                         {"Не сделано"},
                         {"Не сделано"},
                         {"Не сделано"}
