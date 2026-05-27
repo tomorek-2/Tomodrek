@@ -41,6 +41,11 @@ public class Momodrek001 extends Plugin {
 NetConnection netc;
 int kickCurrentMenuId;
 Seq<String[]> name003 = new Seq<>();
+int menuId2;
+Seq<String> uuidss = new Seq<>();
+    Seq<String[]> name004 = new Seq<>();
+    String name005;
+    String uuid004;
     @Override
   public void init() {
       //Blocks.vault.requirements(Category.effect, ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
@@ -66,8 +71,34 @@ Seq<String[]> name003 = new Seq<>();
                       {"Перенаправить на локальный сервер"}
               };
               Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name001 + " " + uuid001, timeOptions);
+
           }
+
       });
+        menuId2 = Menus.registerMenu((player, selection) -> {
+            AdminChecker.loadConfig();
+            for(Player player2 : Groups.player) {
+uuidss.add(player2.uuid());
+                name004.add(new String[] { player2.name," ", player2.lastText, player2.uuid()});
+
+            }
+            name005 = name004.get(selection)[0];
+            uuid004 = uuidss.get(selection);
+                Player targetPlayer2 = Groups.player.find(p -> p.uuid().equals(uuid001));
+
+                String[][] timeOptions = {
+                        {"1 день"},
+                        {"1 неделя"},
+                        {"1 месяц"},
+                        {"Навсегда"},
+                        {"Разкик"},
+                        {"Перенаправить на локальный сервер"}
+                };
+                Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name005 + " " + uuid004, timeOptions);
+
+
+
+        });
       dopMenuId = Menus.registerMenu((player, selection) -> {
           if(selection == 0) {
               Events.fire(new GameOverEvent(Team.derelict));
@@ -98,15 +129,17 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
             Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
             break;
         case 1:
-            name003.clear();
+            name004.clear();
 for(Player player002 : Groups.player) {
-name003.add(new String[] { player002.name, " ", player002.uuid()});
+name004.add(new String[] { player002.name, " ", "", player002.uuid()});
         }
-String[][] options002 = new String[name003.size][1];
-            for (int i = 0; i < name003.size; i++) {
-                options002[i][0] = name003.get(i)[0]; //Проблема в строке
+
+String[][] options002 = new String[name004.size][1];
+            for (int i = 0; i < name004.size; i++) {
+                options002[i][0] = name004.get(i)[0];
             }
-            Call.menu(player.con, menuId, "Текущие игроки", "Choose player", options002);
+
+            Call.menu(player.con, menuId2, "Текущие игроки", "Choose player", options002);
 
             break;
     }
@@ -158,19 +191,23 @@ Call.menu(player.con, dopMenuId, "Выбор действия", "", options2);
       kickMenuId = Menus.registerMenu((player, selection) -> {
           if (uuid001 == null) return;
           Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
+          Player target1 = Groups.player.find(p -> p.uuid().equals(uuid004));
           long duration = 0;
           String reason = "";
           Administration.PlayerInfo info002 = Vars.netServer.admins.getInfo(uuid001);
+          Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid004);
           switch (selection) {
               case 0:
                   duration = 24 * 60 * 60 * 1000;
                   reason = "1 день";
-                 // Administration.PlayerInfo info002 = Vars.netServer.admins.getInfo(uuid001);
-                  //Player target = Groups.player.find(p ->p.uuid().equals(uuid001));
                   if (target != null) {
 
                       target.con.kick("Вы наказаны на " + reason, duration);
                       Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, duration);
+                  }
+                  if(target1 != null) {
+                      target1.con.kick("Вы наказаны на " + reason, duration);
+                      Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, duration);
                   }
                   break;
               case 1:
@@ -182,31 +219,47 @@ Call.menu(player.con, dopMenuId, "Выбор действия", "", options2);
 
                       target.con.kick("Вы наказаны на " + reason, duration);
                   }
+                  if(target1 != null) {
+                      target1.con.kick("Вы наказаны на " + reason, duration);
+                      Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, duration);
+                  }
                   break;
               case 2:
                   duration = 30L * 24 * 60 * 60 * 1000;
                   reason = "1 месяц";
 
                   if (target != null) {
+
                       Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, duration);
 
                       target.con.kick("Вы наказаны на " + reason, duration);
+                  }
+                  if(target1 != null) {
+                      Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, duration);
+                      target1.con.kick("Вы наказаны на " + reason, duration);
                   }
                   break;
               case 3:
                   duration = 0;
                   reason = "навсегда (бан)";
-                  Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
+                 // Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
                   uuid003 = player.uuid();
                   if (AdminChecker.isAdmin(uuid003)) {
-                      if (info003 != null && info003.banned) {
+                      if (info002 != null && info002.banned) {
 
 
                           Vars.netServer.admins.unbanPlayerID(uuid001);
                       } else {
                           Vars.netServer.admins.banPlayerID(uuid001);
                       }
+                      if(target1 != null && info003.banned) {
+                          Vars.netServer.admins.unbanPlayerID(uuid004);
+                      } else {
+                          Vars.netServer.admins.banPlayerID(uuid004);
+                      }
                   }
+
+
                   break;
               case 4:
                   if (target != null) {

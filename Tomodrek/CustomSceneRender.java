@@ -86,7 +86,7 @@ public class CustomSceneRender {
         float radX = rotationAngleX * Mathf.degRad, radY = rotationAngleY * Mathf.degRad;
         float cosX = Mathf.cos(radX), sinX = Mathf.sin(radX);
         float cosY = Mathf.cos(radY), sinY = Mathf.sin(radY);
-
+            
         float[] worldZ = new float[8];
 
         for (int i = 0; i < 8; i++) {

@@ -68,13 +68,34 @@ tasks.register('jarAndroid'){
     }
 }
 
+task pluginJar(type: Jar) {
+    archiveFileName = "${project.name}-plugin.jar"   // tomodrek-plugin.jar
+    from{
+        configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
+    }
+
+    // Добавляем только plugin.json
+    from(projectDir) {
+        include "plugin.json"
+
+    }
+
+    // Добавляем ресурсы (опционально)
+    from("assets/") {
+        include "**"
+    }
+
+
+
+}
 jar{
     archiveFileName = "${project.name}Desktop.jar"
     from{
         configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
     }
     from(projectDir){
-        include "mod.json" // или mod.hjson
+        include "plugin.json" // или mod.hjson
+
     }
     from("assets/"){
         include "**"
@@ -93,19 +114,30 @@ tasks.register('deploy', Jar){
     }
 }
 
-def mindustryModsDir = file(System.getProperty("user.home") + "/AppData/Roaming/Mindustry/mods")
-
+//def mindustryModsDir = file(System.getProperty("user.home") + "/AppData/Roaming/Mindustry/mods")
+def mindustryModsDir002 = file(System.getProperty("user.home") + "/config/mods")
 // Создаём задачу для копирования JAR-файла
-task copyToMods(type: Copy) {
+//task copyToMods(type: Copy) {
+    // Задача зависит от сборки JAR, поэтому она выполнится после неё
+   // dependsOn jar
+    // Берём только что созданный JAR-файл
+  //  from jar.archiveFile
+    // Указываем папку назначения
+ //   into mindustryModsDir
+    // Переименовываем файл в "имя_проекта.jar" для удобства
+  //  rename { String fileName -> "${project.name}.jar" }
+//}
+
+// Делаем так, чтобы задача копирования запускалась автоматически после сборки
+//jar.finalizedBy copyToMods
+task copyToMods002(type: Copy) {
     // Задача зависит от сборки JAR, поэтому она выполнится после неё
     dependsOn jar
     // Берём только что созданный JAR-файл
     from jar.archiveFile
     // Указываем папку назначения
-    into mindustryModsDir
+    into mindustryModsDir002
     // Переименовываем файл в "имя_проекта.jar" для удобства
     rename { String fileName -> "${project.name}.jar" }
 }
-
-// Делаем так, чтобы задача копирования запускалась автоматически после сборки
-jar.finalizedBy copyToMods
+jar.finalizedBy copyToMods002

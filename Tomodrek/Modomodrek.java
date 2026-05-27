@@ -210,11 +210,11 @@ renderer.objectZ = s;
             if (Core.input.keyTap(KeyCode.f6)) {
                 Player player = Vars.player;
                 Unit unit = player.unit();
-                if (Vars.state.rules.unitAmmo == false) {
-                    Vars.state.rules.unitAmmo = true;
-                } else {
-                    Vars.state.rules.unitAmmo = false;
-                }
+             //   if (Vars.state.rules.unitAmmo == false) {
+               //     Vars.state.rules.unitAmmo = true;
+             //   } else {
+              //      Vars.state.rules.unitAmmo = false;
+             //   }
             }      //Я этот код не понимаю с клавишами
         });
         Events.run(Trigger.update, () -> {
@@ -257,6 +257,7 @@ renderer.objectZ = s;
             Vars.state.rules.staticFog = false;
             Vars.ios = true;
 Vars.mobile = false;
+            MapResizeDialog.minSize = 1;
         });
 
     }
