@@ -24,7 +24,7 @@ import mindustry.game.EventType.*;
 import mindustry.net.NetConnection;
 import mindustry.ui.Menus;
 
-
+//ДА ПОЧЕМУ INTELLIJ ОТКАЗЫВАЕТСЯ ПРИНИМАТЬ ИЗМЕНЕНИЯ?!
 public class Momodrek001 extends Plugin {
     int menuId;
     String name001;
