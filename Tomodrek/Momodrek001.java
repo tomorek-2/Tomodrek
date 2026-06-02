@@ -15,7 +15,7 @@ import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
 import mindustry.gen.Player;
-import mindustry.io.JsonIO;
+
 import mindustry.mod.Plugin;
 
 import arc.util.CommandHandler;
@@ -23,6 +23,7 @@ import mindustry.net.Administration;
 import mindustry.game.EventType.*;
 import mindustry.net.NetConnection;
 import mindustry.ui.Menus;
+import mindustry.world.Block;
 
 //ДА ПОЧЕМУ INTELLIJ ОТКАЗЫВАЕТСЯ ПРИНИМАТЬ ИЗМЕНЕНИЯ?!
 public class Momodrek001 extends Plugin {
@@ -48,11 +49,11 @@ Seq<String> uuidss = new Seq<>();
     String uuid004;
     @Override
   public void init() {
-      //Blocks.vault.requirements(Category.effect, ItemStack.with(Items.copper, 2000, Items.lead, 2000, Items.thorium, 4000));
-      // mindustry.Vars.maxSchematicSize = 1024;
 
       //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
+for(Block block : Vars.content.blocks()) {
 
+}
     //  });
       menuId = Menus.registerMenu((player, selection) -> {
           AdminChecker.loadConfig();
