@@ -215,7 +215,13 @@ renderer.objectZ = s;
              //   } else {
               //      Vars.state.rules.unitAmmo = false;
              //   }
-            }      //Я этот код не понимаю с клавишами
+                new MapResizeDialogTO((width, height, shiftX, shiftY) -> {
+                }).show();
+            }
+
+
+
+            //Я этот код не понимаю с клавишами
         });
         Events.run(Trigger.update, () -> {
             if (Core.input.keyTap(KeyCode.f5)) {
@@ -257,7 +263,8 @@ renderer.objectZ = s;
             Vars.state.rules.staticFog = false;
             Vars.ios = true;
 Vars.mobile = false;
-            MapResizeDialog.minSize = 1;
+            MapResizeDialog.minSize = -1;
+
         });
 
     }
