@@ -365,7 +365,7 @@ String uuid0004 = target1.uuid();
       for (Player player : Groups.player) {
 
 
-        player.sendMessage("Переходите на канал ТГ через команду /telegram");
+        player.sendMessage("Есть пожелания к плагину? Напишите через команду /telegram");
       }
     }, 5f, 600f);
   }
@@ -373,7 +373,7 @@ String uuid0004 = target1.uuid();
     @Override
     public void registerClientCommands(CommandHandler handler) {
         handler.<Player>register("telegram", "ТГ", (args, player) -> {
-            Call.openURI("https://t.me/LazyCatV");
+            Call.openURI("https://t.me/tomorek");
 
 
         });
@@ -412,7 +412,6 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
         swqe = "Встроенная";
     }
      swq = " Карта " + map.name() + " [gold]" + swqe;
-    //Пробую исправить переполнение
     player.sendMessage(swq);
 
 }
@@ -428,7 +427,7 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
 }
 class AdminChecker {
 
-    private static String[] rootAdmins = {"ass", ""};
+    private static String[] rootAdmins = {"", ""};
     private static String[] admins = {"", ""};
     private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", "uuid-moder-2"};
     private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
