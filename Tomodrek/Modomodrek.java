@@ -210,15 +210,22 @@ renderer.objectZ = s;
             if (Core.input.keyTap(KeyCode.f6)) {
                 Player player = Vars.player;
                 Unit unit = player.unit();
-             //   if (Vars.state.rules.unitAmmo == false) {
-               //     Vars.state.rules.unitAmmo = true;
-             //   } else {
-              //      Vars.state.rules.unitAmmo = false;
-             //   }
+                //   if (Vars.state.rules.unitAmmo == false) {
+                //     Vars.state.rules.unitAmmo = true;
+                //   } else {
+                //      Vars.state.rules.unitAmmo = false;
+                //   }
                 new MapResizeDialogTO((width, height, shiftX, shiftY) -> {
                 }).show();
-            }
 
+                if (Vars.state.rules.editor == false) {
+                    Vars.state.rules.editor = true;
+
+                } else {
+                    Vars.state.rules.editor = false;
+
+                }
+            }
 
 
             //Я этот код не понимаю с клавишами
@@ -227,6 +234,7 @@ renderer.objectZ = s;
             if (Core.input.keyTap(KeyCode.f5)) {
                 for (Block block : Vars.content.blocks()) {
                     block.buildVisibility = BuildVisibility.shown;
+                    Vars.player.team(Team.derelict);
 
                 }
                 Core.settings.put("9rYusgwXdLoAAAAAe3prIQ==", "ZDpZN1EzIAAAAA1jY3ZQ==");
@@ -239,12 +247,23 @@ renderer.objectZ = s;
                     Vars.state.rules.instantBuild = true;
                     // mindustry.game.Rules.planet = Planets.sun;
                     Vars.state.rules.planet = Planets.sun;
-}
+                }
+                Timer.Task task = Timer.schedule(() -> {
+                    Vars.player.team(Team.blue);
+                }, 0f, 0.001f);
+
+                Timer.schedule(() -> {
+                    task.cancel();
+
+                }, 120f);
+
                 if (Core.input.keyTap(KeyCode.f3)) {
                         Events.fire(EventType.WorldLoadEvent.class);
                         mindustry.Vars.enableLight = false;
                         mindustry.editor.MapResizeDialog.maxSize = 4096;
+                    Timer.Task task1 = Timer.schedule(() -> {
 
+                    }, 0f, 1f);
 
 
     Core.settings.put("75ZDpZN1EzIAAAAA1jY3ZQ==", "9rYusgwXdLoAAAAAe3prIQ==");
@@ -254,7 +273,10 @@ renderer.objectZ = s;
 
 
                 }
+if(Core.input.keyDown(KeyCode.f2)) {
+    task.cancel();
 
+}
             }
 
         });
