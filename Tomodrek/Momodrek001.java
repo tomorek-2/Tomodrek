@@ -267,8 +267,6 @@ String uuid0004 = target1.uuid();
                   if (target1 != null) {
                       Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, 0);
 
-                  } else {
-                      Log.err("Нетц цели для разкика, 250 строка");
                   }
                   break;
               case 5:
