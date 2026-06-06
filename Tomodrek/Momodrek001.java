@@ -115,7 +115,7 @@ uuidss.add(player2.uuid());
                   Log.warn("Админ сохранил данные, " + player.ip() + "uuid:" + player.uuid());
               }
           }
-          if(selection == 0) {
+          if(selection == 2) {
               for(Block block : Vars.content.blocks()) {
                   block.buildVisibility = BuildVisibility.shown;
               }
