@@ -42,7 +42,7 @@ size = 1;
             buildVisibility = BuildVisibility.shown;
             powerProduction = 1f;
 }};
-new Tomodrek.KeyBoardBlock("KeyBoardLogicInputBlock") {{
+new Tomodrek.KeyBoardBlock("keyboardlogicinputblock") {{
 health = 500;
 size = 1;
 buildVisibility = BuildVisibility.shown;
