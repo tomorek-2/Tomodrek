@@ -76,7 +76,7 @@ task pluginJar(type: Jar) {
 
     // Добавляем только plugin.json
     from(projectDir) {
-        include "plugin.json"
+        include "mod.json"
 
     }
 
