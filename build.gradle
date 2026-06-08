@@ -94,7 +94,7 @@ jar{
         configurations.runtimeClasspath.collect{ it.isDirectory() ? it : zipTree(it) }
     }
     from(projectDir){
-        include "plugin.json" // или mod.hjson
+        include "mod.json" // или mod.hjson
 
     }
     from("assets/"){
