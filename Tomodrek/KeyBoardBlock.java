@@ -2,6 +2,7 @@ package Tomodrek;
 
 
 
+import arc.input.KeyCode;
 import mindustry.content.Bullets;
 import mindustry.gen.Call;
 import mindustry.ui.dialogs.BaseDialog;
@@ -37,19 +38,22 @@ public class KeyBoardBlock extends LaserTurret {
 
 
             super.updateTile();
-            if (this.isControlled() && mindustry.Vars.player.unit() == this.unit) {
+            if (mindustry.Vars.player == null || mindustry.Vars.player.unit() == null) return;
+            if (this.isControlled() && this.unit.controller() == mindustry.Vars.player.unit().controller()) {
                 internalMemory[0] = this.isShooting() ? 1.0d : 0.0d;
                 internalMemory[1] = this.unit != null ? (double) this.unit.aimX() : 0.0d;
                 internalMemory[2] = this.unit != null ? (double) this.unit.aimY() : 0.0d;
 
                 // Считываем физическую клавиатуру ПК
                 double currentPressedKey = 0.0d;
-                if(arc.Core.input.keyDown(arc.input.KeyCode.w)) currentPressedKey = 51.0d;
-                else if(arc.Core.input.keyDown(arc.input.KeyCode.a)) currentPressedKey = 29.0d;
-                else if(arc.Core.input.keyDown(arc.input.KeyCode.s)) currentPressedKey = 47.0d;
-                else if(arc.Core.input.keyDown(arc.input.KeyCode.d)) currentPressedKey = 32.0d;
-                else if(arc.Core.input.keyDown(arc.input.KeyCode.space)) currentPressedKey = 62.0d;
-                else if(arc.Core.input.keyDown(arc.input.KeyCode.e)) currentPressedKey = 37.0d;
+                if (arc.Core.input.keyDown(arc.input.KeyCode.w)) currentPressedKey = 51.0d;
+                else if (arc.Core.input.keyDown(arc.input.KeyCode.a)) currentPressedKey = 29.0d;
+                else if (arc.Core.input.keyDown(arc.input.KeyCode.s)) currentPressedKey = 47.0d;
+                else if (arc.Core.input.keyDown(arc.input.KeyCode.d)) currentPressedKey = 32.0d;
+                else if (arc.Core.input.keyDown(arc.input.KeyCode.space)) currentPressedKey = 62.0d;
+                else if (arc.Core.input.keyDown(arc.input.KeyCode.e)) currentPressedKey = 37.0d;
+                else if (arc.Core.input.keyDown(KeyCode.mouseLeft)) currentPressedKey = 0.1d;
+                else if (arc.Core.input.keyDown(KeyCode.mouseRight)) currentPressedKey = 1.1d;
                 else {
                     // ХАК: Если нажата любая другая буква, которую игра заблокировала в keyDown,
                     // мы вытаскиваем её через текстовый буфер ввода Arc!
@@ -61,6 +65,7 @@ public class KeyBoardBlock extends LaserTurret {
                         }
                     }
                 }
+
 
                 if (lastSentKey != currentPressedKey) {
                     // Пишем локально (для локального хоста Ubuntu)
