@@ -2,26 +2,11 @@ package Tomodrek;
 
 import mindustry.mod.Mod;
 import mindustry.world.blocks.defense.Wall;
-import mindustry.world.blocks.defense.*;
-import mindustry.world.blocks.defense.turrets.*;
 import mindustry.type.Category;
-import mindustry.content.Items;
 import mindustry.world.meta.BuildVisibility;
-import mindustry.type.Item;        
-import mindustry.world.blocks.distribution.Router;
-
-import mindustry.world.blocks.defense.turrets.LaserTurret;
-import mindustry.world.blocks.defense.turrets.PowerTurret;
-import mindustry.entities.bullet.ContinuousLaserBulletType;
-
-import mindustry.content.Liquids;
-import mindustry.world.consumers.ConsumePower;
-
-import mindustry.Vars;
 
 
-
-public class qwerWalls extends Mod {
+public class TomodrekBlocks extends Mod {
     
     public static void load() {
         

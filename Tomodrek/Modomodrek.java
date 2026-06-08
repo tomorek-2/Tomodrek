@@ -75,26 +75,20 @@ public class Modomodrek extends Mod {
 Timer.Task task;
     @Override
     public void loadContent() {
-        Tomodrek.qwerWalls.load();
+        Tomodrek.TomodrekBlocks.load();
     }
 
     @Override
     public void init() {
 
-            // Запуск самой отрисовки на карте
 
 
 
-            // 2. СОЗДАНИЕ ОБЪЕКТА (записываем в глобальный Object)
-      /*  sceneObject1 = new Tomodrek.CustomSceneRender();
-        // Сдвигаем его ВЛЕВО на 2 единицы и приподнимаем вверх
-        sceneObject1.objectX = 1.f;
-        sceneObject1.objectY = 1.0f;
-        sceneObject1.objectScale = 1.0f;
-*/
-        // 2. Создаем второй 3D-куб (абсолютно новый объект того же класса)
+
+
+
         sceneObject2 = new Tomodrek.CustomSceneRender();
-        // Сдвигаем его ВПРАВО на 2 единицы и приподнимаем вверх
+
         sceneObject2.objectX = 2.0f;
         sceneObject2.objectY = 1.0f;
         sceneObject2.objectScale = 0.5f;
