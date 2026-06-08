@@ -32,14 +32,14 @@ public class qwerWalls extends Mod {
             buildVisibility = BuildVisibility.shown;
             
         }};
-        new qwerWall("qwerWallHeal") {{
+        new Tomodrek.qwerWall("qwerWallHeal") {{
             health = 500;
             size = 1;
             category = Category.logic;
             buildVisibility = BuildVisibility.shown;
             
         }};
-new selfHealCore("selfHealCore") {{
+new Tomodrek.selfHealCore("selfHealCore") {{
             health = 5000;
             description = "Ядро которое само исцеляется на 1 ХП, если здоровье меньше 1000 ХП то хилиться больше";
             size = 3;
@@ -47,7 +47,7 @@ new selfHealCore("selfHealCore") {{
             buildVisibility = BuildVisibility.shown;
 itemCapacity = 3000;
 }};
-new BadSolarPanel("BadSolarPanel") {{
+new Tomodrek.BadSolarPanel("BadSolarPanel") {{
 health = 25;
 description = "Солнечная панель которая из хлама разрушается сама по себе но пока единственный вариант";
 category = Category.power;
@@ -57,7 +57,7 @@ size = 1;
             buildVisibility = BuildVisibility.shown;
             powerProduction = 1f;
 }};
-new LogicWall("LogicWall") {{
+new Tomodrek.KeyBoardBlock("KeyBoardLogicInputBlock") {{
 health = 500;
 size = 1;
 buildVisibility = BuildVisibility.shown;

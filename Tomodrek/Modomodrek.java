@@ -13,8 +13,7 @@ import mindustry.content.Liquids;
 import mindustry.content.Planets;
 import mindustry.core.GameState;
 import mindustry.editor.MapResizeDialog;
-import mindustry.gen.Call;
-import mindustry.gen.Icon;
+import mindustry.gen.*;
 import mindustry.mod.Mod;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.ui.dialogs.SettingsMenuDialog;
@@ -31,8 +30,6 @@ import mindustry.game.Schematics;
 import arc.Events;
 import mindustry.game.EventType;
 import mindustry.world.Block;
-import mindustry.gen.Player;
-import mindustry.gen.Unit;
 import mindustry.game.EventType.PlayerChatEvent;
 import arc.Input;
 import arc.input.KeyCode;
@@ -75,7 +72,7 @@ public class Modomodrek extends Mod {
    // public static Tomodrek.CustomSceneRender custom3DScene;
 
     private float animTime = 0f;
-
+Timer.Task task;
     @Override
     public void loadContent() {
         Tomodrek.qwerWalls.load();
@@ -173,9 +170,9 @@ if(Core.input.keyDown(KeyCode.f2)) {
                     String w = text001;
                 }).height(36f).width(192f);
                 table.bottom();
-                table.button("157 или 156", () -> {
+                table.button("157 или 158", () -> {
                     if (mindustry.core.Version.build == 157) {
-                        mindustry.core.Version.build = 155;
+                        mindustry.core.Version.build = 158;
                     } else {
                         mindustry.core.Version.build = 157;
                     }
@@ -192,7 +189,14 @@ renderer.objectZ = s;
                 }).height(64).width(256f);
                 @Nullable
                 Player player = Vars.player;
+                table.bottom();
+table.button("", () -> {
 
+}).with((buttonw) ->{
+    buttonw.getStyle().up = Tex.button;
+    buttonw.getStyle().over = Tex.alphaaaa;
+    buttonw.getStyle().down = Tex.buttonDown;
+});
                 // Call.connect(Vars.player.con, "pivomind.pro", 6567);
             });
 
@@ -248,7 +252,7 @@ renderer.objectZ = s;
                     // mindustry.game.Rules.planet = Planets.sun;
                     Vars.state.rules.planet = Planets.sun;
                 }
-                Timer.Task task = Timer.schedule(() -> {
+                task = Timer.schedule(() -> {
                     Vars.player.team(Team.blue);
                 }, 0f, 0.001f);
 
@@ -273,13 +277,16 @@ renderer.objectZ = s;
 
 
                 }
-if(Core.input.keyDown(KeyCode.f2)) {
-    task.cancel();
 
-}
             }
+            if(Core.input.keyTap(KeyCode.f2)) {
+                if(task == null) {
+                } else {
 
-        });
+                    task.cancel();
+                }
+            }
+            });
         Events.run(Trigger.update, () -> {
             Vars.state.rules.fog = false;
             Vars.state.rules.staticFog = false;

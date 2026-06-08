@@ -120,6 +120,7 @@ uuidss.add(player2.uuid());
                   block.buildVisibility = BuildVisibility.shown;
               }
           }
+          
 
       });
 kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
