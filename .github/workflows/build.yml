@@ -27,5 +27,5 @@ jobs:
       - name: Upload mod JAR
         uses: actions/upload-artifact@v4
         with:
-          name: Tomodrek
+          name: Tertanum
           path: build/libs/*.jar
