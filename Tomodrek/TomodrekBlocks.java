@@ -3,13 +3,16 @@ package Tomodrek;
 import mindustry.mod.Mod;
 import mindustry.world.blocks.defense.Wall;
 import mindustry.type.Category;
+import mindustry.world.blocks.environment.Floor;
+import mindustry.world.blocks.environment.Prop;
 import mindustry.world.blocks.environment.StaticWall;
 import mindustry.world.meta.BuildVisibility;
 
 
 public class TomodrekBlocks extends Mod {
     public static String[] nameWall001 = {"blue-stone-wall","blue-stone-crystall"};
-    public static String[] nameWall002 = { ""};
+    public static String[] nameFloor002 = { "blue-stone-floor"};
+    public static String[] nameProp003 = {"blue-stone-boulder"};
     public static void load() {
         
         Wall qwertyWall = new Wall("qwerWall") {{
@@ -57,10 +60,16 @@ new StaticWall(name) {{
 }};
 
  }
- for(String name : nameWall002) {
-     new StaticWall(name) {{
+ for(String name : nameFloor002) {
+     new Floor(name) {{
          size = 1;
-         variants = 1;
+         variants = 5;
+     }};
+ }
+ for(String name : nameProp003) {
+     new Prop(name) {{
+         size = 1;
+         variants = 2;
      }};
  }
     }
