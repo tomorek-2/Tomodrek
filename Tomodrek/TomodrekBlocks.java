@@ -1,4 +1,4 @@
-package Tomodrek;
+ггpackage Tomodrek;
 
 import mindustry.content.Items;
 import mindustry.mod.Mod;
@@ -87,13 +87,13 @@ public class TomodrekBlocks extends Mod {
         } */
         afatite = new mindustry.type.Item("afatite", arc.graphics.Color.valueOf("4F8BFF")) {{
             flammability = 0f;
-            charge = 0.5f;
+            radioactivity = 0.5f;
         }};
 
 
         blueStone = new mindustry.type.Item("blue-stone", arc.graphics.Color.valueOf("8B67C9")) {{
             flammability = 0f;
-            radioactivity = 0.0001f;
+            radioactivity = 0f;
         }};
 
 
@@ -104,7 +104,6 @@ public class TomodrekBlocks extends Mod {
 
         crystallCluster = new mindustry.type.Item("crystall-cluster", arc.graphics.Color.valueOf("6767C9")) {{
             flammability = 0f;
-            charge = 0.5f;
             radioactivity = 0.2f;
         }};
 
