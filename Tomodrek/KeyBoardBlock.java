@@ -147,7 +147,15 @@ public class KeyBoardBlock extends LaserTurret {
                 this.internalMemory[idx] = value.num();
             }
         }
+@Override
+        public void draw() {
+            super.draw();
+    arc.graphics.g2d.Draw.color(arc.graphics.Color.valueOf("172C26FF"));
 
+
+
+    arc.graphics.g2d.Draw.color();
+        }
 
         }
 
