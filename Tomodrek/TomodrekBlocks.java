@@ -1,4 +1,4 @@
-ггpackage Tomodrek;
+package Tomodrek;
 
 import mindustry.content.Items;
 import mindustry.mod.Mod;
