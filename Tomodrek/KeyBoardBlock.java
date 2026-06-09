@@ -55,11 +55,10 @@ public class KeyBoardBlock extends LaserTurret {
                 else if (arc.Core.input.keyDown(KeyCode.mouseLeft)) currentPressedKey = 0.1d;
                 else if (arc.Core.input.keyDown(KeyCode.mouseRight)) currentPressedKey = 1.1d;
                 else {
-                    // ХАК: Если нажата любая другая буква, которую игра заблокировала в keyDown,
-                    // мы вытаскиваем её через текстовый буфер ввода Arc!
+
                     for (arc.input.KeyCode key : arc.input.KeyCode.values()) {
-                        // keyTap улавливает момент нажатия даже во время блокировки контроля блока!
-                        if (arc.Core.input.keyTap(key)) {
+
+                        if (arc.Core.input.keyDown(key)) {
                             currentPressedKey = (double) key.name().hashCode();
                             break;
                         }

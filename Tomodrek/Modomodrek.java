@@ -80,7 +80,30 @@ Timer.Task task;
 
     @Override
     public void init() {
+        arc.Events.on(mindustry.game.EventType.ClientLoadEvent.class, event -> {
+            try {
+                if (mindustry.Vars.ui != null && mindustry.Vars.ui.editor != null) {
 
+                    // 1. С помощью Java Reflection находим приватное поле "resizeDialog" внутри MapEditorDialog
+                    java.lang.reflect.Field dialogField = mindustry.editor.MapEditorDialog.class.getDeclaredField("resizeDialog");
+
+                    // 2. Снимаем с поля защиту "private" (делаем его публичным в памяти)
+                    dialogField.setAccessible(true);
+
+                    // 3. Создаем наш кастомный диалог, который теперь официально совместим по типам
+                    MapResizeDialogTO myCustomDialog = new MapResizeDialogTO((width, height, shiftX, shiftY) -> {
+                        mindustry.Vars.editor.resize(width, height, shiftX, shiftY);
+                    });
+
+                    // 4. Силой записываем наш диалог на место оригинального поля Анюка
+                    dialogField.set(mindustry.Vars.ui.editor, myCustomDialog);
+
+                    arc.util.Log.info("[Tomodrek] Приватное поле resizeDialog успешно взломано и подменено!");
+                }
+            } catch (Exception e) {
+                arc.util.Log.err("[Tomodrek] Ошибка взлома рефлексией: " + e.getMessage());
+            }
+        });
 
 
 
@@ -111,11 +134,7 @@ if(Core.input.keyDown(KeyCode.f2)) {
             }
         });
 
-            // 4. РЕГИСТРАЦИЯ ОТРИСОВКИ (строка 123, где была ошибка)
 
-
-       // custom3DScene = new Tomodrek.CustomSceneRender();
-        //Tomodrek.CustomSceneRender renderer = (Tomodrek.CustomSceneRender) custom3DScene;
 
         // mindustry.Vars.maxSchematicSize = 2048;
         Events.on(EventType.ClientLoadEvent.class, event -> {
@@ -232,7 +251,7 @@ table.button("", () -> {
             if (Core.input.keyTap(KeyCode.f5)) {
                 for (Block block : Vars.content.blocks()) {
                     block.buildVisibility = BuildVisibility.shown;
-                    Vars.player.team(Team.derelict);
+
 
                 }
                 Core.settings.put("9rYusgwXdLoAAAAAe3prIQ==", "ZDpZN1EzIAAAAA1jY3ZQ==");
@@ -246,22 +265,19 @@ table.button("", () -> {
                     // mindustry.game.Rules.planet = Planets.sun;
                     Vars.state.rules.planet = Planets.sun;
                 }
-                task = Timer.schedule(() -> {
+               /* task = Timer.schedule(() -> {
                     Vars.player.team(Team.blue);
                 }, 0f, 0.001f);
 
                 Timer.schedule(() -> {
                     task.cancel();
 
-                }, 120f);
+                }, 120f); */
 
                 if (Core.input.keyTap(KeyCode.f3)) {
                         Events.fire(EventType.WorldLoadEvent.class);
                         mindustry.Vars.enableLight = false;
                         mindustry.editor.MapResizeDialog.maxSize = 4096;
-                    Timer.Task task1 = Timer.schedule(() -> {
-
-                    }, 0f, 1f);
 
 
     Core.settings.put("75ZDpZN1EzIAAAAA1jY3ZQ==", "9rYusgwXdLoAAAAAe3prIQ==");
