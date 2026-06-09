@@ -76,6 +76,7 @@ Timer.Task task;
     @Override
     public void loadContent() {
         Tomodrek.TomodrekBlocks.load();
+
     }
 
     @Override
