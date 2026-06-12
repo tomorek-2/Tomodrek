@@ -123,6 +123,22 @@ uuidss.add(player2.uuid());
           
 
       });
+        mindustry.Vars.netServer.admins.addActionFilter(action -> {
+           if(action.tile != null && action.tile.x >= 348 && action.tile.x <= 451 && action.tile.y >= 348 && action.tile.y <= 451) {
+               return true;
+           } else {
+               if(action.tile != null) {
+                   if(action.player.admin) {
+                       return true;
+                   } else {
+                       return false;
+                   }
+               } else {
+                   return true;
+               }
+           }
+
+        });
 kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
     switch (selection) {
         case 0:
