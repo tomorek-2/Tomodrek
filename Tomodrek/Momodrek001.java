@@ -51,6 +51,7 @@ Seq<String> uuidss = new Seq<>();
     int kickMenuId2;
     String swq = "";
     String swqe = "";
+    String agit;
     @Override
   public void init() {
 
@@ -96,7 +97,8 @@ uuidss.add(player2.uuid());
                         {"1 месяц"},
                         {"Навсегда"},
                         {"Разкик"},
-                        {"Перенаправить на локальный сервер"}
+                        {"Перенаправить на локальный сервер"},
+                        {"Сделать игрока админом"}
                 };
                 Call.menu(player.con, kickMenuId2, "Выберите срок", "Для игрока: " + name005 + " " + uuid004, timeOptions);
 
@@ -294,6 +296,12 @@ String uuid0004 = target1.uuid();
                 Call.connect(netc, "127.0.0.1", 6567);
             }
                   break;
+              case 6:
+                  if(target1.admin()) {
+                      target1.admin = false;
+                  } else {
+                      target1.admin = true;
+                  }
               default:
                   return;
 
@@ -379,18 +387,47 @@ String uuid0004 = target1.uuid();
    });
 
     Timer.schedule(() -> {
+        int rand5 = arc.math.Mathf.random(1, 5);
+        switch(rand5) {
+            case 1:
+             agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
+            break;
+            case 2:
+              agit = "Хочешь предложить свою схему или правку? Присоединяйся к телеграмму - /tg";
+                break;
+            case 3:
+                 agit = "Не пропусти обновления сервера и новые гайды — подписывайся на телегу - /tg";
+                break;
+            case 4:
+                 agit = "Обсуждаем схемы, принимаем идеи и учимся строить вместе. Наш канал в телеге - /tg";
+                break;
+            case 5:
+                agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
+                break;
+        }
       for (Player player : Groups.player) {
 
 
-        player.sendMessage("Есть пожелания к плагину? Напишите через команду /telegram");
-      }
-    }, 5f, 600f);
+        //player.sendMessage("Есть пожелания к плагину? Напишите через команду /telegram");
+          player.sendMessage(agit);
+          }
+    }, 5f, 499f);
   }
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        handler.<Player>register("telegram", "ТГ", (args, player) -> {
+        handler.<Player>register("telegramPlugin", "ТГ создателя плагина", (args, player) -> {
             Call.openURI("https://t.me/tomorek");
+
+
+        });
+        handler.<Player>register("tg", "ТГ канал сервера ", (args, player) -> {
+            Call.openURI("https://t.me/mindustry_schems");
+
+
+        });
+        handler.<Player>register("chat", "Чат сервера в ТГ", (args, player) -> {
+            Call.openURI("https://t.me/chatlybiteleizavodov");
 
 
         });

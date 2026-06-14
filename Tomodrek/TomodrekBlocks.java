@@ -17,7 +17,7 @@ public class TomodrekBlocks extends Mod {
     public static String[] nameProp003 = {"blue-stone-boulder"};
     public static String[] nameFloor004 = {"crystall-floor"};
     public static String[] nameItem005 = {"afatite", "blue-stone", "dark-scrap", "crystall-cluster"};
-    public static Item afatite, blueStone, darkScrap, crystallCluster;
+    public static Item afatite, blueStone, darkScrap, crystallCluster, rawIron;
     public static void load() {
 
 
@@ -108,7 +108,9 @@ public class TomodrekBlocks extends Mod {
             charge = 0.5f;
             radioactivity = 0.2f;
         }};
+rawIron = new Item("raw-iron") {{
 
+}};
     }
 
 
