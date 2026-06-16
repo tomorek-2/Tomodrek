@@ -60,7 +60,7 @@ Seq<String> uuidss = new Seq<>();
         AdminChecker.loadConfig();
     //  });
       menuId = Menus.registerMenu((player, selection) -> {
-          if(AdminChecker.isModer(player.uuid())) {
+          if(AdminChecker.isModer(player.uuid(), player)) {
           AdminChecker.loadConfig();
           if (uuids != null && selection >= 0 && selection < uuids.size) {
               name001 = name002.get(selection)[0];
@@ -82,7 +82,8 @@ Seq<String> uuidss = new Seq<>();
 
       });
         menuId2 = Menus.registerMenu((player, selection) -> {
-            if(AdminChecker.isModer(player.uuid())) {
+            if(selection == -1) return;
+            if(AdminChecker.isModer(player.uuid(), player)) {
                 AdminChecker.loadConfig();
                 for (Player player2 : Groups.player) {
                     uuidss.add(player2.uuid());
@@ -108,13 +109,13 @@ Seq<String> uuidss = new Seq<>();
 
         });
       dopMenuId = Menus.registerMenu((player, selection) -> {
-          if(AdminChecker.isModer(player.uuid())) {
+          if(AdminChecker.isModer(player.uuid(), player)) {
               if (selection == 0) {
                   Events.fire(new GameOverEvent(Team.derelict));
-                  // Call.
+
               }
               if (selection == 1) {
-                  if (AdminChecker.isAdmin(player.uuid())) {
+                  if (AdminChecker.isAdmin(player.uuid(), player)) {
                       Core.settings.manualSave();
                       Vars.netServer.admins.save();
                       Log.warn("Админ сохранил данные, " + player.ip() + "uuid:" + player.uuid());
@@ -156,7 +157,7 @@ Seq<String> uuidss = new Seq<>();
 
         });
 kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
-    if(AdminChecker.isModer(player.uuid())) {
+    if(AdminChecker.isModer(player.uuid(), player)) {
         switch (selection) {
             case 0:
                 for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
@@ -192,7 +193,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
     }
 });
       playerMenuId = Menus.registerMenu((player, selection) -> {
-          if(AdminChecker.isModer(player.uuid())) {
+          if(AdminChecker.isModer(player.uuid(), player)) {
           String[][] timeOptions = {
                   {"Банить/кикать игроков"},
                   {"Улучшение процесса"},
@@ -237,7 +238,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
           }
               });
       kickMenuId2 = Menus.registerMenu((player, selection) -> {
-          if(AdminChecker.isModer(player.uuid())) {
+          if(AdminChecker.isModer(player.uuid(), player)) {
           if (uuid004 == null) return;
          // Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
           Player target1 = Groups.player.find(p -> p.uuid().equals(uuid004));
@@ -287,8 +288,8 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   reason = "навсегда (бан)";
                   // Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
                   uuid003 = player.uuid();
-                  if (AdminChecker.isAdmin(uuid003)) {
-                      String uuid0004 = target1.uuid();
+                  if (AdminChecker.isAdmin(uuid003, player)) {
+                      String uuid0004 = info003.id;
                       if (target1 != null && info003.banned) {
                           Vars.netServer.admins.unbanPlayerID(uuid0004);
                       } else {
@@ -325,7 +326,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
           }
       });
         kickMenuId = Menus.registerMenu((player, selection) -> {
-            if(AdminChecker.isModer(player.uuid())) {
+            if(AdminChecker.isModer(player.uuid(), player)) {
             if (uuid001 == null) return;
 
             Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
@@ -367,7 +368,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                     reason = "навсегда (бан)";
                     // Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
                     uuid003 = player.uuid();
-                    if (AdminChecker.isAdmin(uuid003)) {
+                    if (AdminChecker.isAdmin(uuid003, player)) {
 
                         if (info002 != null && info002.banned) {
                             Vars.netServer.admins.unbanPlayerID(uuid001);
@@ -405,8 +406,9 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
 
     Timer.schedule(() -> {
         int rand5 = arc.math.Mathf.random(1, 5);
-        switch(rand5) {
+      /*  switch(rand5) {
             case 1:
+
              agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
             break;
             case 2:
@@ -421,10 +423,30 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
             case 5:
                 agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
                 break;
-        }
+        } */
       for (Player player : Groups.player) {
+          if(player.locale.equals("ru")) {
+          switch(rand5) {
+              case 1:
 
-
+                  agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
+                  break;
+              case 2:
+                  agit = "Хочешь предложить свою схему или правку? Присоединяйся к телеграмму - /tg";
+                  break;
+              case 3:
+                  agit = "Не пропусти обновления сервера и новые гайды — подписывайся на телегу - /tg";
+                  break;
+              case 4:
+                  agit = "Обсуждаем схемы, принимаем идеи и учимся строить вместе. Наш канал в телеге - /tg";
+                  break;
+              case 5:
+                  agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
+                  break;
+          }
+          } else {
+              agit = "Язык не поддерживается";
+          }
         //player.sendMessage("Есть пожелания к плагину? Напишите через команду /telegram");
           player.sendMessage(agit);
           }
@@ -449,7 +471,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
 
         });
         handler.<Player>register("amenu", "Для администрации", (args, player) -> {
-            if (AdminChecker.isModer(player.uuid())) {
+            if (AdminChecker.isModer(player.uuid(), player)) {
                 name002.clear();
                 uuids.clear();
 
@@ -502,11 +524,15 @@ class AdminChecker {
     private static String[] admins = {"", ""};
     private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", "uuid-moder-2"};
     private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
+private static String[] ip = {"127.0.0.1", "94"};
 
-
-    private static boolean contains(String[] array, String value) {
+    private static boolean contains(String[] array, String value, Player player) {
         for (String item : array) {
-            if (item.equals(value)) return true;
+            if (item.equals(value)) {
+              for(String ip001 : ip) {
+                  if(player.ip().equals(ip001)) return true;
+              }
+            }
         }
         return false;
     }
@@ -520,6 +546,7 @@ class AdminChecker {
                 admins = json.get("admins").asStringArray();
                 moders = json.get("moders").asStringArray();
                 reserve = json.get("reserve").asStringArray();
+                ip = json.get("ip").asStringArray();
             } else {
                 Log.warn("Файл конфигурации не найден по пути: " + file.path());
 
@@ -534,16 +561,16 @@ class AdminChecker {
 
 
 
-    public static int getLevel(String uuid) {
-        if (contains(rootAdmins, uuid)) return 0;
-        if (contains(admins, uuid)) return 1;
-        if (contains(moders, uuid)) return 2;
-        if (contains(reserve, uuid)) return 3;
+    public static int getLevel(String uuid, Player player) {
+        if (contains(rootAdmins, uuid, player)) return 0;
+        if (contains(admins, uuid, player)) return 1;
+        if (contains(moders, uuid, player)) return 2;
+        if (contains(reserve, uuid, player)) return 3;
         return 4;
     }
 
 
-    public static boolean isRoot(String uuid) { return getLevel(uuid) == 0; }
-    public static boolean isAdmin(String uuid) { return getLevel(uuid) <= 1; }
-    public static boolean isModer(String uuid) { return getLevel(uuid) <= 2; }
+    public static boolean isRoot(String uuid, Player player) { return getLevel(uuid, player) == 0; }
+    public static boolean isAdmin(String uuid, Player player) { return getLevel(uuid, player) <= 1; }
+    public static boolean isModer(String uuid, Player player) { return getLevel(uuid, player) <= 2; }
 }
