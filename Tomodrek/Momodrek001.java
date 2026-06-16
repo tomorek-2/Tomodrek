@@ -130,7 +130,7 @@ Seq<String> uuidss = new Seq<>();
 
       });
         mindustry.Vars.netServer.admins.addActionFilter(action -> {
-           if(action.tile != null && action.tile.x >= 348 && action.tile.x <= 451 && action.tile.y >= 348 && action.tile.y <= 451) {
+           if(action.tile != null && action.tile.x >= 248 && action.tile.x <= 351 && action.tile.y >= 248 && action.tile.y <= 351) {
            //    return true;
                if(action.block == mindustry.content.Blocks.logicDisplay) {
                    if(action.player.admin) {
@@ -406,24 +406,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
 
     Timer.schedule(() -> {
         int rand5 = arc.math.Mathf.random(1, 5);
-      /*  switch(rand5) {
-            case 1:
 
-             agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
-            break;
-            case 2:
-              agit = "Хочешь предложить свою схему или правку? Присоединяйся к телеграмму - /tg";
-                break;
-            case 3:
-                 agit = "Не пропусти обновления сервера и новые гайды — подписывайся на телегу - /tg";
-                break;
-            case 4:
-                 agit = "Обсуждаем схемы, принимаем идеи и учимся строить вместе. Наш канал в телеге - /tg";
-                break;
-            case 5:
-                agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
-                break;
-        } */
       for (Player player : Groups.player) {
           if(player.locale.equals("ru")) {
           switch(rand5) {
@@ -504,25 +487,22 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
     } else {
         swqe = "Встроенная";
     }
-     swq = " Карта " + map.name() + " [gold]" + swqe;
+     swq = " Карта " + map.name() + " [gold]" + swqe + " " + map.width + "x" + map.height;
     player.sendMessage(swq);
 
 }
-//player.sendMessage(swq);
+
 
         });
         }
 
-    //public void kick(String reason){
-  //        kick(reason, null, 30 * 1000);
-  //    }
 
 }
 class AdminChecker {
 
     private static String[] rootAdmins = {"", ""};
     private static String[] admins = {"", ""};
-    private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", "uuid-moder-2"};
+    private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", ""};
     private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
 private static String[] ip = {"127.0.0.1", "94"};
 
@@ -542,7 +522,7 @@ private static String[] ip = {"127.0.0.1", "94"};
             if (file.exists()) {
                 String content = file.readString();
                 JsonValue json = new JsonReader().parse(content);
-                rootAdmins = json.get("rootAdmins").asStringArray();
+         rootAdmins = json.get("rootAdmins").asStringArray();
                 admins = json.get("admins").asStringArray();
                 moders = json.get("moders").asStringArray();
                 reserve = json.get("reserve").asStringArray();

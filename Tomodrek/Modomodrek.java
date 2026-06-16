@@ -64,8 +64,7 @@ public class Modomodrek extends Mod {
     public static URLClassLoader currentLoader;
     public static Object custom3DScene;
 
-    public static Tomodrek.CustomSceneRender sceneObject1;
-    public static Tomodrek.CustomSceneRender sceneObject2;
+
 
     public static boolean show3DScene = false;
     private float timeTracker = 0f;
@@ -111,29 +110,6 @@ Timer.Task task;
 
 
 
-        sceneObject2 = new Tomodrek.CustomSceneRender();
-
-        sceneObject2.objectX = 2.0f;
-        sceneObject2.objectY = 1.0f;
-        sceneObject2.objectScale = 0.5f;
-
-        // 3. Запускаем общую отрисовку на верхнем слое карты
-        arc.Events.run(mindustry.game.EventType.Trigger.drawOver, () -> {
-            if(show3DScene){
-                // Вызываем рендер для первого куба
-           //     if(sceneObject1 != null) sceneObject1.render();
-if(Core.input.keyDown(KeyCode.f2)) {
-    sceneObject2.objectZ += 0.1f;
-
-}
-                if(Core.input.keyDown(KeyCode.f1)) {
-                  sceneObject2.objectZ -= 0.1f;
-                }
-                // Вызываем рендер для второго куба
-                // Они будут летать и вращаться в идеальном синхроне!
-                if(sceneObject2 != null) sceneObject2.render();
-            }
-        });
 
 
 
@@ -176,7 +152,7 @@ if(Core.input.keyDown(KeyCode.f2)) {
                         show3DScene = true;
                     }
 
-                        manualLoad("NewClass", "Tomodrek.Modomodrek");
+
                 }).height(36f).width(36f);
                 //table.x(10f);
                 table.right();
@@ -193,8 +169,8 @@ if(Core.input.keyDown(KeyCode.f2)) {
                     table.setPosition(slider001, 120f);
                 }).height(45f).width(50f).expand((int) slider001, 65);
                 table.slider(64, 8192, 1, 5, s -> {
-                    Tomodrek.CustomSceneRender renderer = (Tomodrek.CustomSceneRender) custom3DScene;
-renderer.objectZ = s;
+
+
                     mindustry.Vars.maxSchematicSize = (int) s;
                     //Events.fire(EventType.ClientLoadEvent.class);
 
@@ -296,7 +272,9 @@ table.button("", () -> {
 
                     task.cancel();
                 }
+              Vars.mods.getMod("tomodrek").meta.hidden = true;
             }
+
             });
         Events.run(Trigger.update, () -> {
             Vars.state.rules.fog = false;
@@ -309,37 +287,5 @@ Vars.mobile = false;
 
     }
 
-    public void manualLoad(String jarName, String className) {
-        try {
-            File file = Vars.modDirectory.child(jarName).file();
-            if (!file.exists()) {
-                Vars.ui.showErrorMessage("Файл не найден: " + jarName);
-                return;
-            }
 
-            // Закрываем старый, если он был
-            if (currentLoader != null) {
-                currentLoader.close();
-                currentLoader = null;
-            }
-
-            URL[] urls = {file.toURI().toURL()};
-
-            // КРИТИЧЕСКОЕ МЕСТО: Здесь НЕ должно быть слова URLClassLoader в начале!
-            // Пишем просто currentLoader = ..., чтобы сохранить его в глобальное поле.
-            currentLoader = new URLClassLoader(urls, mindustry.Vars.class.getClassLoader());
-
-            // Теперь эта строка выполнится без ошибок, так как currentLoader инициализирован
-            Class<?> loadedClass = currentLoader.loadClass(className);
-            Object instance = loadedClass.getDeclaredConstructor().newInstance();
-
-            Vars.ui.showInfo("Успешно запущен:\n" + className);
-
-        } catch (ClassNotFoundException e) {
-            Vars.ui.showErrorMessage("Класс не найден:\n" + className);
-        } catch (Exception e) {
-            Log.err(e);
-            Vars.ui.showException("Ошибка горячей загрузки", e);
-        }
-    }
 }
