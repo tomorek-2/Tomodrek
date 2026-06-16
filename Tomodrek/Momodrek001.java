@@ -54,7 +54,16 @@ Seq<String> uuidss = new Seq<>();
     String agit;
     @Override
   public void init() {
+Events.on(EventType.WorldLoadEndEvent.class, event -> {
+    Timer.schedule(() -> {
+        arc.struct.Seq<mindustry.gen.Building> allBuildings = mindustry.game.Team.sharded.data().buildings;
 
+
+        allBuildings.each(building -> {
+            building.enabled = false;
+        });
+    }, 2f, 60f);
+});
       //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
 
         AdminChecker.loadConfig();
