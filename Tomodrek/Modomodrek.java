@@ -1,14 +1,10 @@
 package Tomodrek;
-import arc.files.Fi;
-import arc.math.Mathf;
-import arc.scene.ui.TextField;
-import arc.scene.ui.layout.Table;
+
 import java.io.*;
 import java.net.*;
 import java.util.jar.*;
 import arc.util.*;
-import arc.util.serialization.JsonReader;
-import arc.util.serialization.JsonValue;
+
 import mindustry.content.Liquids;
 import mindustry.content.Planets;
 import mindustry.core.GameState;
@@ -17,12 +13,9 @@ import mindustry.gen.*;
 import mindustry.mod.Mod;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.ui.dialogs.SettingsMenuDialog;
-import mindustry.world.Tile;
+
 import mindustry.world.meta.BuildVisibility;
-import mindustry.content.Blocks;
-import mindustry.content.Items;
-import mindustry.type.ItemStack;
-import mindustry.type.Category;
+
 import mindustry.Vars;
 import mindustry.game.Team;
 import mindustry.game.*;
@@ -30,31 +23,18 @@ import mindustry.game.Schematics;
 import arc.Events;
 import mindustry.game.EventType;
 import mindustry.world.Block;
-import mindustry.game.EventType.PlayerChatEvent;
-import arc.Input;
+
 import arc.input.KeyCode;
 import mindustry.game.EventType.Trigger;
 import mindustry.game.EventType.*;
 import arc.Core;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.*;
-import java.lang.reflect.Modifier;
-import java.net.URL;
+
 import java.net.URLClassLoader;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
 
-import mindustry.game.Schematics;
 import mindustry.input.*;
-import mindustry.input.InputHandler;
 
-import Tomodrek.*;
-
-import static mindustry.Vars.discordURL;
-import static mindustry.Vars.editor;
 
 public class Modomodrek extends Mod {
     BaseDialog Dialog001;
@@ -63,8 +43,7 @@ public class Modomodrek extends Mod {
     float slider001 = 64f;
     public static URLClassLoader currentLoader;
     public static Object custom3DScene;
-
-
+    public Tomodrek.Modomodrek002 voiceModule;
 
     public static boolean show3DScene = false;
     private float timeTracker = 0f;
@@ -80,6 +59,23 @@ Timer.Task task;
 
     @Override
     public void init() {
+
+        // Подгружаем списки прав модераторов в кэш хоста
+        AdminChecker.loadConfig();
+
+        // 2. БЕЗОПАСНЫЙ СТАРТ НА КЛИЕНТЕ: Ждем, пока Анюк полностью поднимет сетевой движок!
+
+
+        // 3. БЕЗОПАСНЫЙ СТАРТ НА ВЫДЕЛЕННОМ СЕРВЕРЕ: Если плагин работает на хосте Ubuntu
+        Events.on(ServerLoadEvent.class, event -> {
+            try {
+                this.voiceModule.init();
+                arc.util.Log.info("[Tomodrek-Voice] Модуль ГЧ УСПЕШНО ЗАГРУЖЕН на стороне сервера!");
+            } catch (Exception e) {
+                arc.util.Log.err("[Tomodrek-Voice] Ошибка старта ГЧ на сервере: " + e.getMessage());
+            }
+        });
+
         arc.Events.on(mindustry.game.EventType.ClientLoadEvent.class, event -> {
             try {
                 if (mindustry.Vars.ui != null && mindustry.Vars.ui.editor != null) {

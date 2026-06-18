@@ -115,7 +115,7 @@ tasks.register('deploy', Jar){
 }
 
 //def mindustryModsDir = file(System.getProperty("user.home") + "/AppData/Roaming/Mindustry/mods")
-def mindustryModsDir002 = file(System.getProperty("user.home") + "/config/mods")
+def mindustryModsDir002 = file(System.getProperty("user.home") + "/.local/share/Mindustry/mods")
 // Создаём задачу для копирования JAR-файла
 //task copyToMods(type: Copy) {
     // Задача зависит от сборки JAR, поэтому она выполнится после неё

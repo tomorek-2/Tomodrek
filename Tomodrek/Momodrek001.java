@@ -22,6 +22,7 @@ import arc.util.CommandHandler;
 import mindustry.net.Administration;
 import mindustry.game.EventType.*;
 import mindustry.net.NetConnection;
+import mindustry.net.Packets;
 import mindustry.ui.Menus;
 import mindustry.world.Block;
 import mindustry.world.meta.BuildVisibility;
@@ -136,7 +137,6 @@ Events.on(EventType.WorldLoadEndEvent.class, event -> {
                   }
               }
           }
-
       });
         mindustry.Vars.netServer.admins.addActionFilter(action -> {
            if(action.tile != null && action.tile.x >= 248 && action.tile.x <= 351 && action.tile.y >= 248 && action.tile.y <= 351) {
