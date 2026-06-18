@@ -487,10 +487,16 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                 for (int i = 0; i < name002.size; i++) {
                     options[i][0] = name002.get(i)[0];
                 } */
+                String Body001;
+                if(player.locale.equals("ru")) {
+                    Body001 = "Статистика";
+                } else {
+                    Body001 = "Statistics";
+                }
                 String[][] timeOptions = {
                         {"Банить/кикать игроков"},
                         {"Другое"},
-                        {"Статистика"},
+                        {Body001},
                         {"Не сделано"},
                         {"Не сделано"}
                 };
