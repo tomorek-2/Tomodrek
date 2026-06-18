@@ -22,7 +22,6 @@ import arc.util.CommandHandler;
 import mindustry.net.Administration;
 import mindustry.game.EventType.*;
 import mindustry.net.NetConnection;
-import mindustry.net.Packets;
 import mindustry.ui.Menus;
 import mindustry.world.Block;
 import mindustry.world.meta.BuildVisibility;
@@ -41,6 +40,7 @@ public class Momodrek001 extends Plugin {
     private Seq<String[]> name002 = new Seq<>();
     int playerMenuId;
     int dopMenuId;
+    int dopMenuId001;
 NetConnection netc;
 int kickCurrentMenuId;
 Seq<String[]> name003 = new Seq<>();
@@ -53,6 +53,8 @@ Seq<String> uuidss = new Seq<>();
     String swq = "";
     String swqe = "";
     String agit;
+    int online001; //Счётчик онлайна которых зашло
+    int online002; //Счётчик онлайна которых вышло
     @Override
   public void init() {
 Events.on(EventType.WorldLoadEndEvent.class, event -> {
@@ -66,7 +68,12 @@ Events.on(EventType.WorldLoadEndEvent.class, event -> {
     }, 2f, 60f);
 });
       //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
-
+Events.on(EventType.PlayerJoin.class, event -> {
+    online001++;
+});
+        Events.on(EventType.PlayerLeave.class, event -> {
+            online002++;
+        });
         AdminChecker.loadConfig();
     //  });
       menuId = Menus.registerMenu((player, selection) -> {
@@ -137,6 +144,7 @@ Events.on(EventType.WorldLoadEndEvent.class, event -> {
                   }
               }
           }
+
       });
         mindustry.Vars.netServer.admins.addActionFilter(action -> {
            if(action.tile != null && action.tile.x >= 248 && action.tile.x <= 351 && action.tile.y >= 248 && action.tile.y <= 351) {
@@ -206,27 +214,12 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
           String[][] timeOptions = {
                   {"Банить/кикать игроков"},
                   {"Улучшение процесса"},
-                  {"Не сделано"},
+                  {"Статистика"},
                   {"Не сделано"},
                   {"Не сделано"}
           };
           switch (selection) {
               case 0:
-                  // Call.menu(player.con, menuId, " ", "Меню для фич", timeOptions);
-           /*       for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
-                      uuids.add(info.id);
-
-
-                      name002.add(new String[] { info.lastName," ", info.lastSentMessage, info.id});
-
-                  }
-                  String[][] options = new String[name002.size][1];
-                  for (int i = 0; i < name002.size; i++) {
-                      options[i][0] = name002.get(i)[0];
-                  }
-
-                  Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
-*/
                   String[][] options3 = {
                           {"Выбор всех игроков"},
                           {"Выбор онлайн игроков"}
@@ -241,11 +234,27 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   };
                   Call.menu(player.con, dopMenuId, "Выбор действия", "", options2);
                   break;
+              case 2:
+                  String Body001;
+                  if(player.locale.equals("ru")) {
+                     Body001 = "Статистика";
+                  } else {
+                      Body001 = "Statistics";
+                  }
+                  String[][] options4 = {
+                          {Body001 + " " + "Игроков которые зашли: " + online001},
+                          {Body001 + " " + "Игроков которые вышли: " + online002}
+                  };
+                  Call.menu(player.con, dopMenuId001, Body001, "", options4);
               default:
                   return;
           }
           }
               });
+        dopMenuId001 = Menus.registerMenu((player, selection) -> {
+
+        });
+
       kickMenuId2 = Menus.registerMenu((player, selection) -> {
           if(AdminChecker.isModer(player.uuid(), player)) {
           if (uuid004 == null) return;

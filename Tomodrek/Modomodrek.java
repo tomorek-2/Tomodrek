@@ -43,7 +43,8 @@ public class Modomodrek extends Mod {
     float slider001 = 64f;
     public static URLClassLoader currentLoader;
     public static Object custom3DScene;
-    public Tomodrek.Modomodrek002 voiceModule;
+
+
 
     public static boolean show3DScene = false;
     private float timeTracker = 0f;
@@ -59,28 +60,12 @@ Timer.Task task;
 
     @Override
     public void init() {
-
-        // Подгружаем списки прав модераторов в кэш хоста
-        AdminChecker.loadConfig();
-
-        // 2. БЕЗОПАСНЫЙ СТАРТ НА КЛИЕНТЕ: Ждем, пока Анюк полностью поднимет сетевой движок!
-
-
-        // 3. БЕЗОПАСНЫЙ СТАРТ НА ВЫДЕЛЕННОМ СЕРВЕРЕ: Если плагин работает на хосте Ubuntu
-        Events.on(ServerLoadEvent.class, event -> {
-            try {
-                this.voiceModule.init();
-                arc.util.Log.info("[Tomodrek-Voice] Модуль ГЧ УСПЕШНО ЗАГРУЖЕН на стороне сервера!");
-            } catch (Exception e) {
-                arc.util.Log.err("[Tomodrek-Voice] Ошибка старта ГЧ на сервере: " + e.getMessage());
-            }
-        });
-
+        
         arc.Events.on(mindustry.game.EventType.ClientLoadEvent.class, event -> {
             try {
                 if (mindustry.Vars.ui != null && mindustry.Vars.ui.editor != null) {
 
-                    // 1. С помощью Java Reflection находим приватное поле "resizeDialog" внутри MapEditorDialog
+
                     java.lang.reflect.Field dialogField = mindustry.editor.MapEditorDialog.class.getDeclaredField("resizeDialog");
 
                     // 2. Снимаем с поля защиту "private" (делаем его публичным в памяти)
