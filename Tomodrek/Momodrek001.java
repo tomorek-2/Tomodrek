@@ -490,7 +490,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                 String[][] timeOptions = {
                         {"Банить/кикать игроков"},
                         {"Другое"},
-                        {"Не сделано"},
+                        {"Статистика"},
                         {"Не сделано"},
                         {"Не сделано"}
                 };
