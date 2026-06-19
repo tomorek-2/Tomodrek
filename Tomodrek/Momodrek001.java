@@ -7,6 +7,7 @@ import arc.struct.Seq;
 
 import arc.util.Log;
 import arc.util.Timer;
+import arc.util.serialization.Json;
 import arc.util.serialization.JsonReader;
 import arc.util.serialization.JsonValue;
 import mindustry.Vars;
@@ -25,6 +26,8 @@ import mindustry.net.NetConnection;
 import mindustry.ui.Menus;
 import mindustry.world.Block;
 import mindustry.world.meta.BuildVisibility;
+
+import static mindustry.Vars.player;
 
 //ДА ПОЧЕМУ INTELLIJ ОТКАЗЫВАЕТСЯ ПРИНИМАТЬ ИЗМЕНЕНИЯ?!
 public class Momodrek001 extends Plugin {
@@ -70,12 +73,22 @@ Events.on(EventType.WorldLoadEndEvent.class, event -> {
       //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
 Events.on(EventType.PlayerJoin.class, event -> {
     online001++;
+    if(ShadowBanHashMap.PlayerShadowBanned(event.player.uuid())) {
+        event.player.team(Team.derelict);
+    }
 });
         Events.on(EventType.PlayerLeave.class, event -> {
             online002++;
         });
+        Vars.netServer.admins.addChatFilter((player, message) -> {
+if(ShadowBanHashMap.PlayerShadowBanned(player.uuid())) {
+    return null;
+} else {
+    return message;
+}
+        });
         AdminChecker.loadConfig();
-    //  });
+    ShadowBanHashMap.loadConfig();
       menuId = Menus.registerMenu((player, selection) -> {
           if(AdminChecker.isModer(player.uuid(), player)) {
           AdminChecker.loadConfig();
@@ -297,6 +310,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   if (target1 != null) {
                       Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, duration);
                       target1.con.kick("Вы наказаны на " + reason, duration);
+                      ShadowBanHashMap.AddPlayerInShadowBan(uuid003);
                   } else {
                       Log.err("Нетц цели для разкика, 250 строка");
                   }
@@ -426,31 +440,52 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
         int rand5 = arc.math.Mathf.random(1, 5);
 
       for (Player player : Groups.player) {
-          if(player.locale.equals("ru")) {
-          switch(rand5) {
-              case 1:
+        switch(player.locale()) {
+            case "ru":
+            switch (rand5) {
+                case 1:
 
-                  agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
-                  break;
-              case 2:
-                  agit = "Хочешь предложить свою схему или правку? Присоединяйся к телеграмму - /tg";
-                  break;
-              case 3:
-                  agit = "Не пропусти обновления сервера и новые гайды — подписывайся на телегу - /tg";
-                  break;
-              case 4:
-                  agit = "Обсуждаем схемы, принимаем идеи и учимся строить вместе. Наш канал в телеге - /tg";
-                  break;
-              case 5:
-                  agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
-                  break;
-          }
-          } else {
-              agit = "Язык не поддерживается";
-          }
+                    agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
+                    break;
+                case 2:
+                    agit = "Хочешь предложить свою схему или правку? Присоединяйся к телеграмму - /tg";
+                    break;
+                case 3:
+                    agit = "Не пропусти обновления сервера и новые гайды — подписывайся на телегу - /tg";
+                    break;
+                case 4:
+                    agit = "Обсуждаем схемы, принимаем идеи и учимся строить вместе. Наш канал в телеге - /tg";
+                    break;
+                case 5:
+                    agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
+                    break;
+            }
+            break;
+            default:
+                switch (rand5) {
+                    case 1:
+
+                        agit = " Guides on schematics and server news in Telegram - /tg";
+                        break;
+                    case 2:
+                        agit = "Want to suggest your own schematic or an edit? Join the Telegram - /tg";
+                        break;
+                    case 3:
+                        agit = " Don't miss server updates and new guides — subscribe to the Telegram - /tg";
+                        break;
+                    case 4:
+                        agit = "Discussing schematics, taking ideas, and learning to build together. Our Telegram channel - /tg";
+                        break;
+                    case 5:
+                        agit = " Know how to improve a schematic on the server? Write to us on Telegram - /tg";
+                        break;
+                }
+                break;
+        }
         //player.sendMessage("Есть пожелания к плагину? Напишите через команду /telegram");
           player.sendMessage(agit);
           }
+
     }, 5f, 499f);
   }
 
@@ -475,18 +510,9 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
             if (AdminChecker.isModer(player.uuid(), player)) {
                 name002.clear();
                 uuids.clear();
+AdminChecker.loadConfig();
+ShadowBanHashMap.loadConfig();
 
-            /*    for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
-                    uuids.add(info.id);
-
-
-                    name002.add(new String[] { info.lastName," ", info.lastSentMessage, info.id});
-
-                }
-                String[][] options = new String[name002.size][1];
-                for (int i = 0; i < name002.size; i++) {
-                    options[i][0] = name002.get(i)[0];
-                } */
                 String Body001;
                 if(player.locale.equals("ru")) {
                     Body001 = "Статистика";
@@ -578,3 +604,45 @@ private static String[] ip = {"127.0.0.1", "94"};
     public static boolean isAdmin(String uuid, Player player) { return getLevel(uuid, player) <= 1; }
     public static boolean isModer(String uuid, Player player) { return getLevel(uuid, player) <= 2; }
 }
+
+       class ShadowBanHashMap {
+    public static java.util.HashSet<String> shadowBanList = new java.util.HashSet<>();
+    public static String[] shadowBanList001;
+ static          Fi file = Core.files.local("config/config/PlayerInShadowBan.json");
+    public static void loadConfig() {
+        try {
+            if (file.exists()) {
+                String content = file.readString();
+                JsonValue json = new JsonReader().parse(content);
+                shadowBanList001 = json.get("shadowBan").asStringArray();
+                if(shadowBanList001 == null) return;
+for(String uuid : shadowBanList001) {
+    if(uuid != null) {
+        shadowBanList.add(uuid);
+    }}
+            } else {
+                Log.warn("Файл конфигурации не найден по пути: " + file.path());
+                return;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }}
+ static public boolean PlayerShadowBanned(String uuid) {
+        if(shadowBanList.contains(uuid)) {
+            return true;
+        } else {
+            return false;
+        }}
+ static   public void AddPlayerInShadowBan(String uuid) {
+        if(uuid != null) {
+            shadowBanList.add(uuid);
+        }}
+   static public void SaveShadowBansList() {
+        if (file.exists()) {
+            java.util.HashMap<String, Object> wrapper = new java.util.HashMap<>();
+            wrapper.put("shadowBan", shadowBanList);
+            Json json = new Json();
+            file.writeString(json.prettyPrint(wrapper));
+        }}}
+
+
