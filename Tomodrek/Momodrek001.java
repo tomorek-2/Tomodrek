@@ -58,6 +58,9 @@ Seq<String> uuidss = new Seq<>();
     String agit;
     int online001; //Счётчик онлайна которых зашло
     int online002; //Счётчик онлайна которых вышло
+    int online003; //Счётчик активности
+    String[][] timeOptions;
+    String[][] options3;
     @Override
   public void init() {
 Events.on(EventType.WorldLoadEndEvent.class, event -> {
@@ -80,6 +83,9 @@ Events.on(EventType.PlayerJoin.class, event -> {
         Events.on(EventType.PlayerLeave.class, event -> {
             online002++;
         });
+        Events.on(EventType.BlockBuildEndEvent.class, event -> {
+            online003++;
+        });
         Vars.netServer.admins.addChatFilter((player, message) -> {
 if(ShadowBanHashMap.PlayerShadowBanned(player.uuid())) {
     return null;
@@ -98,14 +104,29 @@ if(ShadowBanHashMap.PlayerShadowBanned(player.uuid())) {
 
               Player targetPlayer = Groups.player.find(p -> p.uuid().equals(uuid001));
 
-              String[][] timeOptions = {
-                      {"1 день"},
-                      {"1 неделя"},
-                      {"1 месяц"},
-                      {"Навсегда"},
-                      {"Разкик"},
-                      {"Перенаправить на локальный сервер"}
-              };
+              if(player.locale.equals("ru")) {
+                  String[][] timeOptions = new String[][]{
+                          {"1 день"},
+                          {"1 неделя"},
+                          {"1 месяц"},
+                          {"Навсегда"},
+                          {"Разкик"},
+                          {"Перенаправить на локальный сервер"},
+                          {"Сделать игрока админом"},
+                          {"Теневой бан"}
+                  };
+              } else {
+                  timeOptions = new String[][] {
+                          {"1 day"},
+                          {"1 week"},
+                          {"1 month"},
+                          {"Forever"},
+                          {"pardon"},
+                          {"Redirect to local server"},
+                          {"Make them admin"},
+                          {"Shadowban"}
+                  };
+              }
               Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name001 + " " + uuid001, timeOptions);
           }
           }
@@ -123,16 +144,30 @@ if(ShadowBanHashMap.PlayerShadowBanned(player.uuid())) {
                 name005 = name004.get(selection)[0];
                 uuid004 = uuidss.get(selection);
                 Player targetPlayer2 = Groups.player.find(p -> p.uuid().equals(uuid004));
-
-                String[][] timeOptions = {
-                        {"1 день"},
-                        {"1 неделя"},
-                        {"1 месяц"},
-                        {"Навсегда"},
-                        {"Разкик"},
-                        {"Перенаправить на локальный сервер"},
-                        {"Сделать игрока админом"}
-                };
+           //    String[][] timeOptions;
+if(player.locale.equals("ru")) {
+ timeOptions = new String[][]{
+            {"1 день"},
+            {"1 неделя"},
+            {"1 месяц"},
+            {"Навсегда"},
+            {"Разкик"},
+            {"Перенаправить на локальный сервер"},
+            {"Сделать игрока админом"},
+            {"Теневой бан"}
+    };
+} else {
+ timeOptions = new String[][]{
+            {"1 day"},
+            {"1 week"},
+            {"1 month"},
+            {"Forever"},
+            {"Unban"},
+            {"Redirect to local server"},
+            {"Make them admin"},
+            {"Shadowban"}
+    };
+}
                 Call.menu(player.con, kickMenuId2, "Выберите срок", "Для игрока: " + name005 + " " + uuid004, timeOptions);
 
             }
@@ -145,9 +180,10 @@ if(ShadowBanHashMap.PlayerShadowBanned(player.uuid())) {
 
               }
               if (selection == 1) {
-                  if (AdminChecker.isAdmin(player.uuid(), player)) {
+                  if (AdminChecker.isModer(player.uuid(), player)) {
                       Core.settings.manualSave();
                       Vars.netServer.admins.save();
+                      ShadowBanHashMap.SaveShadowBansList();
                       Log.warn("Админ сохранил данные, " + player.ip() + "uuid:" + player.uuid());
                   }
               }
@@ -224,19 +260,21 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
 });
       playerMenuId = Menus.registerMenu((player, selection) -> {
           if(AdminChecker.isModer(player.uuid(), player)) {
-          String[][] timeOptions = {
-                  {"Банить/кикать игроков"},
-                  {"Улучшение процесса"},
-                  {"Статистика"},
-                  {"Не сделано"},
-                  {"Не сделано"}
-          };
+
           switch (selection) {
               case 0:
-                  String[][] options3 = {
-                          {"Выбор всех игроков"},
-                          {"Выбор онлайн игроков"}
-                  };
+
+                  if(player.locale.equals("ru")) {
+                    options3 = new String[][]{
+                              {"Выбор всех игроков"},
+                              {"Выбор онлайн игроков"}
+                      };
+                  } else {
+              options3 = new String[][]{
+                              {"Select all players"},
+                              {"Select online players"}
+                      };
+                  }
                   Call.menu(player.con, kickCurrentMenuId, "", "", options3);
                   break;
               case 1:
@@ -256,7 +294,8 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   }
                   String[][] options4 = {
                           {Body001 + " " + "Игроков которые зашли: " + online001},
-                          {Body001 + " " + "Игроков которые вышли: " + online002}
+                          {Body001 + " " + "Игроков которые вышли: " + online002},
+                          {Body001 + " " + "Блоков построено: " + online003}
                   };
                   Call.menu(player.con, dopMenuId001, Body001, "", options4);
               default:
@@ -272,6 +311,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
           if(AdminChecker.isModer(player.uuid(), player)) {
           if (uuid004 == null) return;
          // Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
+
           Player target1 = Groups.player.find(p -> p.uuid().equals(uuid004));
           long duration = 0;
           String reason = "";
@@ -310,7 +350,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   if (target1 != null) {
                       Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, duration);
                       target1.con.kick("Вы наказаны на " + reason, duration);
-                      ShadowBanHashMap.AddPlayerInShadowBan(uuid003);
+
                   } else {
                       Log.err("Нетц цели для разкика, 250 строка");
                   }
@@ -327,6 +367,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                       } else {
                           Vars.netServer.admins.banPlayerID(uuid0004);
                       }
+
                   }
 
 
@@ -351,6 +392,9 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   } else {
                       target1.admin = true;
                   }
+break;
+              case 7:
+                  ShadowBanHashMap.AddPlayerInShadowBan(uuid004);
               default:
                   return;
 
@@ -533,11 +577,21 @@ ShadowBanHashMap.loadConfig();
         handler.<Player>register("maps", "Карты", (args, player) -> {
 for(mindustry.maps.Map map : Vars.maps.all()) {
     if(map.custom) {
-        swqe = "Кастом";
+        if(player.locale.equals("ru")) {
+            swqe = "Кастом";
+        } else {
+            swqe = "custom";
+        }
     } else {
-        swqe = "Встроенная";
+        if(player.locale.equals("ru")) {
+            swqe = "Встроенная";
+        } else {
+            swqe = "Built-in map";
+
+        }
+
     }
-     swq = " Карта " + map.name() + " [gold]" + swqe + " " + map.width + "x" + map.height;
+     swq = "[white]" +  "Map " + map.name() + " [gold]" + swqe + " " + map.width + "x" + map.height;
     player.sendMessage(swq);
 
 }
@@ -546,7 +600,15 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
         });
         }
 
-
+    @Override
+    public void registerServerCommands(CommandHandler handler) {
+        // Регистрируем команду "asay" (админ-сказать) для терминала
+        handler.register("asay", "<text...>", "Отправить сообщение в админ-чат", args -> {
+            String raw = "[red][server]: [white]" + args[0];
+            Groups.player.each(mindustry.gen.Player::admin, a -> a.sendMessage(raw));
+            arc.util.Log.info("Сообщение отправлено в админ-чат: " + args[0]);
+        });
+    }
 }
 class AdminChecker {
 
