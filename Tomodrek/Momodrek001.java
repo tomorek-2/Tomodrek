@@ -61,6 +61,7 @@ Seq<String> uuidss = new Seq<>();
     int online003; //Счётчик активности
     String[][] timeOptions;
     String[][] options3;
+    String body001;
     @Override
   public void init() {
 Events.on(EventType.WorldLoadEndEvent.class, event -> {
@@ -278,26 +279,43 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   Call.menu(player.con, kickCurrentMenuId, "", "", options3);
                   break;
               case 1:
-                  String[][] options2 = {
-                          {"Скип карты"},
-                          {"Сохранение данных, не трогайте, пожалейте диск хоста"},
-                          {"for цикл на показ всех блоков"}
-                  };
+                  String[][] options2;
+                  if(player.locale.equals("ru")) {
+                      options2 = new String[][]{
+                              {"Скип карты"},
+                              {"Сохранение данных, не трогайте, пожалейте диск хоста"},
+                              {"for цикл на показ всех блоков"}
+                      };
+                  } else {
+                      options2 = new String[][]{
+                              {"Skip Map"},
+                              {"Save Data (Don't touch, spare the host's disk)"},
+                              {"for loop to show all blocks"}
+                      };
+                  }
                   Call.menu(player.con, dopMenuId, "Выбор действия", "", options2);
                   break;
               case 2:
-                  String Body001;
-                  if(player.locale.equals("ru")) {
-                     Body001 = "Статистика";
+
+                  String[][] options4;
+
+                  // Безопасная проверка локали (защита от NullPointerException, если locale == null)
+                  if(player.locale != null && player.locale.equals("ru")) {
+                      body001 = "Статистика";
+                      options4 = new String[][]{
+                              {"Игроков зашло: " + online001},
+                              {"Игроков вышло: " + online002},
+                              {"Блоков построено: " + online003}
+                      };
                   } else {
-                      Body001 = "Statistics";
+                      body001 = "Statistics";
+                      options4 = new String[][]{
+                              {"Players joined: " + online001},
+                              {"Players left: " + online002},
+                              {"Blocks built: " + online003}
+                      };
                   }
-                  String[][] options4 = {
-                          {Body001 + " " + "Игроков которые зашли: " + online001},
-                          {Body001 + " " + "Игроков которые вышли: " + online002},
-                          {Body001 + " " + "Блоков построено: " + online003}
-                  };
-                  Call.menu(player.con, dopMenuId001, Body001, "", options4);
+                  Call.menu(player.con, dopMenuId001, body001, "", options4);
               default:
                   return;
           }
@@ -326,7 +344,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                       target1.con.kick("Вы наказаны на " + reason, duration);
                       Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, duration);
                   } else {
-                      Log.err("Нетц цели для разкика, 250 строка");
+                      Log.err("Нетц цели для разкика, 329 строка");
                   }
 
 
@@ -366,6 +384,13 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                           Vars.netServer.admins.unbanPlayerID(uuid0004);
                       } else {
                           Vars.netServer.admins.banPlayerID(uuid0004);
+                          netc = Seq.with(Vars.net.getConnections()).find(con -> con.uuid.equals(uuid004));
+                          if (netc == null) {
+
+                          } else {
+                              Call.connect(netc, "127.0.0.1", 6567);
+                          }
+
                       }
 
                   }
@@ -700,11 +725,13 @@ for(String uuid : shadowBanList001) {
             shadowBanList.add(uuid);
         }}
    static public void SaveShadowBansList() {
-        if (file.exists()) {
-            java.util.HashMap<String, Object> wrapper = new java.util.HashMap<>();
-            wrapper.put("shadowBan", shadowBanList);
-            Json json = new Json();
-            file.writeString(json.prettyPrint(wrapper));
-        }}}
+       if (file.exists()) {
+           java.util.HashMap<String, Object> wrapper = new java.util.HashMap<>();
+
+           wrapper.put("shadowBan", shadowBanList.toArray(new String[0]));
+
+           Json json = new Json();
+           file.writeString(json.prettyPrint(wrapper));
+       }}}
 
 
