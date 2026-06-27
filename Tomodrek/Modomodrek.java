@@ -130,11 +130,6 @@ public class Modomodrek extends Mod {
                     Vars.maxSchematicSize = 4096;
                     Vars.state.rules.planet = Planets.sun;
 
-                    if(show3DScene == true) {
-                        show3DScene = false;
-                    } else {
-                        show3DScene = true;
-                    }
 
 
                 }).height(36f).width(36f);
