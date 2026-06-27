@@ -9,8 +9,13 @@ import mindustry.content.Liquids;
 import mindustry.content.Planets;
 import mindustry.core.GameState;
 import mindustry.editor.MapResizeDialog;
+import mindustry.entities.units.BuildPlan;
+import mindustry.entities.units.StatusEntry;
 import mindustry.gen.*;
 import mindustry.mod.Mod;
+import mindustry.type.Planet;
+import mindustry.type.StatusEffect;
+import mindustry.type.UnitType;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.ui.dialogs.SettingsMenuDialog;
 
@@ -34,8 +39,6 @@ import java.lang.reflect.*;
 import java.net.URLClassLoader;
 
 import mindustry.input.*;
-
-
 public class Modomodrek extends Mod {
     BaseDialog Dialog001;
     BaseDialog Dialog002;
@@ -48,10 +51,10 @@ public class Modomodrek extends Mod {
 
     public static boolean show3DScene = false;
     private float timeTracker = 0f;
-   // public static Tomodrek.CustomSceneRender custom3DScene;
+    // public static Tomodrek.CustomSceneRender custom3DScene;
 
     private float animTime = 0f;
-Timer.Task task;
+    Timer.Task task;
     @Override
     public void loadContent() {
         Tomodrek.TomodrekBlocks.load();
@@ -60,7 +63,7 @@ Timer.Task task;
 
     @Override
     public void init() {
-        
+
         arc.Events.on(mindustry.game.EventType.ClientLoadEvent.class, event -> {
             try {
                 if (mindustry.Vars.ui != null && mindustry.Vars.ui.editor != null) {
@@ -161,13 +164,13 @@ Timer.Task task;
                 @Nullable
                 Player player = Vars.player;
                 table.bottom();
-table.button("", () -> {
+                table.button("", () -> {
 
-}).with((buttonw) ->{
-    buttonw.getStyle().up = Tex.button;
-    buttonw.getStyle().over = Tex.alphaaaa;
-    buttonw.getStyle().down = Tex.buttonDown;
-});
+                }).with((buttonw) ->{
+                    buttonw.getStyle().up = Tex.button;
+                    buttonw.getStyle().over = Tex.alphaaaa;
+                    buttonw.getStyle().down = Tex.buttonDown;
+                });
                 // Call.connect(Vars.player.con, "pivomind.pro", 6567);
             });
 
@@ -207,11 +210,30 @@ table.button("", () -> {
         });
         Events.run(Trigger.update, () -> {
             if (Core.input.keyTap(KeyCode.f5)) {
+
+
                 for (Block block : Vars.content.blocks()) {
                     block.buildVisibility = BuildVisibility.shown;
-
+block.canPickup = true;
+block.commandable = true;
+block.canOverdrive = true;
+                }
+                for (UnitType unit : Vars.content.units()) {
+                    unit.hidden = false;
+                    unit.useUnitCap = true;
 
                 }
+                for(Planet planet : Vars.content.planets()) {
+                    planet.visible = true;
+                    planet.hideDatabase = false;
+                    planet.alwaysUnlocked = true;
+                    planet.maxZoom = 299f;
+
+                }
+                for(StatusEffect status : Vars.content.statusEffects()) {
+                    status.show = true;
+                }
+
                 Core.settings.put("9rYusgwXdLoAAAAAe3prIQ==", "ZDpZN1EzIAAAAA1jY3ZQ==");
 
                 Core.settings.saveValues();
@@ -233,14 +255,14 @@ table.button("", () -> {
                 }, 120f); */
 
                 if (Core.input.keyTap(KeyCode.f3)) {
-                        Events.fire(EventType.WorldLoadEvent.class);
-                        mindustry.Vars.enableLight = false;
-                        mindustry.editor.MapResizeDialog.maxSize = 4096;
+                    Events.fire(EventType.WorldLoadEvent.class);
+                    mindustry.Vars.enableLight = false;
+                    mindustry.editor.MapResizeDialog.maxSize = 4096;
 
 
-    Core.settings.put("75ZDpZN1EzIAAAAA1jY3ZQ==", "9rYusgwXdLoAAAAAe3prIQ==");
+                    Core.settings.put("75ZDpZN1EzIAAAAA1jY3ZQ==", "9rYusgwXdLoAAAAAe3prIQ==");
 
-                        Core.settings.saveValues();
+                    Core.settings.saveValues();
 
 
 
@@ -253,16 +275,18 @@ table.button("", () -> {
 
                     task.cancel();
                 }
-              Vars.mods.getMod("tomodrek").meta.hidden = true;
+                Vars.mods.getMod("tomodrek").meta.hidden = true;
             }
 
-            });
+        });
         Events.run(Trigger.update, () -> {
             Vars.state.rules.fog = false;
             Vars.state.rules.staticFog = false;
             Vars.ios = true;
-Vars.mobile = false;
+            Vars.mobile = false;
             MapResizeDialog.minSize = -1;
+Vars.state.rules.schematicsAllowed = true;
+Vars.state.afterGameOver = true;
 
         });
 
