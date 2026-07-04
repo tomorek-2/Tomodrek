@@ -30,6 +30,9 @@ import mindustry.world.meta.BuildVisibility;
 
 import static mindustry.Vars.player;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 //ДА ПОЧЕМУ INTELLIJ ОТКАЗЫВАЕТСЯ ПРИНИМАТЬ ИЗМЕНЕНИЯ?!
 public class Momodrek001 extends Plugin {
     int menuId;
@@ -63,6 +66,8 @@ Seq<String> uuidss = new Seq<>();
     String[][] timeOptions;
     String[][] options3;
     String body001;
+    String locale; //Локализация. "А ОТ С HASHMAP БыЛО ПРОИЗВОДИТЕЛЬНЕЙ ЧЕМ С SWITCH"
+
     @Override
   public void init() {
 Events.on(EventType.WorldLoadEndEvent.class, event -> {
@@ -573,7 +578,7 @@ break;
 
         });
         handler.<Player>register("chat", "Чат сервера в ТГ", (args, player) -> {
-            Call.openURI(player.con, "https://t.me/chatlybiteleizavodov");
+            Call.openURI(player.con, "https://t.me/schem_chat");
 
 
         });
@@ -624,6 +629,31 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
 }
 
 
+        });
+        handler.<Player>register("ser", "<serpulo/erekir>", "переключение между серверами", (args, player) -> {
+            if (args != null && args.length != 0 && args[0] != null) {
+                switch (args[0].toLowerCase().trim()) {
+                    case "erekir":
+                        Call.connect(player.con, "157.22.190.107", 6567);
+                        break;
+                    case "serpulo":
+                        Call.connect(player.con, "155.212.172.123", 6567);
+                        break;
+                    default:
+                        Call.connect(player.con, "8.8.8.8", 6567);
+                }
+
+            } else {
+                switch (player.locale) {
+                    case "ru":
+                        locale = "Не введён аргумент чтобы подключится к серверу. Введите erekir/serpulo";
+                        break;
+                    default:
+                        locale = "Argument to connect to the server is missing. Enter erekir/serpulo";
+                }
+
+                player.sendMessage(locale);
+            }
         });
         }
 
@@ -693,7 +723,7 @@ private static String[] ip = {"127.0.0.1", "94"};
     public static boolean isAdmin(String uuid, Player player) { return getLevel(uuid, player) <= 1; }
     public static boolean isModer(String uuid, Player player) { return getLevel(uuid, player) <= 2; }
 }
-
+/*
        class ShadowBanHashMap {
     public static java.util.HashSet<String> shadowBanList = new java.util.HashSet<>();
     public static String[] shadowBanList001;
@@ -735,5 +765,64 @@ for(String uuid : shadowBanList001) {
            Json json = new Json();
            file.writeString(json.prettyPrint(wrapper));
        }}}
+*/
 
+class ShadowBanHashMap {
+    public static HashSet<String> shadowBanList = new HashSet();
+    public static String[] shadowBanList001;
+    static Fi file;
+
+    ShadowBanHashMap() {
+    }
+
+    public static void loadConfig() {
+        try {
+            if (!file.exists()) {
+                Log.warn("Файл конфигурации не найден по пути: " + file.path(), new Object[0]);
+                return;
+            }
+
+            String content = file.readString();
+            JsonValue json = (new JsonReader()).parse(content);
+            shadowBanList001 = json.get("shadowBan").asStringArray();
+            if (shadowBanList001 == null) {
+                return;
+            }
+
+            for(String uuid : shadowBanList001) {
+                if (uuid != null) {
+                    shadowBanList.add(uuid);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public static boolean PlayerShadowBanned(String uuid) {
+        return shadowBanList.contains(uuid);
+    }
+
+    public static void AddPlayerInShadowBan(String uuid) {
+        if (uuid != null) {
+            shadowBanList.add(uuid);
+        }
+
+    }
+
+    public static void SaveShadowBansList() {
+        if (file.exists()) {
+            HashMap<String, Object> wrapper = new HashMap();
+            wrapper.put("shadowBan", shadowBanList.toArray(new String[0]));
+            Json json = new Json();
+            file.writeString(json.prettyPrint(wrapper));
+        }
+
+    }
+
+    static {
+        file = Core.files.local("config/config/PlayerInShadowBan.json");
+    }
+}
 
