@@ -276,11 +276,11 @@ public class Modomodrek extends Mod {
 
         });
         if (Core.app.isAndroid()) {
-androidAcc.androidAcc();
+//androidAcc.androidAcc();
         }
     }
 
-   static class androidAcc {
+ /*  static class androidAcc {
        static void androidAcc() {
             try {
                 android.content.Context context = (android.content.Context) arc.Core.app;
