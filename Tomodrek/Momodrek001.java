@@ -1,3 +1,7 @@
+/*
+ * Copyright (c) 2026 tomorek-2
+ * Licensed under the GNU GPL v3.0
+ */
 package Tomodrek;
 
 import arc.Core;
@@ -37,6 +41,9 @@ import java.util.HashSet;
 
 //ДА ПОЧЕМУ INTELLIJ ОТКАЗЫВАЕТСЯ ПРИНИМАТЬ ИЗМЕНЕНИЯ?!
 public class Momodrek001 extends Plugin {
+    String LICENSE = " \n" +
+            "Copyright (c) 2026 tomorek-2\n" +
+            "Licensed under the GNU GPL v3.0";
     int menuId;
     String name001;
     String uuid001;
