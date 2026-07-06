@@ -35,7 +35,7 @@ import mindustry.world.consumers.ConsumePower;
 import mindustry.world.meta.BuildVisibility;
 
 import static mindustry.Vars.player;
-
+import Tomodrek.LoadJSONConfig;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -44,6 +44,7 @@ public class Momodrek001 extends Plugin {
     String LICENSE = " \n" +
             "Copyright (c) 2026 tomorek-2\n" +
             "Licensed under the GNU GPL v3.0";
+    LoadJSONConfig LoadJSONConfig;
     int menuId;
     String name001;
     String uuid001;
@@ -98,7 +99,7 @@ Events.on(EventType.WorldLoadEndEvent.class, event -> {
       //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
 Events.on(EventType.PlayerJoin.class, event -> {
     online001++;
-    if(ShadowBanHashMap.PlayerShadowBanned(event.player.uuid())) {
+    if(LoadJSONConfig.PlayerShadowBanned(event.player.uuid())) {
         event.player.team(Team.derelict);
     }
 });
@@ -115,17 +116,17 @@ Events.on(EventType.PlayerJoin.class, event -> {
             online005++;
         });
         Vars.netServer.admins.addChatFilter((player, message) -> {
-if(ShadowBanHashMap.PlayerShadowBanned(player.uuid())) {
+if(LoadJSONConfig.PlayerShadowBanned(player.uuid())) {
     return null;
 } else {
     return message;
 }
         });
-        AdminChecker.loadConfig();
-    ShadowBanHashMap.loadConfig();
+        LoadJSONConfig.loadConfig();
+    //ShadowBanHashMap.loadConfig();
       menuId = Menus.registerMenu((player, selection) -> {
-          if(AdminChecker.isModer(player.uuid(), player)) {
-          AdminChecker.loadConfig();
+          if(LoadJSONConfig.isModer(player.uuid(), player)) {
+          LoadJSONConfig.loadConfig();
           if (uuids != null && selection >= 0 && selection < uuids.size) {
               name001 = name002.get(selection)[0];
               uuid001 = uuids.get(selection);
@@ -162,8 +163,8 @@ if(ShadowBanHashMap.PlayerShadowBanned(player.uuid())) {
       });
         menuId2 = Menus.registerMenu((player, selection) -> {
             if(selection == -1) return;
-            if(AdminChecker.isModer(player.uuid(), player)) {
-                AdminChecker.loadConfig();
+            if(LoadJSONConfig.isModer(player.uuid(), player)) {
+                LoadJSONConfig.loadConfig();
                 for (Player player2 : Groups.player) {
                     uuidss.add(player2.uuid());
                     name004.add(new String[]{player2.name, " ", player2.lastText, player2.uuid()});
@@ -202,16 +203,16 @@ if(player.locale.equals("ru")) {
 
         });
       dopMenuId = Menus.registerMenu((player, selection) -> {
-          if(AdminChecker.isModer(player.uuid(), player)) {
+          if(LoadJSONConfig.isModer(player.uuid(), player)) {
               if (selection == 0) {
                   Events.fire(new GameOverEvent(Team.derelict));
 
               }
               if (selection == 1) {
-                  if (AdminChecker.isModer(player.uuid(), player)) {
+                  if (LoadJSONConfig.isModer(player.uuid(), player)) {
                       Core.settings.manualSave();
                       Vars.netServer.admins.save();
-                      ShadowBanHashMap.SaveShadowBansList();
+                      LoadJSONConfig.SaveShadowBansList();
                       Log.warn("Админ сохранил данные, " + player.ip() + "uuid:" + player.uuid());
                   }
               }
@@ -251,7 +252,7 @@ if(player.locale.equals("ru")) {
 
         });
 kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
-    if(AdminChecker.isModer(player.uuid(), player)) {
+    if(LoadJSONConfig.isModer(player.uuid(), player)) {
         switch (selection) {
             case 0:
                 for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
@@ -287,7 +288,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
     }
 });
       playerMenuId = Menus.registerMenu((player, selection) -> {
-          if(AdminChecker.isModer(player.uuid(), player)) {
+          if(LoadJSONConfig.isModer(player.uuid(), player)) {
 
           switch (selection) {
               case 0:
@@ -357,7 +358,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
         });
 
       kickMenuId2 = Menus.registerMenu((player, selection) -> {
-          if(AdminChecker.isModer(player.uuid(), player)) {
+          if(LoadJSONConfig.isModer(player.uuid(), player)) {
           if (uuid004 == null) return;
          // Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
 
@@ -409,7 +410,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   reason = "навсегда (бан)";
                   // Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
                   uuid003 = player.uuid();
-                  if (AdminChecker.isAdmin(uuid003, player)) {
+                  if (LoadJSONConfig.isAdmin(uuid003, player)) {
                       String uuid0004 = info003.id;
                       if (target1 != null && info003.banned) {
                           Vars.netServer.admins.unbanPlayerID(uuid0004);
@@ -450,7 +451,7 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                   }
 break;
               case 7:
-                  ShadowBanHashMap.AddPlayerInShadowBan(uuid004);
+                  LoadJSONConfig.AddPlayerInShadowBan(uuid004);
               default:
                   return;
 
@@ -458,7 +459,7 @@ break;
           }
       });
         kickMenuId = Menus.registerMenu((player, selection) -> {
-            if(AdminChecker.isModer(player.uuid(), player)) {
+            if(LoadJSONConfig.isModer(player.uuid(), player)) {
             if (uuid001 == null) return;
 
             Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
@@ -500,7 +501,7 @@ break;
                     reason = "навсегда (бан)";
                     // Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
                     uuid003 = player.uuid();
-                    if (AdminChecker.isAdmin(uuid003, player)) {
+                    if (LoadJSONConfig.isAdmin(uuid003, player)) {
 
                         if (info002 != null && info002.banned) {
                             Vars.netServer.admins.unbanPlayerID(uuid001);
@@ -617,11 +618,10 @@ break;
 
         });
         handler.<Player>register("amenu", "Для администрации", (args, player) -> {
-            if (AdminChecker.isModer(player.uuid(), player)) {
+            if (LoadJSONConfig.isModer(player.uuid(), player)) {
                 name002.clear();
                 uuids.clear();
-AdminChecker.loadConfig();
-ShadowBanHashMap.loadConfig();
+Tomodrek.LoadJSONConfig.loadConfig();
 
                 String Body001;
                 if(player.locale.equals("ru")) {
@@ -701,6 +701,7 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
         });
     }
 }
+/*
 class AdminChecker {
 
     private static String[] rootAdmins = {"", ""};
@@ -817,4 +818,4 @@ class ShadowBanHashMap {
         file = Core.files.local("config/config/PlayerInShadowBan.json");
     }
 }
-
+ */

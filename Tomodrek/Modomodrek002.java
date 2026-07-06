@@ -22,7 +22,7 @@ public class Modomodrek002 extends Mod {
     @Override
     public void init() {
         micRecorder = new VoiceChat001();
-        AdminChecker.loadConfig();
+        Tomodrek.LoadJSONConfig.loadConfig();
 
         // 1. СЕРВЕРНЫЙ РЕТРАНСЛЯТОР СТАРТА СТРИМА
         Vars.net.handleServer(mindustry.net.Packets.ConnectPacket.class, (con, pkt) -> {
