@@ -50,9 +50,7 @@ public class Momodrek001 extends Plugin {
     String uuid001;
     int kickMenuId;
     String uuid003;
-    private int page = 0;
-    Seq<String[]> b;
-    Administration.PlayerInfo info002;
+
     private Seq<String> uuids = new Seq<>();
     private Seq<String[]> name002 = new Seq<>();
     int playerMenuId;
