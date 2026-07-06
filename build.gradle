@@ -52,9 +52,10 @@ dependencies {
     compileOnly "Anuken:Mindustry:$mindustryVersion"
     annotationProcessor "Anuken:jabel:v1.0.0"
 
-    // Прямое подключение Android API 26 для Honor 7c
-    compileOnly files(androidJar)
-    compileOnly files("/home/tomorek/AndroidSDK/sources/android-26")
+  if(System.getenv("USER").equals("tomorek")) {
+      compileOnly files(androidJar)
+      compileOnly files("/home/tomorek/AndroidSDK/sources/android-26")
+  }
 }
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
