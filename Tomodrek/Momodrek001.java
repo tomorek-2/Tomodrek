@@ -335,7 +335,8 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                               {"Игроков вышло: " + online002},
                               {"Блоков построено: " + online003},
                               {"Юнитов захвачено игроками: " + online004},
-                              {"Сообщений написали игроки в чате: " + online005}
+                              {"Сообщений написали игроки в чате: " + online005},
+                              {"ОЗУ" + Runtime.getRuntime().totalMemory() / 1024 / 1024 + " МБ"}
                       };
                   } else {
                       body001 = "Statistics";
@@ -344,7 +345,8 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                               {"Players left: " + online002},
                               {"Blocks built: " + online003},
                               {"Units controlled: " + online004},
-                              {"Messages sent: " + online005}
+                              {"Messages sent: " + online005},
+                              {"RAM" + Runtime.getRuntime().totalMemory() / 1024 / 1024 + " MB"}
                       };
                   }
                   Call.menu(player.con, dopMenuId001, body001, "", options4);
