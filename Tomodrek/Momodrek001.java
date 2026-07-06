@@ -546,19 +546,24 @@ break;
             switch (rand5) {
                 case 1:
 
-                    agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
+                  //  agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
+                    agit = LoadJSONConfig.getConfig("LocalRu1Agit");
                     break;
                 case 2:
-                    agit = "Хочешь предложить свою схему или правку? Присоединяйся к телеграмму - /tg";
+                 //   agit = "Хочешь предложить свою схему или правку? Присоединяйся к телеграмму - /tg";
+         agit = LoadJSONConfig.getConfig("LocalRu2Agit");
                     break;
                 case 3:
-                    agit = "Не пропусти обновления сервера и новые гайды — подписывайся на телегу - /tg";
+                    //agit = "Не пропусти обновления сервера и новые гайды — подписывайся на телегу - /tg";
+                    agit = LoadJSONConfig.getConfig("LocalRu3Agit");
                     break;
                 case 4:
-                    agit = "Обсуждаем схемы, принимаем идеи и учимся строить вместе. Наш канал в телеге - /tg";
+                   // agit = "Обсуждаем схемы, принимаем идеи и учимся строить вместе. Наш канал в телеге - /tg";
+                     agit = LoadJSONConfig.getConfig("LocalRu4Agit");
                     break;
                 case 5:
-                    agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
+                 //   agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
+                    agit = LoadJSONConfig.getConfig("LocalRu5Agit");
                     break;
             }
             break;
@@ -566,19 +571,24 @@ break;
                 switch (rand5) {
                     case 1:
 
-                        agit = " Guides on schematics and server news in Telegram - /tg";
+                   //     agit = " Guides on schematics and server news in Telegram - /tg";
+                        agit = LoadJSONConfig.getConfig("LocalEn1Agit");
                         break;
                     case 2:
-                        agit = "Want to suggest your own schematic or an edit? Join the Telegram - /tg";
+                   //     agit = "Want to suggest your own schematic or an edit? Join the Telegram - /tg";
+                        agit = LoadJSONConfig.getConfig("LocalEn2Agit");
                         break;
                     case 3:
-                        agit = " Don't miss server updates and new guides — subscribe to the Telegram - /tg";
+                       // agit = " Don't miss server updates and new guides — subscribe to the Telegram - /tg";
+                        agit = LoadJSONConfig.getConfig("LocalEn3Agit");
                         break;
                     case 4:
-                        agit = "Discussing schematics, taking ideas, and learning to build together. Our Telegram channel - /tg";
+                        //agit = "Discussing schematics, taking ideas, and learning to build together. Our Telegram channel - /tg";
+                        agit = LoadJSONConfig.getConfig("LocalEn4Agit");
                         break;
                     case 5:
-                        agit = " Know how to improve a schematic on the server? Write to us on Telegram - /tg";
+                       // agit = " Know how to improve a schematic on the server? Write to us on Telegram - /tg";
+                        agit = LoadJSONConfig.getConfig("LocalEn5Agit");
                         break;
                 }
                 break;
@@ -608,12 +618,12 @@ break;
 
         });
         handler.<Player>register("tg", "ТГ канал сервера ", (args, player) -> {
-            Call.openURI(player.con, "https://t.me/mindustry_schems");
+            Call.openURI(player.con, LoadJSONConfig.getConfig("URLCommandTelegramChannelServer"));
 
 
         });
         handler.<Player>register("chat", "Чат сервера в ТГ", (args, player) -> {
-            Call.openURI(player.con, "https://t.me/schem_chat");
+            Call.openURI(player.con, LoadJSONConfig.getConfig("URLCommandChat"));
 
 
         });
@@ -667,11 +677,11 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
         handler.<Player>register("ser", "<serpulo/erekir>", "переключение между серверами", (args, player) -> {
             if (args != null && args.length != 0 && args[0] != null) {
                 switch (args[0].toLowerCase().trim()) {
-                    case "erekir":
-                        Call.connect(player.con, "157.22.190.107", 6567);
+                    case "erekir": //157.22.190.107:6567
+                        Call.connect(player.con, LoadJSONConfig.getConfig("IPerekir"), 6567);
                         break;
-                    case "serpulo":
-                        Call.connect(player.con, "155.212.172.123", 6567);
+                    case "serpulo": //155.212.172.123:6567
+                        Call.connect(player.con, LoadJSONConfig.getConfig("IPSerpulo"), 6567);
                         break;
                     default:
                         Call.connect(player.con, "8.8.8.8", 6567);

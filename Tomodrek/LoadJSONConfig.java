@@ -99,9 +99,9 @@ private static boolean contains(String[] array, String value, Player player) {
 
         String content003  = fileConfigObject.readString();
         JsonValue json003 = new JsonReader().parse(content003);
-        String[] output001 = json003.get(ObjectS).asStringArray();
-        String output = String.join("", output001);
+        String output001 = json003.get(ObjectS).asString();
+        //String output = String.join("", output001);
 
-        return output;
+        return output001;
     }
 }
