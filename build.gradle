@@ -7,7 +7,7 @@ sourceSets.main.java.srcDirs = ["Tomodrek"]
 repositories{
     mavenCentral()
 
-    
+
     ivy{
         url 'https://github.com/'
         patternLayout{artifact '/[organisation]/[module]/releases/download/[revision]/dependencies.jar'}
@@ -31,12 +31,14 @@ java{
     targetCompatibility = 8
     sourceCompatibility = JavaVersion.VERSION_17
 }
-
-ext{
+ext {
     mindustryVersion = 'v155.4'
+    sdkRoot = "/home/tomorek/AndroidSDK"
     isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
+    androidJar = "${sdkRoot}/platforms/android-26/android.jar"
 }
+
 
 allprojects{
     tasks.withType(JavaCompile).tap{
@@ -45,12 +47,15 @@ allprojects{
         }
     }
 }
-dependencies{
-    def useLatest = false // BE? БЕ БЕ
-    compileOnly useLatest ? "Anuken:MindustryBuilds:latest" : "Anuken:Mindustry:$mindustryVersion"
+dependencies {
+    // Основная библиотека Mindustry
+    compileOnly "Anuken:Mindustry:$mindustryVersion"
     annotationProcessor "Anuken:jabel:v1.0.0"
-}
 
+    // Прямое подключение Android API 26 для Honor 7c
+    compileOnly files(androidJar)
+    compileOnly files("/home/tomorek/AndroidSDK/sources/android-26")
+}
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
 }
@@ -118,14 +123,14 @@ tasks.register('deploy', Jar){
 def mindustryModsDir002 = file(System.getProperty("user.home") + "/.local/share/Mindustry/mods")
 // Создаём задачу для копирования JAR-файла
 //task copyToMods(type: Copy) {
-    // Задача зависит от сборки JAR, поэтому она выполнится после неё
-   // dependsOn jar
-    // Берём только что созданный JAR-файл
-  //  from jar.archiveFile
-    // Указываем папку назначения
- //   into mindustryModsDir
-    // Переименовываем файл в "имя_проекта.jar" для удобства
-  //  rename { String fileName -> "${project.name}.jar" }
+// Задача зависит от сборки JAR, поэтому она выполнится после неё
+// dependsOn jar
+// Берём только что созданный JAR-файл
+//  from jar.archiveFile
+// Указываем папку назначения
+//   into mindustryModsDir
+// Переименовываем файл в "имя_проекта.jar" для удобства
+//  rename { String fileName -> "${project.name}.jar" }
 //}
 
 // Делаем так, чтобы задача копирования запускалась автоматически после сборки

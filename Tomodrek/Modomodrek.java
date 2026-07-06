@@ -44,9 +44,8 @@ public class Modomodrek extends Mod {
     BaseDialog Dialog002;
     String w = "Напиши", ww = "ww";
     float slider001 = 64f;
-    public static URLClassLoader currentLoader;
-    public static Object custom3DScene;
 
+    public static Object custom3DScene;
 
 
     public static boolean show3DScene = false;
@@ -55,6 +54,7 @@ public class Modomodrek extends Mod {
 
     private float animTime = 0f;
     Timer.Task task;
+
     @Override
     public void loadContent() {
         Tomodrek.TomodrekBlocks.load();
@@ -88,13 +88,6 @@ public class Modomodrek extends Mod {
                 arc.util.Log.err("[Tomodrek] Ошибка взлома рефлексией: " + e.getMessage());
             }
         });
-
-
-
-
-
-
-
 
 
         // mindustry.Vars.maxSchematicSize = 2048;
@@ -131,7 +124,6 @@ public class Modomodrek extends Mod {
                     Vars.state.rules.planet = Planets.sun;
 
 
-
                 }).height(36f).width(36f);
                 //table.x(10f);
                 table.right();
@@ -161,7 +153,7 @@ public class Modomodrek extends Mod {
                 table.bottom();
                 table.button("", () -> {
 
-                }).with((buttonw) ->{
+                }).with((buttonw) -> {
                     buttonw.getStyle().up = Tex.button;
                     buttonw.getStyle().over = Tex.alphaaaa;
                     buttonw.getStyle().down = Tex.buttonDown;
@@ -209,23 +201,23 @@ public class Modomodrek extends Mod {
 
                 for (Block block : Vars.content.blocks()) {
                     block.buildVisibility = BuildVisibility.shown;
-block.canPickup = true;
-block.commandable = true;
-block.canOverdrive = true;
+                    block.canPickup = true;
+                    block.commandable = true;
+                    block.canOverdrive = true;
                 }
                 for (UnitType unit : Vars.content.units()) {
                     unit.hidden = false;
                     unit.useUnitCap = true;
 
                 }
-                for(Planet planet : Vars.content.planets()) {
+                for (Planet planet : Vars.content.planets()) {
                     planet.visible = true;
                     planet.hideDatabase = false;
                     planet.alwaysUnlocked = true;
                     planet.maxZoom = 299f;
 
                 }
-                for(StatusEffect status : Vars.content.statusEffects()) {
+                for (StatusEffect status : Vars.content.statusEffects()) {
                     status.show = true;
                 }
 
@@ -260,12 +252,11 @@ block.canOverdrive = true;
                     Core.settings.saveValues();
 
 
-
                 }
 
             }
-            if(Core.input.keyTap(KeyCode.f2)) {
-                if(task == null) {
+            if (Core.input.keyTap(KeyCode.f2)) {
+                if (task == null) {
                 } else {
 
                     task.cancel();
@@ -280,12 +271,68 @@ block.canOverdrive = true;
             Vars.ios = true;
             Vars.mobile = false;
             MapResizeDialog.minSize = -1;
-Vars.state.rules.schematicsAllowed = true;
-Vars.state.afterGameOver = true;
+            Vars.state.rules.schematicsAllowed = true;
+            Vars.state.afterGameOver = true;
 
         });
-
+        if (Core.app.isAndroid()) {
+androidAcc.androidAcc();
+        }
     }
 
+   static class androidAcc {
+       static void androidAcc() {
+            try {
+                android.content.Context context = (android.content.Context) arc.Core.app;
+                android.hardware.SensorManager sm = (android.hardware.SensorManager) context.getSystemService(android.content.Context.SENSOR_SERVICE);
+                android.hardware.Sensor accel = sm.getDefaultSensor(android.hardware.Sensor.TYPE_ACCELEROMETER);
 
+                android.hardware.SensorEventListener myListener = new android.hardware.SensorEventListener() {
+                    @Override
+                    public void onSensorChanged(android.hardware.SensorEvent event) {
+                        float x = event.values[0];
+                        float y = event.values[1];
+                        float z = event.values[2];
+
+                        float s = 0.5f;
+                        arc.Core.camera.position.y -= y;
+                        if (!(z >= 8.5f && z <= 10.5)) {
+                            arc.Core.camera.position.x -= x;
+                        }
+                        arc.Core.camera.update();
+
+                    }
+
+                    @Override
+                    public void onAccuracyChanged(android.hardware.Sensor sensor, int accuracy) {
+                    }
+                };
+
+                if (accel != null) {
+                    sm.registerListener(myListener, accel, android.hardware.SensorManager.SENSOR_DELAY_GAME);
+                }
+            } catch (Exception e) {
+                arc.util.Log.err("[Tomodrek] Sensor error: " + e.getMessage());
+            }
+        }
+    }
+  /*  void TestClassLoader() {
+        try  {
+            File file = new File("Extra.jar"); URL url = file.toURI().toURL(); URL[] urls = new URL[]{url};
+// 2. Создаем сам загрузчик.
+// Важно передать текущий ClassLoader как родителя (parent),
+// чтобы новый загрузчик видел классы Mindustry.
+            URLClassLoader loader = new URLClassLoader(urls, this.getClass().getClassLoader());
+
+// 3. Загружаем нужный нам класс по его полному имени
+            Class<?> myClass = loader.loadClass("Tomodrek.ExtraContent");
+
+// 4. Создаем объект этого класса
+            Object instance = myClass.getDeclaredConstructor().newInstance();
+
+// 5. Вызываем метод (если знаем имя)
+            myClass.getMethod("run").invoke(instance);
+        } catch (Exception e) { e.printStackTrace(); }
+    } */
 }
+

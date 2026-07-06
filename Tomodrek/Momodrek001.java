@@ -11,6 +11,7 @@ import arc.util.serialization.Json;
 import arc.util.serialization.JsonReader;
 import arc.util.serialization.JsonValue;
 import mindustry.Vars;
+import mindustry.content.Blocks;
 import mindustry.entities.Effect;
 import mindustry.game.EventType;
 import mindustry.game.Team;
@@ -26,6 +27,7 @@ import mindustry.game.EventType.*;
 import mindustry.net.NetConnection;
 import mindustry.ui.Menus;
 import mindustry.world.Block;
+import mindustry.world.consumers.ConsumePower;
 import mindustry.world.meta.BuildVisibility;
 
 import static mindustry.Vars.player;
@@ -60,9 +62,8 @@ Seq<String> uuidss = new Seq<>();
     String swq = "";
     String swqe = "";
     String agit;
-    int online001; //Счётчик онлайна которых зашло
-    int online002; //Счётчик онлайна которых вышло
-    int online003; //Счётчик активности
+
+    int online001, online002, online003, online004, online005; //Счётчик активности
     String[][] timeOptions;
     String[][] options3;
     String body001;
@@ -70,11 +71,17 @@ Seq<String> uuidss = new Seq<>();
 
     @Override
   public void init() {
+
 Events.on(EventType.WorldLoadEndEvent.class, event -> {
     Timer.schedule(() -> {
         arc.struct.Seq<mindustry.gen.Building> allBuildings = mindustry.game.Team.sharded.data().buildings;
 
+        arc.struct.Seq<mindustry.gen.Building> allBuildings1 = Team.malis.data().buildings;
 
+
+        allBuildings1.each(building -> {
+            building.enabled = false;
+        });
         allBuildings.each(building -> {
             building.enabled = false;
         });
@@ -93,6 +100,12 @@ Events.on(EventType.PlayerJoin.class, event -> {
         });
         Events.on(EventType.BlockBuildEndEvent.class, event -> {
             online003++;
+        });
+        Events.on(EventType.UnitControlEvent.class, event -> {
+            online004++;
+        });
+        Events.on(EventType.PlayerChatEvent.class, event -> {
+            online005++;
         });
         Vars.netServer.admins.addChatFilter((player, message) -> {
 if(ShadowBanHashMap.PlayerShadowBanned(player.uuid())) {
@@ -312,14 +325,18 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                       options4 = new String[][]{
                               {"Игроков зашло: " + online001},
                               {"Игроков вышло: " + online002},
-                              {"Блоков построено: " + online003}
+                              {"Блоков построено: " + online003},
+                              {"Юнитов захвачено игроками: " + online004},
+                              {"Сообщений написали игроки в чате: " + online005}
                       };
                   } else {
                       body001 = "Statistics";
                       options4 = new String[][]{
                               {"Players joined: " + online001},
                               {"Players left: " + online002},
-                              {"Blocks built: " + online003}
+                              {"Blocks built: " + online003},
+                              {"Units controlled: " + online004},
+                              {"Messages sent: " + online005}
                       };
                   }
                   Call.menu(player.con, dopMenuId001, body001, "", options4);
@@ -567,9 +584,19 @@ break;
 
     @Override
     public void registerClientCommands(CommandHandler handler) {
-        handler.<Player>register("telegramPlugin", "ТГ создателя плагина", (args, player) -> {
-            Call.openURI(player.con, "https://t.me/tomorek");
+        handler.<Player>register("aboutPlugin","<github/telegram>", "Контактная информация разработчика плагина. Релизов плагина нет.", (args, player) -> {
+            if (args != null && args.length != 0 && args[0] != null) {
+                switch (args[0].toLowerCase().trim()) {
 
+                    case "github":
+                        Call.openURI(player.con, "https://github.com/tomorek-2/Tomodrek");
+
+                        return;
+                    case "telegram":
+                        Call.openURI(player.con, "https://t.me/tomorek");
+                        return;
+                }
+            }
 
         });
         handler.<Player>register("tg", "ТГ канал сервера ", (args, player) -> {
@@ -723,49 +750,7 @@ private static String[] ip = {"127.0.0.1", "94"};
     public static boolean isAdmin(String uuid, Player player) { return getLevel(uuid, player) <= 1; }
     public static boolean isModer(String uuid, Player player) { return getLevel(uuid, player) <= 2; }
 }
-/*
-       class ShadowBanHashMap {
-    public static java.util.HashSet<String> shadowBanList = new java.util.HashSet<>();
-    public static String[] shadowBanList001;
- static          Fi file = Core.files.local("config/config/PlayerInShadowBan.json");
-    public static void loadConfig() {
-        try {
-            if (file.exists()) {
-                String content = file.readString();
-                JsonValue json = new JsonReader().parse(content);
-                shadowBanList001 = json.get("shadowBan").asStringArray();
-                if(shadowBanList001 == null) return;
-for(String uuid : shadowBanList001) {
-    if(uuid != null) {
-        shadowBanList.add(uuid);
-    }}
-            } else {
-                Log.warn("Файл конфигурации не найден по пути: " + file.path());
-                return;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }}
- static public boolean PlayerShadowBanned(String uuid) {
-        if(shadowBanList.contains(uuid)) {
-            return true;
-        } else {
-            return false;
-        }}
- static   public void AddPlayerInShadowBan(String uuid) {
-        if(uuid != null) {
-            shadowBanList.add(uuid);
-        }}
-   static public void SaveShadowBansList() {
-       if (file.exists()) {
-           java.util.HashMap<String, Object> wrapper = new java.util.HashMap<>();
 
-           wrapper.put("shadowBan", shadowBanList.toArray(new String[0]));
-
-           Json json = new Json();
-           file.writeString(json.prettyPrint(wrapper));
-       }}}
-*/
 
 class ShadowBanHashMap {
     public static HashSet<String> shadowBanList = new HashSet();
