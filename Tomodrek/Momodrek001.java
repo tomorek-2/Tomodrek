@@ -9,6 +9,7 @@ import arc.Events;
 import arc.files.Fi;
 import arc.struct.Seq;
 
+import arc.util.Http;
 import arc.util.Log;
 import arc.util.Timer;
 import arc.util.serialization.Json;
@@ -39,7 +40,7 @@ import Tomodrek.LoadJSONConfig;
 import java.util.HashMap;
 import java.util.HashSet;
 
-//ДА ПОЧЕМУ INTELLIJ ОТКАЗЫВАЕТСЯ ПРИНИМАТЬ ИЗМЕНЕНИЯ?!
+
 public class Momodrek001 extends Plugin {
     String LICENSE = " \n" +
             "Copyright (c) 2026 tomorek-2\n" +
@@ -56,6 +57,7 @@ public class Momodrek001 extends Plugin {
     int playerMenuId;
     int dopMenuId;
     int dopMenuId001;
+    int dopMenuId002;
 NetConnection netc;
 int kickCurrentMenuId;
 Seq<String[]> name003 = new Seq<>();
@@ -65,8 +67,8 @@ Seq<String> uuidss = new Seq<>();
     String name005;
     String uuid004;
     int kickMenuId2;
-    String swq = "";
-    String swqe = "";
+    String mapsCommand = "";
+    String mapsCommandWIP = "";
     String agit;
 
     int online001, online002, online003, online004, online005; //Счётчик активности
@@ -80,39 +82,45 @@ Seq<String> uuidss = new Seq<>();
 
 Events.on(EventType.WorldLoadEndEvent.class, event -> {
     Timer.schedule(() -> {
-        arc.struct.Seq<mindustry.gen.Building> allBuildings = mindustry.game.Team.sharded.data().buildings;
+        arc.struct.Seq<mindustry.gen.Building> allBuildingsSharded = mindustry.game.Team.sharded.data().buildings;
 
-        arc.struct.Seq<mindustry.gen.Building> allBuildings1 = Team.malis.data().buildings;
+        arc.struct.Seq<mindustry.gen.Building> allBuildingsMalis= Team.malis.data().buildings;
 
 
-        allBuildings1.each(building -> {
+        allBuildingsSharded.each(building -> {
             building.enabled = false;
         });
-        allBuildings.each(building -> {
+        allBuildingsMalis.each(building -> {
             building.enabled = false;
         });
     }, 2f, 60f);
 });
 
       //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
+        //Счётчик зашедших игроков
 Events.on(EventType.PlayerJoin.class, event -> {
     online001++;
     if(LoadJSONConfig.PlayerShadowBanned(event.player.uuid())) {
         event.player.team(Team.derelict);
     }
 });
+//Счётчик вышедших игроков
         Events.on(EventType.PlayerLeave.class, event -> {
             online002++;
         });
+        //Счётчик поставленных блоков
         Events.on(EventType.BlockBuildEndEvent.class, event -> {
             online003++;
         });
+        //Счётчик, когда игрок брал под управление объект
         Events.on(EventType.UnitControlEvent.class, event -> {
             online004++;
         });
+        //Сколько игроков написали в чат
         Events.on(EventType.PlayerChatEvent.class, event -> {
             online005++;
         });
+        //Необходимо для мута.
         Vars.netServer.admins.addChatFilter((player, message) -> {
 if(LoadJSONConfig.PlayerShadowBanned(player.uuid())) {
     return null;
@@ -122,6 +130,7 @@ if(LoadJSONConfig.PlayerShadowBanned(player.uuid())) {
         });
         LoadJSONConfig.loadConfig();
     //ShadowBanHashMap.loadConfig();
+        //Устаревшая логика, должна прийти на замену база данных
       menuId = Menus.registerMenu((player, selection) -> {
           if(LoadJSONConfig.isModer(player.uuid(), player)) {
           LoadJSONConfig.loadConfig();
@@ -222,6 +231,8 @@ if(player.locale.equals("ru")) {
           }
 
       });
+      //В процессе, я забыл туда подставить переменные на замену.
+        //С addActionFilter и с HashMap можно приват сделать, логика проста как табуретка.
         mindustry.Vars.netServer.admins.addActionFilter(action -> {
            if(action.tile != null && action.tile.x >= 248 && action.tile.x <= 351 && action.tile.y >= 248 && action.tile.y <= 351) {
            //    return true;
@@ -334,7 +345,8 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
                               {"Блоков построено: " + online003},
                               {"Юнитов захвачено игроками: " + online004},
                               {"Сообщений написали игроки в чате: " + online005},
-                              {"ОЗУ" + Runtime.getRuntime().totalMemory() / 1024 / 1024 + " МБ"}
+                              {"ОЗУ" + Runtime.getRuntime().totalMemory() / 1024 / 1024 + " МБ"},
+                              {"Пинг до 8.8.8.8:"}
                       };
                   } else {
                       body001 = "Statistics";
@@ -353,14 +365,27 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
           }
           }
               });
-        dopMenuId001 = Menus.registerMenu((player, selection) -> {
 
+        dopMenuId001 = Menus.registerMenu((player, selection) -> {
+if(selection == 6) {
+    Http.get("http://google.com", response -> {
+        int code = response.getStatus().code;
+
+
+        String[][] options4 = new String[][]{
+                {"Статус Google: " + code},
+        };
+
+        Call.menu(player.con, dopMenuId002, "Statistics", "", options4);
+    });
+}
+        });
+        dopMenuId002 = Menus.registerMenu((player, selection) -> {
         });
 
       kickMenuId2 = Menus.registerMenu((player, selection) -> {
           if(LoadJSONConfig.isModer(player.uuid(), player)) {
           if (uuid004 == null) return;
-         // Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
 
           Player target1 = Groups.player.find(p -> p.uuid().equals(uuid004));
           long duration = 0;
@@ -458,6 +483,7 @@ break;
           }
           }
       });
+      //Устаревшая логика, должна прийти на замену база данных
         kickMenuId = Menus.registerMenu((player, selection) -> {
             if(LoadJSONConfig.isModer(player.uuid(), player)) {
             if (uuid001 == null) return;
@@ -539,7 +565,7 @@ break;
 
     Timer.schedule(() -> {
         int rand5 = arc.math.Mathf.random(1, 5);
-
+//Код, который необходим для сервера схем
       for (Player player : Groups.player) {
         switch(player.locale()) {
             case "ru":
@@ -654,21 +680,21 @@ Tomodrek.LoadJSONConfig.loadConfig();
 for(mindustry.maps.Map map : Vars.maps.all()) {
     if(map.custom) {
         if(player.locale.equals("ru")) {
-            swqe = "Кастом";
+            mapsCommandWIP = "Кастом";
         } else {
-            swqe = "custom";
+            mapsCommandWIP = "custom";
         }
     } else {
         if(player.locale.equals("ru")) {
-            swqe = "Встроенная";
+            mapsCommandWIP = "Встроенная";
         } else {
-            swqe = "Built-in map";
+            mapsCommandWIP = "Built-in map";
 
         }
 
     }
-     swq = "[white]" +  "Map " + map.name() + " [gold]" + swqe + " " + map.width + "x" + map.height;
-    player.sendMessage(swq);
+     mapsCommandWIP = "[white]" +  "Map " + map.name() + " [gold]" + mapsCommandWIP + " " + map.width + "x" + map.height;
+    player.sendMessage(mapsCommandWIP);
 
 }
 
@@ -703,7 +729,6 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        // Регистрируем команду "asay" (админ-сказать) для терминала
         handler.register("asay", "<text...>", "Отправить сообщение в админ-чат", args -> {
             String raw = "[red][server]: [white]" + args[0];
             Groups.player.each(mindustry.gen.Player::admin, a -> a.sendMessage(raw));
@@ -711,121 +736,3 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
         });
     }
 }
-/*
-class AdminChecker {
-
-    private static String[] rootAdmins = {"", ""};
-    private static String[] admins = {"", ""};
-    private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", ""};
-    private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
-private static String[] ip = {"127.0.0.1", "94"};
-
-    private static boolean contains(String[] array, String value, Player player) {
-        for (String item : array) {
-            if (item.equals(value)) {
-              for(String ip001 : ip) {
-                  if(player.ip().equals(ip001)) return true;
-              }
-            }
-        }
-        return false;
-    }
-    public static void loadConfig() {
-        try {
-            Fi file = Core.files.local("config/config/admins.json");
-            if (file.exists()) {
-                String content = file.readString();
-                JsonValue json = new JsonReader().parse(content);
-         rootAdmins = json.get("rootAdmins").asStringArray();
-                admins = json.get("admins").asStringArray();
-                moders = json.get("moders").asStringArray();
-                reserve = json.get("reserve").asStringArray();
-                ip = json.get("ip").asStringArray();
-            } else {
-                Log.warn("Файл конфигурации не найден по пути: " + file.path());
-
-                return;
-
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-
-    public static int getLevel(String uuid, Player player) {
-        if (contains(rootAdmins, uuid, player)) return 0;
-        if (contains(admins, uuid, player)) return 1;
-        if (contains(moders, uuid, player)) return 2;
-        if (contains(reserve, uuid, player)) return 3;
-        return 4;
-    }
-
-
-    public static boolean isRoot(String uuid, Player player) { return getLevel(uuid, player) == 0; }
-    public static boolean isAdmin(String uuid, Player player) { return getLevel(uuid, player) <= 1; }
-    public static boolean isModer(String uuid, Player player) { return getLevel(uuid, player) <= 2; }
-}
-
-
-class ShadowBanHashMap {
-    public static HashSet<String> shadowBanList = new HashSet();
-    public static String[] shadowBanList001;
-    static Fi file;
-
-    ShadowBanHashMap() {
-    }
-
-    public static void loadConfig() {
-        try {
-            if (!file.exists()) {
-                Log.warn("Файл конфигурации не найден по пути: " + file.path(), new Object[0]);
-                return;
-            }
-
-            String content = file.readString();
-            JsonValue json = (new JsonReader()).parse(content);
-            shadowBanList001 = json.get("shadowBan").asStringArray();
-            if (shadowBanList001 == null) {
-                return;
-            }
-
-            for(String uuid : shadowBanList001) {
-                if (uuid != null) {
-                    shadowBanList.add(uuid);
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public static boolean PlayerShadowBanned(String uuid) {
-        return shadowBanList.contains(uuid);
-    }
-
-    public static void AddPlayerInShadowBan(String uuid) {
-        if (uuid != null) {
-            shadowBanList.add(uuid);
-        }
-
-    }
-
-    public static void SaveShadowBansList() {
-        if (file.exists()) {
-            HashMap<String, Object> wrapper = new HashMap();
-            wrapper.put("shadowBan", shadowBanList.toArray(new String[0]));
-            Json json = new Json();
-            file.writeString(json.prettyPrint(wrapper));
-        }
-
-    }
-
-    static {
-        file = Core.files.local("config/config/PlayerInShadowBan.json");
-    }
-}
- */
