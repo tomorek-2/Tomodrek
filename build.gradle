@@ -32,7 +32,7 @@ java{
     sourceCompatibility = JavaVersion.VERSION_17
 }
 ext {
-    mindustryVersion = 'v155.4'
+    mindustryVersion = 'v158'
     sdkRoot = "/home/tomorek/AndroidSDK"
     isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
@@ -49,7 +49,8 @@ allprojects{
 }
 dependencies {
     // Основная библиотека Mindustry
-    compileOnly "Anuken:Mindustry:$mindustryVersion"
+   // compileOnly "Anuken:Mindustry:$mindustryVersion"
+    compileOnly "Anuken:Mindustry:v158.1"
     annotationProcessor "Anuken:jabel:v1.0.0"
 
   if(System.getenv("USER").equals("tomorek")) {

@@ -14,6 +14,11 @@ import arc.util.Log;
 import arc.util.Timer;
 import mindustry.Vars;
 
+import mindustry.ai.types.BuilderAI;
+import mindustry.ai.types.CommandAI;
+import mindustry.ai.types.GroundAI;
+import mindustry.content.UnitTypes;
+import mindustry.ctype.Content;
 import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Call;
