@@ -6,18 +6,14 @@ package Tomodrek;
 
 import arc.Core;
 import arc.Events;
-import arc.files.Fi;
+
 import arc.struct.Seq;
 
 import arc.util.Http;
 import arc.util.Log;
 import arc.util.Timer;
-import arc.util.serialization.Json;
-import arc.util.serialization.JsonReader;
-import arc.util.serialization.JsonValue;
 import mindustry.Vars;
-import mindustry.content.Blocks;
-import mindustry.entities.Effect;
+
 import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Call;
@@ -32,20 +28,15 @@ import mindustry.game.EventType.*;
 import mindustry.net.NetConnection;
 import mindustry.ui.Menus;
 import mindustry.world.Block;
-import mindustry.world.consumers.ConsumePower;
 import mindustry.world.meta.BuildVisibility;
 
-import static mindustry.Vars.player;
 import Tomodrek.LoadJSONConfig;
-import java.util.HashMap;
-import java.util.HashSet;
-
 
 public class Momodrek001 extends Plugin {
     String LICENSE = " \n" +
             "Copyright (c) 2026 tomorek-2\n" +
             "Licensed under the GNU GPL v3.0";
-    LoadJSONConfig LoadJSONConfig;
+
     int menuId;
     String name001;
     String uuid001;
@@ -71,11 +62,11 @@ Seq<String> uuidss = new Seq<>();
     String mapsCommandWIP = "";
     String agit;
 
-    int online001, online002, online003, online004, online005; //Счётчик активности
+    int online001, online002, online003, online004, online005; //Счётчик активности,
     String[][] timeOptions;
     String[][] options3;
     String body001;
-    String locale; //Локализация. "А ОТ С HASHMAP БыЛО ПРОИЗВОДИТЕЛЬНЕЙ ЧЕМ С SWITCH"
+    String locale; //Локализация. "А ВОТ С HASHMAP БыЛО ПРОИЗВОДИТЕЛЬНЕЙ ЧЕМ С SWITCH"
 
     @Override
   public void init() {
@@ -93,7 +84,7 @@ Events.on(EventType.WorldLoadEndEvent.class, event -> {
         allBuildingsMalis.each(building -> {
             building.enabled = false;
         });
-    }, 2f, 60f);
+    }, 2f, LoadJSONConfig.getConfigInt("IntervalEnabledOffAllBlocksMalis"));
 });
 
       //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
@@ -134,6 +125,7 @@ if(LoadJSONConfig.PlayerShadowBanned(player.uuid())) {
       menuId = Menus.registerMenu((player, selection) -> {
           if(LoadJSONConfig.isModer(player.uuid(), player)) {
           LoadJSONConfig.loadConfig();
+
           if (uuids != null && selection >= 0 && selection < uuids.size) {
               name001 = name002.get(selection)[0];
               uuid001 = uuids.get(selection);
@@ -623,7 +615,7 @@ break;
           player.sendMessage(agit);
           }
 
-    }, 5f, 499f);
+    }, 5f, Tomodrek.LoadJSONConfig.getConfigInt("IntervalSendInChatAgit"));
   }
 
     @Override
@@ -693,8 +685,8 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
         }
 
     }
-     mapsCommandWIP = "[white]" +  "Map " + map.name() + " [gold]" + mapsCommandWIP + " " + map.width + "x" + map.height;
-    player.sendMessage(mapsCommandWIP);
+     mapsCommand = "[white]" +  "Map " + map.name() + " [gold]" + mapsCommandWIP + " " + map.width + "x" + map.height;
+    player.sendMessage(mapsCommand);
 
 }
 
@@ -704,10 +696,10 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
             if (args != null && args.length != 0 && args[0] != null) {
                 switch (args[0].toLowerCase().trim()) {
                     case "erekir": //157.22.190.107:6567
-                        Call.connect(player.con, LoadJSONConfig.getConfig("IPerekir"), 6567);
+                        Call.connect(player.con, LoadJSONConfig.getConfig("IPerekir"), Tomodrek.LoadJSONConfig.getConfigInt("PortErekir"));
                         break;
                     case "serpulo": //155.212.172.123:6567
-                        Call.connect(player.con, LoadJSONConfig.getConfig("IPSerpulo"), 6567);
+                        Call.connect(player.con, LoadJSONConfig.getConfig("IPSerpulo"),  Tomodrek.LoadJSONConfig.getConfigInt("PortSerpulo"));
                         break;
                     default:
                         Call.connect(player.con, "8.8.8.8", 6567);

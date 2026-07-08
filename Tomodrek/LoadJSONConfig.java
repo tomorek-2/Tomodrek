@@ -12,15 +12,18 @@ import mindustry.gen.Player;
 
 public class LoadJSONConfig {
     public static HashSet<String> shadowBanList = new HashSet();
+    public static HashMap<String, String> getStringList = new HashMap();
+    public static HashMap<String, Integer> getIntList = new HashMap();
     public static String[] shadowBanList001;
    static Fi fileShadowBan = Core.files.local("config/config/PlayerInShadowBan.json");
   static   Fi fileAdminChecker = Core.files.local("config/config/admins.json");
+    static  Fi fileConfigObject = Core.files.local("config/config/ConfigObject.json");
     private static String[] rootAdmins = {"", ""};
     private static String[] admins = {"", ""};
     private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", ""};
     private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
     private static String[] ip = new String[]{"127.0.0.1", "94"};
-    static  Fi fileConfigObject = Core.files.local("config/config/ConfigObject.json");
+
 
     LoadJSONConfig() {
     }
@@ -50,6 +53,21 @@ shadowBanList.clear();
                     shadowBanList.add(uuid);
                 }
             }
+            String content003  = fileConfigObject.readString();
+            JsonValue json003 = new JsonReader().parse(content003);
+
+           /* for(int i = 0; i < json003.size; i++) {
+                if(json003.get(i).isString()) {
+                    getStringList.put(json003.get(i).name, json003.get(i).asString());
+                }
+
+                if(json003.get(i).isNumber()) getIntList.put(json003.get(i).name, json003.get(i).asInt());
+
+            } */
+for(JsonValue child = json003.child(); child != null; child = child.next()) {
+    if(child.isString()) getStringList.put(child.name, child.asString());
+    if(child.isNumber()) getIntList.put(child.name, child.asInt());
+}
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -96,8 +114,13 @@ private static boolean contains(String[] array, String value, Player player) {
     public static boolean isAdmin(String uuid, Player player) { return getLevel(uuid, player) <= 1; }
     public static boolean isModer(String uuid, Player player) { return getLevel(uuid, player) <= 2; }
     static public String getConfig(String ObjectS) {
-
-        String content003  = fileConfigObject.readString();
+String output002 = getStringList.get(ObjectS);
+if(output002 == null) {
+    Log.err("В Tomodrek.LoadJSONConfig, в getConfig ошибка: " +ObjectS + " Вызвал null, output001 будет: 'null'");
+    return "null";
+}
+return output002;
+ /*       String content003  = fileConfigObject.readString();
         JsonValue json003 = new JsonReader().parse(content003);
         JsonValue TestNull001 = json003.get(ObjectS);
         if(TestNull001 == null) {
@@ -111,6 +134,11 @@ if(output001 == null) {
     Log.err("В Tomodrek.LoadJSONConfig, в getConfig ошибка: " +ObjectS + " Вызвал null, output001 будет: 'null'");
     return "null";
 }
-        return output001;
+        return output001; */
+    }
+    public static int getConfigInt(String ObjectS) {
+      //  int output002 = GetIntList.get(ObjectS);
+
+return getIntList.getOrDefault(ObjectS, 60);
     }
 }
