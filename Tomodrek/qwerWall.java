@@ -39,8 +39,14 @@ public boolean canPlaceOn(Tile tile, Team team, int rotation) {
         @Override
         public void updateTile() {
             super.updateTile();
+           int LevelHeat = Tomodrek.Modomodrek.TestHeatMap.getOrDefault(new Tomodrek.DoubleInt(tile.x, tile.y), 0);
+                if(LevelHeat > 1) {
+                    dead();
+                    kill();
+                } else {
+                    heal(25f);
+                }
 
-                
              
              
             int CountThorium = items.get(Items.thorium);

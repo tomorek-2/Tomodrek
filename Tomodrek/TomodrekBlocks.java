@@ -46,6 +46,13 @@ public class TomodrekBlocks extends Mod {
             buildVisibility = BuildVisibility.shown;
             category = Category.logic;
         }};
+        new Tomodrek.qwerWall("qwerWall") {{
+            health = 1000;
+            size = 1;
+            buildVisibility = BuildVisibility.shown;
+            category = Category.defense;
+
+        }};
         for (String name : nameWall001) {
             new StaticWall(name) {{
                 size = 1;

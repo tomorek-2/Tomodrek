@@ -2,7 +2,10 @@ package Tomodrek;
 
 import java.io.*;
 import java.net.*;
+import java.util.HashMap;
 import java.util.jar.*;
+
+import arc.math.Mathf;
 import arc.util.*;
 
 import mindustry.content.Liquids;
@@ -13,6 +16,7 @@ import mindustry.entities.units.BuildPlan;
 import mindustry.entities.units.StatusEntry;
 import mindustry.gen.*;
 import mindustry.mod.Mod;
+import mindustry.type.Category;
 import mindustry.type.Planet;
 import mindustry.type.StatusEffect;
 import mindustry.type.UnitType;
@@ -46,7 +50,7 @@ public class Modomodrek extends Mod {
     float slider001 = 64f;
 
     public static Object custom3DScene;
-
+  public static  HashMap<DoubleInt, Integer> TestHeatMap = new HashMap<DoubleInt, Integer>();
 
     public static boolean show3DScene = false;
     private float timeTracker = 0f;
@@ -334,5 +338,46 @@ public class Modomodrek extends Mod {
             myClass.getMethod("run").invoke(instance);
         } catch (Exception e) { e.printStackTrace(); }
     } */
+    public void testHeat() {
+        int xblock = 0;
+        int yblock = 0;
+
+        for(int i = 0; i < 365; i++) {
+            for(int x = 0; x < 10; x++) {
+float xd = Mathf.cosDeg(i);
+float yd = Mathf.sinDeg(i);
+xd *= x;
+yd *= x;
+xd += xblock;
+yd += yblock;
+int xdint = (int) xd;
+int ydint = (int) yd;
+int Heat = TestHeatMap.getOrDefault(new DoubleInt(xblock, yblock), 0);
+if(Heat <= 5) {
+    TestHeatMap.put(new DoubleInt(xdint, ydint), Heat + x);
+}
+            }
+        }
+    }
+}
+class DoubleInt {
+    public int x;
+    public int y;
+    public DoubleInt(int x, int y) {
+        this.x = x;
+        this.y = y;
+
+    }
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof DoubleInt)) return false;
+        DoubleInt other = (DoubleInt) o;
+        return x == other.x && y == other.y;
+    }
+
+    @Override
+    public int hashCode() {
+        return x * 31 + y;
+    }
 }
 
