@@ -35,6 +35,7 @@ public boolean canPlaceOn(Tile tile, Team team, int rotation) {
 }
 
 
+
     public class qwerWallBuild extends Building {
         @Override
         public void updateTile() {

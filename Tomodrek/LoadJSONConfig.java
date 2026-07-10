@@ -113,10 +113,11 @@ private static boolean contains(String[] array, String value, Player player) {
     public static boolean isRoot(String uuid, Player player) { return getLevel(uuid, player) == 0; }
     public static boolean isAdmin(String uuid, Player player) { return getLevel(uuid, player) <= 1; }
     public static boolean isModer(String uuid, Player player) { return getLevel(uuid, player) <= 2; }
+    public static boolean isReserve(String uuid, Player player) { return getLevel(uuid, player) <= 3; }
     static public String getConfig(String ObjectS) {
 String output002 = getStringList.get(ObjectS);
 if(output002 == null) {
-    Log.err("В Tomodrek.LoadJSONConfig, в getConfig ошибка: " +ObjectS + " Вызвал null, output001 будет: 'null'");
+    Log.err("В Tomodrek.LoadJSONConfig, в getConfig ошибка:   " +ObjectS + " Вызвал null, output001 будет: 'null'");
     return "null";
 }
 return output002;

@@ -1,0 +1,9 @@
+rootProject.name = 'Tomodrek'
+
+dependencyResolutionManagement {
+    // Эта строка разрешает Gradle брать репозитории из твоего build.gradle
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        mavenCentral()
+    }
+}

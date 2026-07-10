@@ -231,7 +231,7 @@ if(player.locale.equals("ru")) {
       //В процессе, я забыл туда подставить переменные на замену.
         //С addActionFilter и с HashMap можно приват сделать, логика проста как табуретка.
         mindustry.Vars.netServer.admins.addActionFilter(action -> {
-           if(action.tile != null && action.tile.x >= 248 && action.tile.x <= 351 && action.tile.y >= 248 && action.tile.y <= 351) {
+           if(action.tile != null && action.tile.x >= LoadJSONConfig.getConfigInt("LimitXStartAction") && action.tile.x <= LoadJSONConfig.getConfigInt("LimitXEndAction")&& action.tile.y >= LoadJSONConfig.getConfigInt("LimitYStartAction") && action.tile.y <= LoadJSONConfig.getConfigInt("LimitYEndAction")) {
            //    return true;
                if(action.block == mindustry.content.Blocks.logicDisplay) {
                    if(action.player.admin) {
@@ -410,8 +410,6 @@ if(selection == 6) {
                   if (target1 != null) {
                       target1.con.kick("Вы наказаны на " + reason, duration);
                       Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, duration);
-                  } else {
-                      Log.err("Нетц цели для разкика, 250 строка");
                   }
                   break;
               case 2:
@@ -423,8 +421,6 @@ if(selection == 6) {
                       Vars.netServer.admins.handleKicked(info003.id, info003.lastIP, duration);
                       target1.con.kick("Вы наказаны на " + reason, duration);
 
-                  } else {
-                      Log.err("Нетц цели для разкика, 250 строка");
                   }
                   break;
               case 3:

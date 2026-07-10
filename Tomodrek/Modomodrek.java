@@ -45,6 +45,7 @@ import java.net.URLClassLoader;
 import mindustry.input.*;
 public class Modomodrek extends Mod {
     BaseDialog Dialog001;
+    int www;
     BaseDialog Dialog002;
     String w = "Напиши", ww = "ww";
     float slider001 = 64f;
@@ -176,6 +177,13 @@ public class Modomodrek extends Mod {
         });
 
         Events.run(Trigger.update, () -> {
+                    if (Core.input.keyTap(KeyCode.end)) {
+                        try {
+                            mindustry.Vars.mods.load();
+                        } catch (Exception e) {
+                            arc.util.Log.err(e);
+                        }
+                    }
             if (Core.input.keyTap(KeyCode.f6)) {
                 Player player = Vars.player;
                 Unit unit = player.unit();
@@ -184,8 +192,8 @@ public class Modomodrek extends Mod {
                 //   } else {
                 //      Vars.state.rules.unitAmmo = false;
                 //   }
-                new MapResizeDialogTO((width, height, shiftX, shiftY) -> {
-                }).show();
+               // new MapResizeDialogTO((width, height, shiftX, shiftY) -> {
+        //        }).show();
 
                 if (Vars.state.rules.editor == false) {
                     Vars.state.rules.editor = true;
@@ -272,16 +280,27 @@ public class Modomodrek extends Mod {
         Events.run(Trigger.update, () -> {
             Vars.state.rules.fog = false;
             Vars.state.rules.staticFog = false;
-            Vars.ios = true;
+          //  Vars.ios = true;
             Vars.mobile = false;
             MapResizeDialog.minSize = -1;
             Vars.state.rules.schematicsAllowed = true;
             Vars.state.afterGameOver = true;
 
         });
+
+        Events.run(Trigger.drawOver, () -> {
+
+            arc.graphics.g3d.Camera3D camera = new arc.graphics.g3d.Camera3D();
+            camera.position.set(0f, 0f,  www++);
+
+            //camera.lookAt(0, 0, z++);
+            camera.update();
+        });
         if (Core.app.isAndroid()) {
 //androidAcc.androidAcc();
         }
+
+
     }
 
  /*  static class androidAcc {
