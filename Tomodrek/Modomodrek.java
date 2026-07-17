@@ -257,6 +257,20 @@ Dialog001.top();
                             calculateLastResult /= calculateNumber;
                             calculateNumber = 0;
                         });
+
+                        table.button("sin", () -> {
+                            calculatePlus++;
+                            calculateSum++;
+                            calculateLastResult = arc.math.Mathf.sinDeg(calculateNumber);
+                            calculateNumber = 0;
+                        });
+                        table.button("cos", () -> {
+                            calculatePlus++;
+                            calculateSum++;
+                            calculateLastResult = arc.math.Mathf.cosDeg(calculateNumber);
+                            calculateNumber = 0;
+                        });
+
                         table.button("clear", () -> {
                             calculatePlus++;
                             calculateSum++;
