@@ -8,8 +8,11 @@ import java.util.jar.*;
 import arc.math.Mathf;
 import arc.util.*;
 
+import mindustry.content.Blocks;
+import mindustry.content.Fx;
 import mindustry.content.Liquids;
 import mindustry.content.Planets;
+import mindustry.content.UnitTypes;
 import mindustry.core.GameState;
 import mindustry.editor.MapResizeDialog;
 import mindustry.entities.units.BuildPlan;
@@ -23,6 +26,8 @@ import mindustry.type.UnitType;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.ui.dialogs.SettingsMenuDialog;
 
+import mindustry.world.Tile;
+import mindustry.world.blocks.distribution.Router;
 import mindustry.world.meta.BuildVisibility;
 
 import mindustry.Vars;
@@ -49,7 +54,8 @@ public class Modomodrek extends Mod {
     BaseDialog Dialog002;
     String w = "Напиши", ww = "ww";
     float slider001 = 64f;
-
+    String nameField = "Result";
+String text005;
     public static Object custom3DScene;
   public static  HashMap<DoubleInt, Integer> TestHeatMap = new HashMap<DoubleInt, Integer>();
 
@@ -58,6 +64,11 @@ public class Modomodrek extends Mod {
     // public static Tomodrek.CustomSceneRender custom3DScene;
 
     private float animTime = 0f;
+    float calculatePlus;
+    float calculateMinus;
+    float calculateNumber;
+float calculateSum;
+float calculateLastResult;
     Timer.Task task;
 
     @Override
@@ -68,6 +79,7 @@ public class Modomodrek extends Mod {
 
     @Override
     public void init() {
+
 
         arc.Events.on(mindustry.game.EventType.ClientLoadEvent.class, event -> {
             try {
@@ -102,14 +114,7 @@ public class Modomodrek extends Mod {
             //   }
             Dialog001 = new BaseDialog("Меню мода");
             Dialog001.addCloseButton();
-            Dialog001.cont.add("Заглушка");
-            Dialog001.field(w, text002 -> {
-                String text0002 = text002;
-            }).expand((int) slider001, 65);
 
-            String s001 = Liquids.cryofluid.emoji();
-            Dialog002 = Dialog001;
-            // Добавляем кнопку в настройки
 
             Vars.ui.settings.addCategory("Расширенные возможности", Icon.logic, table -> {
                 table.button("Пауза", () -> {
@@ -148,7 +153,7 @@ public class Modomodrek extends Mod {
 
 
                     mindustry.Vars.maxSchematicSize = (int) s;
-                    //Events.fire(EventType.ClientLoadEvent.class);
+
 
                     float slider001 = s;
 
@@ -166,14 +171,116 @@ public class Modomodrek extends Mod {
                 // Call.connect(Vars.player.con, "pivomind.pro", 6567);
             });
 
-            Dialog001.show();
-            Dialog001.hide();
             Vars.ui.menufrag.addButton("Modomodrek", () -> {
+                Dialog001.clear();
                 Dialog001.show();
-                Dialog001.setPosition(slider001, 35f);
+                Dialog001.button("close", ()-> Dialog001.hide()).size(50f, 90f);
+                Dialog001.button("-", () -> {
+                    calculateMinus++;
+                    calculateSum++;
+                    calculateLastResult -= calculateNumber;
+                    calculateNumber = 0;
+                });
+                Dialog001.button("+", () -> {
+                    calculatePlus++;
+                    calculateSum++;
+                    calculateLastResult += calculateNumber;
+                    calculateNumber = 0;
+
+                });
+                Dialog001.button("*", () -> {
+                    calculatePlus++;
+                    calculateSum++;
+                    calculateLastResult *= calculateNumber;
+                    calculateNumber = 0;
+
+                });
+                Dialog001.button("/", () -> {
+                    calculatePlus++;
+                    calculateSum++;
+                    calculateLastResult /= calculateNumber;
+                    calculateNumber = 0;
+                });
+                Dialog001.button("clear", () -> {
+                    calculatePlus++;
+                    calculateSum++;
+                  calculateLastResult = 0;
+                    calculateNumber = 0;
+                });
+Dialog001.top();
+                Dialog001.field("Result: " + calculateLastResult, field->{
+                    nameField = "Result" + calculateLastResult;
+                }).size(450f, 30f).name(nameField).with(field ->{
+                    field.setDisabled(false);
+                    field.update(() -> {
+                        field.setText("Result: " + calculateLastResult +  " Number: " + calculateNumber);
+                    });
+                });
+                Dialog001.center();
+               for(float i = 0; i <= 9; i++) {
+                   float finalI = i;
+                   Dialog001.button("" + i, () -> {
+                       calculateNumber *= 10;
+                       calculateNumber += finalI;
+                   }).bottom();
+               }
+
             });
 
+                    Vars.ui.settings.addCategory("Калькулятор", Icon.powerOld, table -> {
+                        table.clear();
 
+                        table.button("close", ()-> Dialog001.hide()).size(50f, 90f);
+                        table.button("-", () -> {
+                            calculateMinus++;
+                            calculateSum++;
+                            calculateLastResult -= calculateNumber;
+                            calculateNumber = 0;
+                        });
+                        table.button("+", () -> {
+                            calculatePlus++;
+                            calculateSum++;
+                            calculateLastResult += calculateNumber;
+                            calculateNumber = 0;
+
+                        });
+                        table.button("*", () -> {
+                            calculatePlus++;
+                            calculateSum++;
+                            calculateLastResult *= calculateNumber;
+                            calculateNumber = 0;
+
+                        });
+                        table.button("/", () -> {
+                            calculatePlus++;
+                            calculateSum++;
+                            calculateLastResult /= calculateNumber;
+                            calculateNumber = 0;
+                        });
+                        table.button("clear", () -> {
+                            calculatePlus++;
+                            calculateSum++;
+                            calculateLastResult = 0;
+                            calculateNumber = 0;
+                        });
+                        table.top();
+                        table.field("Result: " + calculateLastResult, field->{
+                            nameField = "Result" + calculateLastResult;
+                        }).size(450f, 30f).name(nameField).with(field ->{
+                            field.setDisabled(false);
+                            field.update(() -> {
+                                field.setText("Result: " + calculateLastResult +  " Number: " + calculateNumber);
+                            });
+                        });
+                        table.center();
+                        for(float i = 0; i <= 9; i++) {
+                            float finalI = i;
+                            table.button("" + i, () -> {
+                                calculateNumber *= 10;
+                                calculateNumber += finalI;
+                            }).bottom();
+                        }
+                    });
         });
 
         Events.run(Trigger.update, () -> {
@@ -205,7 +312,7 @@ public class Modomodrek extends Mod {
             }
 
 
-            //Я этот код не понимаю с клавишами
+
         });
         Events.run(Trigger.update, () -> {
             if (Core.input.keyTap(KeyCode.f5)) {
@@ -216,6 +323,7 @@ public class Modomodrek extends Mod {
                     block.canPickup = true;
                     block.commandable = true;
                     block.canOverdrive = true;
+
                 }
                 for (UnitType unit : Vars.content.units()) {
                     unit.hidden = false;
@@ -275,6 +383,13 @@ public class Modomodrek extends Mod {
                 }
                 Vars.mods.getMod("tomodrek").meta.hidden = true;
             }
+           
+
+            if(Core.input.keyTap(KeyCode.plus)) {
+
+
+            }
+
 
         });
         Events.run(Trigger.update, () -> {

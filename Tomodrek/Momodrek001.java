@@ -71,7 +71,7 @@ Seq<String> uuidss = new Seq<>();
     String[][] timeOptions;
     String[][] options3;
     String body001;
-    String locale; //Локализация. "А ВОТ С HASHMAP БыЛО ПРОИЗВОДИТЕЛЬНЕЙ ЧЕМ С SWITCH"
+    String locale; //Локализация. "А ВОТ С HASHMAP БыЛО ПРОИЗВОДИТЕЛЬНЕЙ ЧЕМ С SWITCH". Я забыл что существует вообще bundle
 
     @Override
   public void init() {
@@ -100,6 +100,7 @@ Events.on(EventType.PlayerJoin.class, event -> {
         event.player.team(Team.derelict);
     }
 });
+
 //Счётчик вышедших игроков
         Events.on(EventType.PlayerLeave.class, event -> {
             online002++;
@@ -125,7 +126,7 @@ if(LoadJSONConfig.PlayerShadowBanned(player.uuid())) {
 }
         });
         LoadJSONConfig.loadConfig();
-    //ShadowBanHashMap.loadConfig();
+
         //Устаревшая логика, должна прийти на замену база данных
       menuId = Menus.registerMenu((player, selection) -> {
           if(LoadJSONConfig.isModer(player.uuid(), player)) {
@@ -228,7 +229,7 @@ if(player.locale.equals("ru")) {
           }
 
       });
-      //В процессе, я забыл туда подставить переменные на замену.
+
         //С addActionFilter и с HashMap можно приват сделать, логика проста как табуретка.
         mindustry.Vars.netServer.admins.addActionFilter(action -> {
            if(action.tile != null && action.tile.x >= LoadJSONConfig.getConfigInt("LimitXStartAction") && action.tile.x <= LoadJSONConfig.getConfigInt("LimitXEndAction")&& action.tile.y >= LoadJSONConfig.getConfigInt("LimitYStartAction") && action.tile.y <= LoadJSONConfig.getConfigInt("LimitYEndAction")) {
@@ -696,10 +697,10 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
         handler.<Player>register("ser", "<serpulo/erekir>", "переключение между серверами", (args, player) -> {
             if (args != null && args.length != 0 && args[0] != null) {
                 switch (args[0].toLowerCase().trim()) {
-                    case "erekir": //157.22.190.107:6567
+                    case "erekir":
                         Call.connect(player.con, LoadJSONConfig.getConfig("IPerekir"), Tomodrek.LoadJSONConfig.getConfigInt("PortErekir"));
                         break;
-                    case "serpulo": //155.212.172.123:6567
+                    case "serpulo":
                         Call.connect(player.con, LoadJSONConfig.getConfig("IPSerpulo"),  Tomodrek.LoadJSONConfig.getConfigInt("PortSerpulo"));
                         break;
                     default:
@@ -725,7 +726,7 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
         handler.register("asay", "<text...>", "Отправить сообщение в админ-чат", args -> {
             String raw = "[red][server]: [white]" + args[0];
             Groups.player.each(mindustry.gen.Player::admin, a -> a.sendMessage(raw));
-            arc.util.Log.info("Сообщение отправлено в админ-чат: " + args[0]);
+            arc.util.Log.info("[Server] " + args[0]);
         });
     }
 }
