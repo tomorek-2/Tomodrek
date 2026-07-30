@@ -36,10 +36,7 @@ public class BadSolarPanelBuild extends SolarGeneratorBuild{
   @Override 
   public void updateTile() {
 super.updateTile();
-      int LevelHeat = Tomodrek.Modomodrek.TestHeatMap.getOrDefault(new Tomodrek.DoubleInt(tile.x, tile.y), 0);
-      if(LevelHeat > 1) {
-          return;
-      }
+
 
 health /= 1.01f;
     powerProduction = health / 25;

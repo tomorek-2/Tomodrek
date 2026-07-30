@@ -121,21 +121,7 @@ if(output002 == null) {
     return "null";
 }
 return output002;
- /*       String content003  = fileConfigObject.readString();
-        JsonValue json003 = new JsonReader().parse(content003);
-        JsonValue TestNull001 = json003.get(ObjectS);
-        if(TestNull001 == null) {
-            Log.err("В Tomodrek.LoadJSONConfig, в getConfig ошибка: " +ObjectS + " Вызвал null, output001 будет: 'null'");
-            return "null";
-        }
 
-        String output001 = json003.get(ObjectS).asString();
-        //String output = String.join("", output001);
-if(output001 == null) {
-    Log.err("В Tomodrek.LoadJSONConfig, в getConfig ошибка: " +ObjectS + " Вызвал null, output001 будет: 'null'");
-    return "null";
-}
-        return output001; */
     }
     public static int getConfigInt(String ObjectS) {
       //  int output002 = GetIntList.get(ObjectS);

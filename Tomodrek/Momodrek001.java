@@ -4,6 +4,8 @@
  */
 package Tomodrek;
 
+import java.util.Arrays;
+
 import arc.Core;
 import arc.Events;
 
@@ -14,6 +16,7 @@ import arc.util.Log;
 import arc.util.Timer;
 import mindustry.Vars;
 
+import mindustry.ai.Pathfinder;
 import mindustry.ai.types.BuilderAI;
 import mindustry.ai.types.CommandAI;
 import mindustry.ai.types.GroundAI;
@@ -23,6 +26,7 @@ import mindustry.game.EventType;
 import mindustry.game.Team;
 import mindustry.gen.Call;
 import mindustry.gen.Groups;
+import mindustry.gen.PathTile;
 import mindustry.gen.Player;
 
 import mindustry.mod.Plugin;
@@ -77,28 +81,37 @@ Seq<String> uuidss = new Seq<>();
   public void init() {
 
 Events.on(EventType.WorldLoadEndEvent.class, event -> {
+
     Timer.schedule(() -> {
-        arc.struct.Seq<mindustry.gen.Building> allBuildingsSharded = mindustry.game.Team.sharded.data().buildings;
 
-        arc.struct.Seq<mindustry.gen.Building> allBuildingsMalis= Team.malis.data().buildings;
+        if(
+                LoadJSONConfig.getConfig("EnableAutoDisableBlocks").equals("true")
+        ) {
+            arc.struct.Seq<mindustry.gen.Building> allBuildingsSharded = mindustry.game.Team.sharded.data().buildings;
+
+            arc.struct.Seq<mindustry.gen.Building> allBuildingsMalis = Team.malis.data().buildings;
 
 
-        allBuildingsSharded.each(building -> {
-            building.enabled = false;
-        });
-        allBuildingsMalis.each(building -> {
-            building.enabled = false;
-        });
+            allBuildingsSharded.each(building -> {
+                building.enabled = false;
+            });
+            allBuildingsMalis.each(building -> {
+                building.enabled = false;
+            });
+        }
     }, 2f, LoadJSONConfig.getConfigInt("IntervalEnabledOffAllBlocksMalis"));
 });
 
       //Vars.netServer.admins.addActionFilter((player, s2, s3, s4) -> {
         //Счётчик зашедших игроков
 Events.on(EventType.PlayerJoin.class, event -> {
+    if(event.player.locale == null) event.player.kick("locale cannot be null");
     online001++;
     if(LoadJSONConfig.PlayerShadowBanned(event.player.uuid())) {
         event.player.team(Team.derelict);
     }
+
+    event.player.name = "<"+LoadJSONConfig.getLevel(event.player.uuid(), event.player)+">"+event.player.name;
 });
 
 //Счётчик вышедших игроков
@@ -207,6 +220,7 @@ if(player.locale.equals("ru")) {
             }
 
         });
+        
       dopMenuId = Menus.registerMenu((player, selection) -> {
           if(LoadJSONConfig.isModer(player.uuid(), player)) {
               if (selection == 0) {
@@ -553,36 +567,33 @@ break;
         });
 
 
-    Events.on(EventType.PlayerJoin.class, event -> {
-
-   });
 
     Timer.schedule(() -> {
         int rand5 = arc.math.Mathf.random(1, 5);
-//Код, который необходим для сервера схем
+//Код, который необходим для агитации.
       for (Player player : Groups.player) {
         switch(player.locale()) {
             case "ru":
             switch (rand5) {
                 case 1:
 
-                  //  agit = "Гайды по схемодельству и новости сервера в телеге - /tg";
+
                     agit = LoadJSONConfig.getConfig("LocalRu1Agit");
                     break;
                 case 2:
-                 //   agit = "Хочешь предложить свою схему или правку? Присоединяйся к телеграмму - /tg";
+
          agit = LoadJSONConfig.getConfig("LocalRu2Agit");
                     break;
                 case 3:
-                    //agit = "Не пропусти обновления сервера и новые гайды — подписывайся на телегу - /tg";
+
                     agit = LoadJSONConfig.getConfig("LocalRu3Agit");
                     break;
                 case 4:
-                   // agit = "Обсуждаем схемы, принимаем идеи и учимся строить вместе. Наш канал в телеге - /tg";
+
                      agit = LoadJSONConfig.getConfig("LocalRu4Agit");
                     break;
                 case 5:
-                 //   agit = "Знаешь как улучшить схему на сервере? Пиши в телегу - /tg";
+
                     agit = LoadJSONConfig.getConfig("LocalRu5Agit");
                     break;
             }
@@ -591,28 +602,29 @@ break;
                 switch (rand5) {
                     case 1:
 
-                   //     agit = " Guides on schematics and server news in Telegram - /tg";
+
                         agit = LoadJSONConfig.getConfig("LocalEn1Agit");
                         break;
                     case 2:
-                   //     agit = "Want to suggest your own schematic or an edit? Join the Telegram - /tg";
+
                         agit = LoadJSONConfig.getConfig("LocalEn2Agit");
                         break;
                     case 3:
-                       // agit = " Don't miss server updates and new guides — subscribe to the Telegram - /tg";
+
                         agit = LoadJSONConfig.getConfig("LocalEn3Agit");
                         break;
                     case 4:
-                        //agit = "Discussing schematics, taking ideas, and learning to build together. Our Telegram channel - /tg";
+
                         agit = LoadJSONConfig.getConfig("LocalEn4Agit");
                         break;
                     case 5:
-                       // agit = " Know how to improve a schematic on the server? Write to us on Telegram - /tg";
+
                         agit = LoadJSONConfig.getConfig("LocalEn5Agit");
                         break;
                 }
                 break;
         }
+
         //player.sendMessage("Есть пожелания к плагину? Напишите через команду /telegram");
           player.sendMessage(agit);
           }
@@ -644,6 +656,11 @@ break;
         });
         handler.<Player>register("chat", "Чат сервера в ТГ", (args, player) -> {
             Call.openURI(player.con, LoadJSONConfig.getConfig("URLCommandChat"));
+
+
+        });
+        handler.<Player>register("me", "Информация о себе", (args, player) -> {
+           player.sendMessage("IP: " + player.ip() + " UUID: " + player.uuid() + " Locale: " + player.locale());
 
 
         });
@@ -723,7 +740,7 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
 
     @Override
     public void registerServerCommands(CommandHandler handler) {
-        handler.register("asay", "<text...>", "Отправить сообщение в админ-чат", args -> {
+        handler.register("asay", "<text...>", "Отправить сообщение админам", args -> {
             String raw = "[red][server]: [white]" + args[0];
             Groups.player.each(mindustry.gen.Player::admin, a -> a.sendMessage(raw));
             arc.util.Log.info("[Server] " + args[0]);
