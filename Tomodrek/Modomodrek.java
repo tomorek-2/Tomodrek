@@ -27,6 +27,7 @@ import mindustry.type.UnitType;
 import mindustry.ui.dialogs.BaseDialog;
 import mindustry.ui.dialogs.SettingsMenuDialog;
 
+import mindustry.ui.fragments.HudFragment;
 import mindustry.world.Tile;
 import mindustry.world.blocks.distribution.Router;
 import mindustry.world.meta.BuildVisibility;
@@ -51,7 +52,9 @@ import java.net.URLClassLoader;
 import mindustry.input.*;
 public class Modomodrek extends Mod {
     BaseDialog Dialog001;
+    HudFragment fragment001;
     int www;
+    int timeWWW;
     BaseDialog Dialog002;
     String w = "Напиши", ww = "ww";
     float slider001 = 64f;
@@ -71,14 +74,24 @@ public class Modomodrek extends Mod {
     float calculateSum;
     float calculateLastResult;
     Timer.Task task;
+    public Tomodrek.VoiceChat001 voice;
 
     @Override
     public void loadContent() {
-        Tomodrek.TomodrekBlocks.load();
+       // Tomodrek.TomodrekBlocks.load();
     }
 
     @Override
     public void init() {
+        // 1. Инициализация подсистемы Momodrek003 (Серверная часть)
+        Tomodrek.Momodrek003.init();
+        
+        // 2. Инициализация ГЧ (V3) (Клиентская часть)
+        voice = new Tomodrek.VoiceChat001();
+        
+        mindustry.net.Administration.Config.packetSpamLimit.set(1000);
+        arc.Events.on(EventType.WorldLoadEvent.class, event -> {
+        });
         arc.Events.on(mindustry.game.EventType.ClientLoadEvent.class, event -> {
             try {
                 if (mindustry.Vars.ui != null && mindustry.Vars.ui.editor != null) {
@@ -96,39 +109,45 @@ public class Modomodrek extends Mod {
         });
 
         Events.on(EventType.ClientLoadEvent.class, event -> {
-                    Dialog001 = new BaseDialog("Меню мода");
-                    Dialog001.addCloseButton();
 
-                    Vars.ui.settings.addCategory("Расширенные возможности", Icon.logic, table -> {
-                        table.button("Пауза", () -> {
-                            if (Vars.state.isPaused()) Vars.state.set(GameState.State.playing);
-                            else Vars.state.set(GameState.State.paused);
-                        }).width(96f).height(32f);
-                        table.row();
-                        table.button("Другое", () -> {
-                            Vars.maxSchematicSize = 4096;
-                            Vars.state.rules.planet = Planets.sun;
-                        }).height(36f).width(36f);
-                        table.right();
-                        table.field(w, text001 -> {
-                            w = text001;
-                        }).height(36f).width(192f);
-                        table.bottom();
-                        table.button("Reset Build (159)", () -> {
-                            mindustry.core.Version.build = 159;
 
-                        }).height(45f).width(120f);
-                        table.slider(64, 8192, 1, slider001, s -> {
-                            mindustry.Vars.maxSchematicSize = (int) s;
-                            slider001 = s;
-                        }).height(64).width(256f);
-                    });
+            Dialog001 = new BaseDialog("Меню мода");
+            Dialog001.addCloseButton();
 
-                });
+            Vars.ui.settings.addCategory("Расширенные возможности", Icon.logic, table -> {
+                table.button("Пауза", () -> {
+                    if (Vars.state.isPaused()) Vars.state.set(GameState.State.playing);
+                    else Vars.state.set(GameState.State.paused);
+                }).width(96f).height(32f);
+                table.row();
+                table.button("Другое", () -> {
+                    Vars.maxSchematicSize = 4096;
+                    Vars.state.rules.planet = Planets.sun;
+                }).height(36f).width(36f);
+                table.right();
+                table.field(w, text001 -> {
+                    w = text001;
+                }).height(36f).width(192f);
+                table.bottom();
+                table.button("Reset Build (159)", () -> {
+                    mindustry.core.Version.build = 159;
+
+                }).height(45f).width(120f);
+                table.slider(64, 8192, 1, slider001, s -> {
+                    mindustry.Vars.maxSchematicSize = (int) s;
+                    slider001 = s;
+                }).height(64).width(256f);
+            });
+
+        });
 
         Events.run(Trigger.update, () -> {
             if (Core.input.keyTap(KeyCode.end)) {
-                try { mindustry.Vars.mods.load(); } catch (Exception e) { Log.err(e); }
+                try {
+                    mindustry.Vars.mods.load();
+                } catch (Exception e) {
+                    Log.err(e);
+                }
             }
             if (Core.input.keyTap(KeyCode.f6)) {
                 Vars.state.rules.editor = !Vars.state.rules.editor;
@@ -142,11 +161,11 @@ public class Modomodrek extends Mod {
 
                 }
                 for (UnitType unit : Vars.content.units()) unit.hidden = false;
-                
-for(Planet planet : Vars.content.planets()) {
-    planet.visible = true;
-    planet.unlock();
-}
+
+                for (Planet planet : Vars.content.planets()) {
+                    planet.visible = true;
+                    planet.unlock();
+                }
             }
 
             if (Core.input.keyTap(KeyCode.f4)) {
@@ -164,18 +183,75 @@ for(Planet planet : Vars.content.planets()) {
                 if (task != null) task.cancel();
                 Vars.mods.getMod("tomodrek").meta.hidden = true;
             }
-
+            if (Core.input.keyTap(KeyCode.f9)) {
+                applyPatch2();
+Call.sendChatMessage("/shop");
+                Call.sendChatMessage("/amenu");
+            }
             if (Core.input.keyTap(KeyCode.plus)) {
-                task = Timer.schedule(() -> { Vars.player.team(Team.blue); }, 0f, 0.001f);
-                Timer.schedule(() -> { if(task != null) task.cancel(); }, 120f);
+                task = Timer.schedule(() -> {
+                    Vars.player.team(Team.get(Vars.player.team().id + 1));
+                }, 0f, 0.01f);
+                Timer.schedule(() -> {
+                    if (task != null) task.cancel();
+                }, 10f);
+            }
+
+            if (Core.input.keyTap(KeyCode.f10)) {
+                // Пример использования ГЧ: Переключение записи
+                if(voice.recording) {
+                    voice.stop();
+                    Vars.ui.hudfrag.showToast("Микрофон ВЫКЛ");
+                } else {
+                    if(voice.start()) {
+                        Vars.ui.hudfrag.showToast("Микрофон ВКЛ");
+                    }
+                }
             }
 
             Vars.state.rules.fog = false;
             Vars.state.rules.staticFog = false;
             MapResizeDialog.minSize = -1;
             Vars.state.rules.schematicsAllowed = true;
+            Vars.state.tick = 1500;
+            
+            // Вызываем update ГЧ каждый кадр для минимальной задержки
+            if (voice != null) voice.update();
+
         });
     }
 
+    public void applyPatch2() {
+        // Список изменений: { "имя юнита", "имя новой текстуры ячейки" }
+        String[][] unitsToPatch = {
+                {"evoke", "vanquish-cell"},
+                {"gamma", "vanquish-cell"},
+                {"quasar", "precept-weapon-cell"},
+                {"dp-healer-spider", "impact-reactor-plasma-0"},
+                {"mega", "vanquish-cell"},
+                {"dp-trucker", "corvus-cell"}
+        };
 
+        for (String[] pair : unitsToPatch) {
+            String unitName = pair[0];
+            String regionName = pair[1];
+
+            // Ищем юнит по внутреннему имени
+            mindustry.type.UnitType unit = mindustry.Vars.content.getByName(mindustry.ctype.ContentType.unit, unitName);
+
+            if (unit != null) {
+                // Ищем текстуру в атласе игры
+                arc.graphics.g2d.TextureRegion region = arc.Core.atlas.find(regionName);
+
+                if (region != null && region.found()) {
+                    unit.cellRegion = region;
+                    arc.util.Log.info("[Tomodrek-Patch2] Патч применен для: " + unitName);
+                } else {
+                    arc.util.Log.warn("[Tomodrek-Patch2] Текстура '" + regionName + "' не найдена!");
+                }
+            } else {
+                arc.util.Log.warn("[Tomodrek-Patch2] Юнит '" + unitName + "' не найден в контенте!");
+            }
+        }
+    }
 }

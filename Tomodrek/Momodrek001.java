@@ -4,6 +4,7 @@
  */
 package Tomodrek;
 
+
 import java.util.Arrays;
 
 import arc.Core;
@@ -20,6 +21,7 @@ import mindustry.ai.Pathfinder;
 import mindustry.ai.types.BuilderAI;
 import mindustry.ai.types.CommandAI;
 import mindustry.ai.types.GroundAI;
+import mindustry.content.Planets;
 import mindustry.content.UnitTypes;
 import mindustry.ctype.Content;
 import mindustry.game.EventType;
@@ -80,7 +82,7 @@ Seq<String> uuidss = new Seq<>();
     @Override
   public void init() {
 
-Events.on(EventType.WorldLoadEndEvent.class, event -> {
+Events.on(EventType.WorldLoadEvent.class, event -> {
 
     Timer.schedule(() -> {
 
@@ -180,6 +182,7 @@ if(LoadJSONConfig.PlayerShadowBanned(player.uuid())) {
 
       });
         menuId2 = Menus.registerMenu((player, selection) -> {
+
             if(selection == -1) return;
             if(LoadJSONConfig.isModer(player.uuid(), player)) {
                 LoadJSONConfig.loadConfig();
@@ -390,9 +393,15 @@ if(selection == 6) {
 
         Call.menu(player.con, dopMenuId002, "Statistics", "", options4);
     });
+
+
+
 }
+
         });
+
         dopMenuId002 = Menus.registerMenu((player, selection) -> {
+
         });
 
       kickMenuId2 = Menus.registerMenu((player, selection) -> {
@@ -482,7 +491,9 @@ if(selection == 6) {
                   } else {
                       target1.admin = true;
                   }
-break;
+
+                  break;
+
               case 7:
                   LoadJSONConfig.AddPlayerInShadowBan(uuid004);
               default:

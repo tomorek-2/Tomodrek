@@ -1,4 +1,5 @@
 package Tomodrek;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -22,8 +23,8 @@ public class LoadJSONConfig {
     private static String[] admins = {"", ""};
     private static String[] moders = {"75ZDpZN1EzIAAAAA1jY3ZQ==", ""};
     private static String[] reserve = {"uuid-reserve-1", "uuid-reserve-2"};
-    private static String[] ip = new String[]{"127.0.0.1", "94"};
-
+  //  private static String[] ip = new String[]{"127.0.0.1", "94"};
+  public static HashSet<String> ip = new HashSet();
 
     LoadJSONConfig() {
     }
@@ -40,7 +41,8 @@ public class LoadJSONConfig {
             admins = jsonA.get("admins").asStringArray();
             moders = jsonA.get("moders").asStringArray();
             reserve = jsonA.get("reserve").asStringArray();
-            ip = jsonA.get("ip").asStringArray();
+            Collections.addAll(ip, jsonA.get("ip").asStringArray());
+
             String contentS = fileShadowBan.readString();
             JsonValue jsonS  = (new JsonReader()).parse(contentS);
             shadowBanList001 = jsonS.get("shadowBan").asStringArray();
@@ -56,14 +58,6 @@ shadowBanList.clear();
             String content003  = fileConfigObject.readString();
             JsonValue json003 = new JsonReader().parse(content003);
 
-           /* for(int i = 0; i < json003.size; i++) {
-                if(json003.get(i).isString()) {
-                    getStringList.put(json003.get(i).name, json003.get(i).asString());
-                }
-
-                if(json003.get(i).isNumber()) getIntList.put(json003.get(i).name, json003.get(i).asInt());
-
-            } */
 for(JsonValue child = json003.child(); child != null; child = child.next()) {
     if(child.isString()) getStringList.put(child.name, child.asString());
     if(child.isNumber()) getIntList.put(child.name, child.asInt());
@@ -78,9 +72,7 @@ private static boolean contains(String[] array, String value, Player player) {
 
     for (String item : array) {
         if (item.equals(value)) {
-            for(String ip001 : ip) {
-                if(player.ip().equals(ip001)) return true;
-            }
+           if(ip.contains(player.ip())) return true;
         }
     }
     return false;

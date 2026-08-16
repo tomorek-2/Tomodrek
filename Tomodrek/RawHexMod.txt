@@ -1,0 +1,26 @@
+package Tomodrek;
+
+import arc.scene.ui.Button;
+import arc.scene.ui.Dialog;
+import mindustry.Vars;
+import mindustry.game.EventType;
+import mindustry.ui.dialogs.BaseDialog;
+
+public class RawHexMod extends mindustry.mod.Mod {
+    BaseDialog ModDialog;
+    String[] commands = new String[]{
+      ":dp-healer-spider:    /buy dp-healer-spider"
+    };
+    @Override
+    public void init() {
+        arc.Events.on(EventType.ClientLoadEvent.class, event -> {
+            ModDialog = new BaseDialog("");
+            for(String command : commands) {
+                Button button = new Button();
+                button.name = command.
+                ModDialog.add(button);
+            }
+            Vars.ui.schematics.add(ModDialog);
+        });
+    }
+}

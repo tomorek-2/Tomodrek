@@ -1,83 +1,127 @@
 package Tomodrek;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
-import javax.sound.sampled.TargetDataLine;
-import javax.sound.sampled.LineUnavailableException;
+import arc.*;
+import arc.util.*;
+import mindustry.Vars;
+import javax.sound.sampled.*;
+import java.util.Arrays;
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class VoiceChat001 {
-    private TargetDataLine line;
-    public AudioFormat format;
-    public boolean recording = false;
-
-    private static int streamSequence = 5000; // Уникальный стартовый ID для аудио-потоков
+    private static final AudioFormat FORMAT = new AudioFormat(16000, 16, 1, true, false);
+    private TargetDataLine mic;
+    private SourceDataLine speakers;
+    public volatile boolean recording = false;
+    private final LinkedBlockingQueue<byte[]> audioQueue = new LinkedBlockingQueue<>(100);
 
     public VoiceChat001() {
+        // Регистрация через наш статический метод
+        VoiceChat002.register();
 
-        this.format = new AudioFormat(16000, 16, 1, true, false);
+        Vars.net.handleClient(VoiceChat002.class, packet -> {
+            // КРИТИЧНО: Никогда не принимаем пакеты от самих себя
+            if (packet.senderId != Vars.player.id) {
+                // Если в очереди больше 3 пакетов (~100мс задержки), 
+                // сбрасываем самый старый, чтобы звук не "тянулся" и не повторялся
+                if (audioQueue.size() > 3) {
+                    audioQueue.poll();
+                }
+                audioQueue.offer(packet.audioData);
+            }
+        });
+        
+        initSpeakers();
+        startPlaybackThread();
     }
+
+    private void initSpeakers() {
+        try {
+            DataLine.Info outInfo = new DataLine.Info(SourceDataLine.class, FORMAT);
+            speakers = (SourceDataLine) AudioSystem.getLine(outInfo);
+            speakers.open(FORMAT, 4096);
+            speakers.start();
+        } catch (Exception e) {
+            Log.err("[Tomodrek-Voice] Ошибка динамиков: " + e.getMessage());
+        }
+    }
+
+    private void startPlaybackThread() {
+        Threads.daemon("Voice-Playback", () -> {
+            while (true) {
+                try {
+                    byte[] data = audioQueue.take();
+                    if (speakers != null && speakers.isOpen()) {
+                        speakers.write(data, 0, data.length);
+                    }
+                } catch (Exception ignored) {}
+            }
+        });
+    }
+
+    public void update() {}
 
     public boolean start() {
         if (recording) return true;
-        try {
-            if (AudioSystem.getMixerInfo().length == 0) return false;
-            DataLine.Info info = new DataLine.Info(TargetDataLine.class, format);
-            if (!AudioSystem.isLineSupported(info)) return false;
+        // Не начинаем запись, если мы еще не на сервере или ID не получен
+        if (!Vars.net.active() || Vars.player == null || Vars.player.id == -1) {
+            Log.warn("[Tomodrek-Voice] Нельзя включить микрофон: нет связи с сервером.");
+            return false;
+        }
 
-            line = (TargetDataLine) AudioSystem.getLine(info);
-            line.open(format);
-            line.start();
+        try {
+            DataLine.Info inInfo = new DataLine.Info(TargetDataLine.class, FORMAT);
+            mic = (TargetDataLine) AudioSystem.getLine(inInfo);
+            mic.open(FORMAT);
+            mic.start();
             recording = true;
 
-            arc.util.Threads.daemon("Tomodrek-Audio-Stream", () -> {
-                int bufferSize = 400; // Наш идеальный безопасный буфер 400 байт
-                byte[] buffer = new byte[bufferSize];
-
-                while (recording && line != null) {
-                    int count = line.read(buffer, 0, bufferSize);
-
-                    if (count > 0 && recording) {
-                        byte[] rawVoice = java.util.Arrays.copyOf(buffer, count);
-
-                        long sum = 0;
-                        for (byte b : rawVoice) sum += Math.abs(b);
-                        boolean hasVoice = sum > (long) rawVoice.length * 5;
-
-                        if (hasVoice && mindustry.Vars.net != null && mindustry.Vars.net.active()) {
-
-                            // 1. Кодируем опасные байты звука в текстовую строку Base64
-                            String base64Audio = java.util.Base64.getEncoder().encodeToString(rawVoice);
-
-                            // 2. ОБОРАЧИВАЕМ В ВАНИЛЬНЫЙ ПАКЕТ КОННЕКТА АНЮКА!
-                            mindustry.net.Packets.ConnectPacket pkt = new mindustry.net.Packets.ConnectPacket();
-
-                            // Зашиваем аудио-поток в поле UUID с маркером [V] и ID игрока через двоеточие
-                            pkt.uuid = "[V]" + (mindustry.Vars.player != null ? mindustry.Vars.player.id : 0) + ":" + base64Audio;
-
-                            // 3. Выстреливаем в сеть.
-                            // Ошибки "Error during UDP deserialization" ПОЛНОСТЬЮ УНИЧТОЖЕНЫ!
-                            mindustry.Vars.net.send(pkt, false); // false = надежный TCP-канал
+            Threads.daemon("Voice-Capture", () -> {
+                byte[] tempBuffer = new byte[1024];
+                try {
+                    while (recording && mic != null && mic.isOpen()) {
+                        int count = mic.read(tempBuffer, 0, tempBuffer.length);
+                        
+                        // Проверяем связь в каждом цикле
+                        if (count > 0 && recording && Vars.net.active() && Vars.player.id != -1) {
+                            long sum = 0;
+                            for (int i = 0; i < count; i++) sum += Math.abs(tempBuffer[i]);
+                            
+                            if (sum > (long)count * 20) {
+                                VoiceChat002 packet = new VoiceChat002(Arrays.copyOf(tempBuffer, count), Vars.player.id);
+                                
+                                try {
+                                    if (Vars.net.server()) {
+                                        Momodrek003.relayVoice(null, packet);
+                                    } else {
+                                        Vars.net.send(packet, false); // UDP
+                                    }
+                                } catch (Exception e) {
+                                    Log.err("[Tomodrek-Voice] Ошибка отправки пакета");
+                                }
+                            }
                         }
                     }
-                    try { Thread.sleep(12); } catch (InterruptedException e) { break; }
+                } catch (Exception e) {
+                    Log.err("[Tomodrek-Voice] Поток записи упал: " + e.getMessage());
+                } finally {
+                    stop();
                 }
             });
 
-            arc.util.Log.info("[Tomodrek-Voice] Нативный аудио-стрим успешно запущен.");
+            Log.info("[Tomodrek-Voice] Микрофон запущен.");
             return true;
         } catch (Exception e) {
+            Log.err("[Tomodrek-Voice] Сбой запуска: " + e.getMessage());
             recording = false;
             return false;
         }
     }
 
-    public void stop() {
+    public synchronized void stop() {
         recording = false;
-        if (line != null) {
-            try { if (line.isOpen()) { line.stop(); line.close(); } } catch (Exception e) {}
-            line = null;
+        if (mic != null) {
+            try { mic.stop(); mic.close(); } catch (Exception ignored) {}
+            mic = null;
         }
-        arc.util.Log.info("[Tomodrek-Voice] Захват аудио остановлен.");
     }
 }

@@ -10,7 +10,7 @@ repositories{
 
     ivy{
         url 'https://github.com/'
-        patternLayout{artifact '/[organisation]/[module]/releases/download/[revision]/dependencies.jar'}
+        patternLayout{artifact '/[organisation]/[module]/releases/download/[revision]/Mindustry-BE-Desktop-27630.jar'}
         metadataSources{ artifact() }
     }
 
@@ -50,7 +50,7 @@ allprojects{
 dependencies {
     // Основная библиотека Mindustry
    // compileOnly "Anuken:Mindustry:$mindustryVersion"
-    compileOnly "Anuken:Mindustry:v159"
+    compileOnly "Anuken:MindustryBuilds:27630"
     annotationProcessor "Anuken:jabel:v1.0.0"
 
   if(System.getenv("USER").equals("tomorek")) {
