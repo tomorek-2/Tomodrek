@@ -33,7 +33,7 @@ java{
 }
 ext {
     mindustryVersion = 'v158'
-    sdkRoot = "/home/tomorek/AndroidSDK"
+    sdkRoot = "/home/tomorek/Android/Sdk"
     isWindows = System.getProperty("os.name").toLowerCase().contains("windows")
     sdkRoot = System.getenv("ANDROID_HOME") ?: System.getenv("ANDROID_SDK_ROOT")
     androidJar = "${sdkRoot}/platforms/android-26/android.jar"
@@ -49,14 +49,14 @@ allprojects{
 }
 dependencies {
     // Основная библиотека Mindustry
-   // compileOnly "Anuken:Mindustry:$mindustryVersion"
     compileOnly "Anuken:MindustryBuilds:27630"
     annotationProcessor "Anuken:jabel:v1.0.0"
-
-  if(System.getenv("USER").equals("tomorek")) {
-      compileOnly files(androidJar)
-      compileOnly files("/home/tomorek/AndroidSDK/sources/android-26")
-  }
+compileOnly files("/home/tomorek/Android/Sdk/sources/android-26/")
+    compileOnly files("/home/tomorek/Android/Sdk/platforms/android-26/android.jar")
+    // Подключаем Android API для работы с AudioRecord/AudioTrack
+    if(new File(androidJar).exists()){
+        compileOnly files(androidJar)
+    }
 }
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'

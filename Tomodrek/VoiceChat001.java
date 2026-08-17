@@ -3,7 +3,12 @@ package Tomodrek;
 import arc.*;
 import arc.util.*;
 import mindustry.Vars;
-import javax.sound.sampled.*;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.DataLine;
+import javax.sound.sampled.SourceDataLine;
+import javax.sound.sampled.TargetDataLine;
+
 import java.util.Arrays;
 import java.util.concurrent.LinkedBlockingQueue;
 
@@ -18,7 +23,7 @@ public class VoiceChat001 {
         // Регистрация через наш статический метод
         VoiceChat002.register();
 
-        Vars.net.handleClient(VoiceChat002.class, packet -> {
+        Vars.net.handleClient(Tomodrek.VoiceChat002.class, packet -> {
             // КРИТИЧНО: Никогда не принимаем пакеты от самих себя
             if (packet.senderId != Vars.player.id) {
                 // Если в очереди больше 3 пакетов (~100мс задержки), 
@@ -26,6 +31,7 @@ public class VoiceChat001 {
                 if (audioQueue.size() > 3) {
                     audioQueue.poll();
                 }
+
                 audioQueue.offer(packet.audioData);
             }
         });
@@ -87,7 +93,7 @@ public class VoiceChat001 {
                             for (int i = 0; i < count; i++) sum += Math.abs(tempBuffer[i]);
                             
                             if (sum > (long)count * 20) {
-                                VoiceChat002 packet = new VoiceChat002(Arrays.copyOf(tempBuffer, count), Vars.player.id);
+                                Tomodrek.VoiceChat002 packet = new Tomodrek.VoiceChat002(Arrays.copyOf(tempBuffer, count), Vars.player.id);
                                 
                                 try {
                                     if (Vars.net.server()) {

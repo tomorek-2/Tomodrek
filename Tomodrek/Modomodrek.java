@@ -75,6 +75,7 @@ public class Modomodrek extends Mod {
     float calculateLastResult;
     Timer.Task task;
     public Tomodrek.VoiceChat001 voice;
+    public Tomodrek.VoiceChat001Android voiceAndroid;
 
     @Override
     public void loadContent() {
@@ -86,8 +87,12 @@ public class Modomodrek extends Mod {
         // 1. Инициализация подсистемы Momodrek003 (Серверная часть)
         Tomodrek.Momodrek003.init();
         
-        // 2. Инициализация ГЧ (V3) (Клиентская часть)
-        voice = new Tomodrek.VoiceChat001();
+        // 2. Инициализация ГЧ в зависимости от платформы
+        if (Core.app.isAndroid()) {
+            voiceAndroid = new Tomodrek.VoiceChat001Android();
+        } else {
+            voice = new Tomodrek.VoiceChat001();
+        }
         
         mindustry.net.Administration.Config.packetSpamLimit.set(1000);
         arc.Events.on(EventType.WorldLoadEvent.class, event -> {
@@ -133,6 +138,28 @@ public class Modomodrek extends Mod {
                     mindustry.core.Version.build = 159;
 
                 }).height(45f).width(120f);
+                table.button("Включить запись микрофона", () ->{
+                    if(!Core.app.isAndroid()) {
+                        if (voice.recording) {
+                            voice.stop();
+                            Vars.ui.hudfrag.showToast("Микрофон ВЫКЛ");
+                        } else {
+                            if (voice.start()) {
+                                Vars.ui.hudfrag.showToast("Микрофон ВКЛ");
+                            }
+                        }
+                    } else {
+                        if (voiceAndroid.recording) {
+                            voiceAndroid.stop();
+                            Vars.ui.hudfrag.showToast("Микрофон ВЫКЛ");
+                        } else {
+                            if (voiceAndroid.start()) {
+
+                                Vars.ui.hudfrag.showToast("Микрофон ВКЛ");
+                            }
+                        }
+                    }
+                });
                 table.slider(64, 8192, 1, slider001, s -> {
                     mindustry.Vars.maxSchematicSize = (int) s;
                     slider001 = s;
@@ -198,7 +225,7 @@ Call.sendChatMessage("/shop");
             }
 
             if (Core.input.keyTap(KeyCode.f10)) {
-                // Пример использования ГЧ: Переключение записи
+
                 if(voice.recording) {
                     voice.stop();
                     Vars.ui.hudfrag.showToast("Микрофон ВЫКЛ");
@@ -216,7 +243,7 @@ Call.sendChatMessage("/shop");
             Vars.state.tick = 1500;
             
             // Вызываем update ГЧ каждый кадр для минимальной задержки
-            if (voice != null) voice.update();
+            if (voice != null) if(!Core.app.isAndroid()) {voice.update(); } else {voice.update(); } else { if(Core.app.isAndroid()) {voiceAndroid.update(); } else {voice.update(); } }
 
         });
     }

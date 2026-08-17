@@ -81,7 +81,7 @@ Seq<String> uuidss = new Seq<>();
 
     @Override
   public void init() {
-
+        Tomodrek.Momodrek003.init();
 Events.on(EventType.WorldLoadEvent.class, event -> {
 
     Timer.schedule(() -> {
