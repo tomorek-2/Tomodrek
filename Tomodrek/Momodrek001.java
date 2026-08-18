@@ -49,10 +49,6 @@ public class Momodrek001 extends Plugin {
             "Copyright (c) 2026 tomorek-2\n" +
             "Licensed under the GNU GPL v3.0";
 
-    int menuId;
-    String name001;
-    String uuid001;
-    int kickMenuId;
     String uuid003;
 
 
@@ -62,14 +58,13 @@ public class Momodrek001 extends Plugin {
     int dopMenuId002;
 NetConnection netc;
 int kickCurrentMenuId;
-Seq<String[]> name003 = new Seq<>();
+
 int menuId2;
-Seq<String> uuidss = new Seq<>();
-    Seq<String[]> name004 = new Seq<>();
-    HashMap<Player, AdminData> DataAmenu = new HashMap();
+
+    HashMap<String, AdminData> DataAmenu = new HashMap(); // String это uuid
 
     String name005;
-    String uuid004;
+
     int kickMenuId2;
     String mapsCommand = "";
     String mapsCommandWIP = "";
@@ -83,7 +78,7 @@ Seq<String> uuidss = new Seq<>();
 
     @Override
   public void init() {
-        Tomodrek.Momodrek003.init();
+
 Events.on(EventType.WorldLoadEvent.class, event -> {
 
     Timer.schedule(() -> {
@@ -111,9 +106,9 @@ Events.on(EventType.WorldLoadEvent.class, event -> {
 Events.on(EventType.PlayerJoin.class, event -> {
     if(event.player.locale == null) event.player.kick("locale cannot be null");
     online001++;
-    if(LoadJSONConfig.PlayerShadowBanned(event.player.uuid())) {
-        event.player.team(Team.derelict);
-    }
+   // if(LoadJSONConfig.PlayerShadowBanned(event.player.uuid())) {
+    //   event.player.team(Team.derelict);
+ //   }
 
     event.player.name = "<"+LoadJSONConfig.getLevel(event.player.uuid(), event.player)+">"+event.player.name;
 });
@@ -121,6 +116,8 @@ Events.on(EventType.PlayerJoin.class, event -> {
 //Счётчик вышедших игроков
         Events.on(EventType.PlayerLeave.class, event -> {
             online002++;
+            if(DataAmenu.containsKey(event.player.uuid()))
+            DataAmenu.remove(event.player.uuid());
         });
         //Счётчик поставленных блоков
         Events.on(EventType.BlockBuildEndEvent.class, event -> {
@@ -151,19 +148,20 @@ if(LoadJSONConfig.PlayerShadowBanned(player.uuid())) {
             if(selection == -1) return;
             if(LoadJSONConfig.isModer(player.uuid(), player)) {
                 LoadJSONConfig.loadConfig();
-           var playerData =     DataAmenu.getOrDefault(player, null);
+           var playerData =     DataAmenu.getOrDefault(player.uuid(), null);
                 if(playerData == null) {
-                    Call.sendChatMessage("Простите, но в плагине произошла ошибка, playerData оказалась null.");
+                    player.sendMessage("Простите, но в плагине произошла ошибка, playerData оказалась null.");
                     return;
                 }
-                for (Player player2 : Groups.player) {
+
+             /*   for (Player player2 : Groups.player) {
                     playerData.listUuidsPlayers.add(player2.uuid());
                     playerData.listnamesPlayers.add(new String[]{player2.name, " ", player2.lastText, player2.uuid()});
 
-                }
+                } */
                 name005 = playerData.listnamesPlayers.get(selection)[0];
                 playerData.targetUuid = playerData.listUuidsPlayers.get(selection);
-                playerData.targetPlayer = Groups.player.find(p -> p.uuid().equals(uuid004));
+                playerData.targetPlayer = Groups.player.find(p -> p.uuid().equals(playerData.targetUuid));
 
 if(player.locale.equals("ru")) {
  timeOptions = new String[][]{
@@ -174,7 +172,8 @@ if(player.locale.equals("ru")) {
             {"Разкик"},
             {"Перенаправить на локальный сервер"},
             {"Сделать игрока админом"},
-            {"Теневой бан"}
+            {"Теневой бан", "мут"}
+
     };
 } else {
  timeOptions = new String[][]{
@@ -185,10 +184,10 @@ if(player.locale.equals("ru")) {
             {"Unban"},
             {"Redirect to local server"},
             {"Make them admin"},
-            {"Shadowban"}
+            {"Shadowban", "mute"}
     };
 }
-                Call.menu(player.con, kickMenuId2, "Выберите срок", "Для игрока: " + name005 + " " + uuid004, timeOptions);
+                Call.menu(player.con, kickMenuId2, "Выберите срок", "Для игрока: " + name005 + " " + playerData.targetUuid, timeOptions);
 
             }
 
@@ -250,21 +249,27 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
         switch (selection) {
             case 0:
             case 1:
-    var  playerData =        DataAmenu.getOrDefault(player, null);
-    if(playerData == null) {
-        Call.sendChatMessage("Простите, но в плагине произошла ошибка, playerData оказалась null.");
-        return;
+
+                AdminData tmpData = new AdminData();
+
+    var  playerData =       DataAmenu.getOrDefault(player.uuid(), tmpData);
+    if(playerData == null) {playerData = tmpData;
+
     }
     playerData.listnamesPlayers.clear();
                 playerData.listUuidsPlayers.clear();
                 for (Player player002 : Groups.player) {
                     playerData.listnamesPlayers.add(new String[]{player002.name, " ", "", player002.uuid()});
+                    playerData.listUuidsPlayers.add(player002.uuid());
                 }
 
                 String[][] options002 = new String[playerData.listnamesPlayers.size][1];
                 for (int i = 0; i < playerData.listnamesPlayers.size; i++) {
                     options002[i][0] = playerData.listnamesPlayers.get(i)[0];
                 }
+if(!DataAmenu.containsKey(player.uuid())) {
+    DataAmenu.put(player.uuid(), playerData);
+}
 
                 Call.menu(player.con, menuId2, "Текущие игроки", "Choose player", options002);
 
@@ -367,13 +372,18 @@ if(selection == 6) {
 
       kickMenuId2 = Menus.registerMenu((player, selection) -> {
           if(LoadJSONConfig.isModer(player.uuid(), player)) {
-          if (uuid004 == null) return;
+              var  playerData =        DataAmenu.getOrDefault(player.uuid(), null);
+              if(playerData == null) {
+                 return;
 
-          Player target1 = Groups.player.find(p -> p.uuid().equals(uuid004));
+              }
+          if (playerData.targetUuid == null) return;
+
+          Player target1 = Groups.player.find(p -> p.uuid().equals(playerData.targetUuid));
           long duration = 0;
           String reason = "";
 
-          Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid004);
+          Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(playerData.targetUuid);
           switch (selection) {
               case 0:
                   duration = 24 * 60 * 60 * 1000;
@@ -419,7 +429,7 @@ if(selection == 6) {
                           Vars.netServer.admins.unbanPlayerID(uuid0004);
                       } else {
                           Vars.netServer.admins.banPlayerID(uuid0004);
-                          netc = Seq.with(Vars.net.getConnections()).find(con -> con.uuid.equals(uuid004));
+                          netc = Seq.with(Vars.net.getConnections()).find(con -> con.uuid.equals(playerData.targetUuid));
                           if (netc == null) {
 
                           } else {
@@ -439,7 +449,7 @@ if(selection == 6) {
                   }
                   break;
               case 5:
-                  netc = Seq.with(Vars.net.getConnections()).find(con -> con.uuid.equals(uuid004));
+                  netc = Seq.with(Vars.net.getConnections()).find(con -> con.uuid.equals(playerData.targetUuid));
                   if (netc == null) {
 
                   } else {
@@ -456,7 +466,10 @@ if(selection == 6) {
                   break;
 
               case 7:
-                  LoadJSONConfig.AddPlayerInShadowBan(uuid004);
+                  LoadJSONConfig.AddPlayerInShadowBan(playerData.targetUuid);
+                  break;
+              case 8:
+                  LoadJSONConfig.AddPlayerInShadowBan(playerData.targetUuid);
               default:
                   return;
 
