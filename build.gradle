@@ -51,10 +51,14 @@ dependencies {
     // Основная библиотека Mindustry
     compileOnly "Anuken:MindustryBuilds:27630"
     implementation 'org.postgresql:postgresql:42.7.4'
-    annotationProcessor "Anuken:jabel:v1.0.0"
-compileOnly files("/home/tomorek/Android/Sdk/sources/android-26/")
-    compileOnly files("/home/tomorek/Android/Sdk/platforms/android-26/android.jar")
 
+    annotationProcessor "Anuken:jabel:v1.0.0"
+    if(System.getenv("USER").equals("tomorek")) {
+
+
+        compileOnly files("/home/tomorek/Android/Sdk/sources/android-26/")
+        compileOnly files("/home/tomorek/Android/Sdk/platforms/android-26/android.jar")
+    }
 }
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
