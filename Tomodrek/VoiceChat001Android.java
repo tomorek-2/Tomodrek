@@ -30,6 +30,7 @@ public class VoiceChat001Android {
             }
         });
 
+
         initSpeakers();
         startPlaybackThread();
     }

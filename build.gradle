@@ -53,10 +53,7 @@ dependencies {
     annotationProcessor "Anuken:jabel:v1.0.0"
 compileOnly files("/home/tomorek/Android/Sdk/sources/android-26/")
     compileOnly files("/home/tomorek/Android/Sdk/platforms/android-26/android.jar")
-    // Подключаем Android API для работы с AudioRecord/AudioTrack
-    if(new File(androidJar).exists()){
-        compileOnly files(androidJar)
-    }
+
 }
 configurations.all {
     resolutionStrategy.cacheChangingModulesFor 0, 'seconds'

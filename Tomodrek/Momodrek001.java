@@ -6,6 +6,7 @@ package Tomodrek;
 
 
 import java.util.Arrays;
+import java.util.HashMap;
 
 import arc.Core;
 import arc.Events;
@@ -54,8 +55,7 @@ public class Momodrek001 extends Plugin {
     int kickMenuId;
     String uuid003;
 
-    private Seq<String> uuids = new Seq<>();
-    private Seq<String[]> name002 = new Seq<>();
+
     int playerMenuId;
     int dopMenuId;
     int dopMenuId001;
@@ -66,6 +66,8 @@ Seq<String[]> name003 = new Seq<>();
 int menuId2;
 Seq<String> uuidss = new Seq<>();
     Seq<String[]> name004 = new Seq<>();
+    HashMap<Player, AdminData> DataAmenu = new HashMap();
+
     String name005;
     String uuid004;
     int kickMenuId2;
@@ -143,58 +145,26 @@ if(LoadJSONConfig.PlayerShadowBanned(player.uuid())) {
         LoadJSONConfig.loadConfig();
 
         //Устаревшая логика, должна прийти на замену база данных
-      menuId = Menus.registerMenu((player, selection) -> {
-          if(LoadJSONConfig.isModer(player.uuid(), player)) {
-          LoadJSONConfig.loadConfig();
 
-          if (uuids != null && selection >= 0 && selection < uuids.size) {
-              name001 = name002.get(selection)[0];
-              uuid001 = uuids.get(selection);
-
-              Player targetPlayer = Groups.player.find(p -> p.uuid().equals(uuid001));
-
-              if(player.locale.equals("ru")) {
-                  String[][] timeOptions = new String[][]{
-                          {"1 день"},
-                          {"1 неделя"},
-                          {"1 месяц"},
-                          {"Навсегда"},
-                          {"Разкик"},
-                          {"Перенаправить на локальный сервер"},
-                          {"Сделать игрока админом"},
-                          {"Теневой бан"}
-                  };
-              } else {
-                  timeOptions = new String[][] {
-                          {"1 day"},
-                          {"1 week"},
-                          {"1 month"},
-                          {"Forever"},
-                          {"pardon"},
-                          {"Redirect to local server"},
-                          {"Make them admin"},
-                          {"Shadowban"}
-                  };
-              }
-              Call.menu(player.con, kickMenuId, "Выберите срок", "Для игрока: " + name001 + " " + uuid001, timeOptions);
-          }
-          }
-
-      });
         menuId2 = Menus.registerMenu((player, selection) -> {
 
             if(selection == -1) return;
             if(LoadJSONConfig.isModer(player.uuid(), player)) {
                 LoadJSONConfig.loadConfig();
+           var playerData =     DataAmenu.getOrDefault(player, null);
+                if(playerData == null) {
+                    Call.sendChatMessage("Простите, но в плагине произошла ошибка, playerData оказалась null.");
+                    return;
+                }
                 for (Player player2 : Groups.player) {
-                    uuidss.add(player2.uuid());
-                    name004.add(new String[]{player2.name, " ", player2.lastText, player2.uuid()});
+                    playerData.listUuidsPlayers.add(player2.uuid());
+                    playerData.listnamesPlayers.add(new String[]{player2.name, " ", player2.lastText, player2.uuid()});
 
                 }
-                name005 = name004.get(selection)[0];
-                uuid004 = uuidss.get(selection);
-                Player targetPlayer2 = Groups.player.find(p -> p.uuid().equals(uuid004));
-           //    String[][] timeOptions;
+                name005 = playerData.listnamesPlayers.get(selection)[0];
+                playerData.targetUuid = playerData.listUuidsPlayers.get(selection);
+                playerData.targetPlayer = Groups.player.find(p -> p.uuid().equals(uuid004));
+
 if(player.locale.equals("ru")) {
  timeOptions = new String[][]{
             {"1 день"},
@@ -279,30 +249,21 @@ kickCurrentMenuId = Menus.registerMenu((player, selection) -> {
     if(LoadJSONConfig.isModer(player.uuid(), player)) {
         switch (selection) {
             case 0:
-                for (Administration.PlayerInfo info : Vars.netServer.admins.playerInfo.values()) {
-                    uuids.add(info.id);
-
-
-                    name002.add(new String[]{info.lastName, " ", info.lastSentMessage, info.id});
-
-                }
-                String[][] options = new String[name002.size][1];
-                for (int i = 0; i < name002.size; i++) {
-                    options[i][0] = name002.get(i)[0];
-                }
-
-                Call.menu(player.con, menuId, "Игроки", "Выберите игрока:", options);
-                break;
             case 1:
-                name004.clear();
-                uuidss.clear();
+    var  playerData =        DataAmenu.getOrDefault(player, null);
+    if(playerData == null) {
+        Call.sendChatMessage("Простите, но в плагине произошла ошибка, playerData оказалась null.");
+        return;
+    }
+    playerData.listnamesPlayers.clear();
+                playerData.listUuidsPlayers.clear();
                 for (Player player002 : Groups.player) {
-                    name004.add(new String[]{player002.name, " ", "", player002.uuid()});
+                    playerData.listnamesPlayers.add(new String[]{player002.name, " ", "", player002.uuid()});
                 }
 
-                String[][] options002 = new String[name004.size][1];
-                for (int i = 0; i < name004.size; i++) {
-                    options002[i][0] = name004.get(i)[0];
+                String[][] options002 = new String[playerData.listnamesPlayers.size][1];
+                for (int i = 0; i < playerData.listnamesPlayers.size; i++) {
+                    options002[i][0] = playerData.listnamesPlayers.get(i)[0];
                 }
 
                 Call.menu(player.con, menuId2, "Текущие игроки", "Choose player", options002);
@@ -502,80 +463,7 @@ if(selection == 6) {
           }
           }
       });
-      //Устаревшая логика, должна прийти на замену база данных
-        kickMenuId = Menus.registerMenu((player, selection) -> {
-            if(LoadJSONConfig.isModer(player.uuid(), player)) {
-            if (uuid001 == null) return;
 
-            Player target = Groups.player.find(p -> p.uuid().equals(uuid001));
-            long duration = 0;
-            String reason = "";
-
-            Administration.PlayerInfo info002 = Vars.netServer.admins.getInfo(uuid001);
-            switch (selection) {
-                case 0:
-                    duration = 24 * 60 * 60 * 1000;
-                    reason = "1 день";
-
-                    if (target != null) {
-                        target.con.kick("Вы наказаны на " + reason, duration);
-                        Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, duration);
-                    }
-                    break;
-                case 1:
-                    duration = 7 * 24 * 60 * 60 * 1000;
-                    reason = "1 неделя";
-
-                    if (target != null) {
-                        target.con.kick("Вы наказаны на " + reason, duration);
-                        Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, duration);
-                    }
-                    break;
-                case 2:
-                    duration = 30L * 24 * 60 * 60 * 1000;
-                    reason = "1 месяц";
-
-
-                    if (target != null) {
-                        Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, duration);
-                        target.con.kick("Вы наказаны на " + reason, duration);
-                    }
-                    break;
-                case 3:
-                    duration = 0;
-                    reason = "навсегда (бан)";
-                    // Administration.PlayerInfo info003 = Vars.netServer.admins.getInfo(uuid001);
-                    uuid003 = player.uuid();
-                    if (LoadJSONConfig.isAdmin(uuid003, player)) {
-
-                        if (info002 != null && info002.banned) {
-                            Vars.netServer.admins.unbanPlayerID(uuid001);
-                        } else {
-                            Vars.netServer.admins.banPlayerID(uuid001);
-                        }
-                    }
-
-
-                    break;
-                case 4:
-                    if (target != null) {
-                        Vars.netServer.admins.handleKicked(info002.id, info002.lastIP, 0);
-                    }
-                    break;
-                case 5:
-                    netc = Seq.with(Vars.net.getConnections()).find(con -> con.uuid.equals(uuid001));
-                    if (netc == null) {
-
-                    } else {
-                        Call.connect(netc, "127.0.0.1", 6567);
-                    }
-                    break;
-                default:
-                    return;
-
-            }
-            }
-        });
 
 
 
@@ -677,8 +565,8 @@ if(selection == 6) {
         });
         handler.<Player>register("amenu", "Для администрации", (args, player) -> {
             if (LoadJSONConfig.isModer(player.uuid(), player)) {
-                name002.clear();
-                uuids.clear();
+
+
 Tomodrek.LoadJSONConfig.loadConfig();
 
                 String Body001;
@@ -687,6 +575,7 @@ Tomodrek.LoadJSONConfig.loadConfig();
                 } else {
                     Body001 = "Statistics";
                 }
+
                 String[][] timeOptions = {
                         {"Банить/кикать игроков"},
                         {"Другое"},
@@ -757,4 +646,10 @@ for(mindustry.maps.Map map : Vars.maps.all()) {
             arc.util.Log.info("[Server] " + args[0]);
         });
     }
+}
+class AdminData {
+    public Seq<String> listUuidsPlayers = new Seq<>(200);
+    public Seq<String[]> listnamesPlayers = new Seq<>(200);
+public Player targetPlayer;
+public String targetUuid;
 }

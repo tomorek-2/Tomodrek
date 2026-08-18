@@ -77,6 +77,7 @@ private static boolean contains(String[] array, String value, Player player) {
     }
     return false;
 }
+
     public static boolean PlayerShadowBanned(String uuid) {
         return shadowBanList.contains(uuid);
     }
@@ -102,6 +103,7 @@ private static boolean contains(String[] array, String value, Player player) {
         if (contains(reserve, uuid, player)) return 3;
         return 4;
     }
+
     public static boolean isRoot(String uuid, Player player) { return getLevel(uuid, player) == 0; }
     public static boolean isAdmin(String uuid, Player player) { return getLevel(uuid, player) <= 1; }
     public static boolean isModer(String uuid, Player player) { return getLevel(uuid, player) <= 2; }

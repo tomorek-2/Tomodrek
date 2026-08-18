@@ -20,18 +20,12 @@ public class Momodrek003 {
 
         // 1. Голосовой ретранслятор (Relay) для VoiceChat002
         Vars.net.handleServer(Tomodrek.VoiceChat002.class, (con, packet) -> {
+            if(packet.senderId != con.player.id) {con.kick("Invalid packet data: ID spoofing detected.");
+                return;}
             relayVoice(con, packet);
         });
 
-        // 2. Система Досье: Отслеживание аномалий
-        Events.on(PlayerJoin.class, event -> {
-            Player player = event.player;
-            Log.info("[Dossier] Игрок @ (IP: @) подключился.", player.name, player.ip());
-            
-            if(player.ip().equals("127.0.0.1") || player.ip().startsWith("10.") || player.ip().startsWith("192.168.")) {
-                Log.warn("[Dossier] Локальное подключение/Прокси: @", player.name);
-            }
-        });
+
     }
 
     /**
