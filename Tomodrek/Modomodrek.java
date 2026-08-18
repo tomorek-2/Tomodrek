@@ -75,7 +75,7 @@ public class Modomodrek extends Mod {
     float calculateLastResult;
     Timer.Task task;
     public Tomodrek.VoiceChat001 voice;
-    public Tomodrek.VoiceChat001Android voiceAndroid;
+    public Tomodrek.VoiceChat001 voiceAndroid;
 
     @Override
     public void loadContent() {
@@ -89,7 +89,7 @@ public class Modomodrek extends Mod {
         
         // 2. Инициализация ГЧ в зависимости от платформы
         if (Core.app.isAndroid()) {
-            voiceAndroid = new Tomodrek.VoiceChat001Android();
+           voiceAndroid = new Tomodrek.VoiceChat001();
         } else {
             voice = new Tomodrek.VoiceChat001();
         }
